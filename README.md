@@ -109,18 +109,13 @@ curl https://observe.lco.global/api/instruments/ | codegen/lco/generator.py > sr
 
 This list is a work in progress.
 
-## OCS (Las Cumbres Observatory)
-
-Full documentation: TODO
-
+## Las Cumbres Observatory (LCO)
 
 ### Dependency group
-The OCS requires no additional dependency groups to be installed.
+Las Cumbres Observatory requires no additional dependency groups to be installed.
 
 ### Configuration Values
 See [configuration](#configuration) for instructions on setting these values.
-
-For LCO:
 
 ```python
 lco_token: str = ""
@@ -131,6 +126,22 @@ lco_api_root: str = "https://observe.lco.global/api/"
 * [LCO Observation Portal](https://observe.lco.global/)
 * [LCO Developer Documentation](https://developers.lco.global/)
 * [OCS API Documentation](https://observatorycontrolsystem.github.io/api/observation_portal/)
+
+## SOAR
+
+SOAR is functionally the same as LCO, but has it's own set of instruments and be configured seperately.
+
+### Dependency group
+SOAR requires no additional dependency groups to be installed.
+
+### Configuration Values
+See [configuration](#configuration) for instructions on setting these values.
+
+```python
+soar_token: str = ""
+soar_api_root: str = "https://observe.lco.global/api/"
+```
+Note: the soar API token will default to the same value as lco_token, if it is set.
 
 ## ESO (European Southern Observatory)
 

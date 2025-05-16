@@ -65,10 +65,10 @@ class LcoFacility:
         response = self.client.post("/requestgroups/validate/", json=payload)
         response = response.json()
         logger.debug("<- %s", response)
-        if response["request_durations"]:
+        if response.get("request_durations"):
             return True, []
         else:
-            return False, response["errors"]
+            return False, response.get("errors", [str(response)])
 
     def submit_request_group(
         self, request_group: RequestGroup

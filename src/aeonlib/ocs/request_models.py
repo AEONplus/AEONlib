@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any, Literal, Union
 
 from annotated_types import Ge, Le
 from pydantic import BaseModel, ConfigDict, Field
@@ -12,6 +12,7 @@ from pydantic.types import (
 
 from aeonlib.models import Window
 from aeonlib.ocs.lco.instruments import LCO_INSTRUMENTS
+from aeonlib.ocs.soar.instruments import SOAR_INSTRUMENTS
 
 
 class Location(BaseModel):
@@ -38,7 +39,9 @@ class Cadence(BaseModel):
 
 
 # Informs Pydantic which instrument configuration type should be used during parsing
-Configuration = Annotated[LCO_INSTRUMENTS, Field(discriminator="instrument_type")]
+Configuration = Annotated[
+    Union[LCO_INSTRUMENTS, SOAR_INSTRUMENTS], Field(discriminator="instrument_type")
+]
 
 
 class Request(BaseModel):

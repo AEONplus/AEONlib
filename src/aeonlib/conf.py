@@ -8,6 +8,10 @@ class Settings(BaseSettings):
     lco_token: str = ""
     lco_api_root: str = "https://observe.lco.global/api/"
 
+    # SOAR
+    soar_token: str = ""
+    soar_api_root: str = "https://observe.lco.global/api/"
+
     # European Southern Observatory
     eso_environment: str = "demo"
     eso_username: str = ""

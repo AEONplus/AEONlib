@@ -15,7 +15,7 @@ def get_modes(ins: dict, type: str) -> list[str]:
         return []
 
 
-def generate_instrument_configs(ins_s: str) -> str:
+def generate_instrument_configs(ins_s: str, soar: bool = False) -> str:
     """
     Generate instrument models based on the output of the OCS
     instrument data endpoint. For LCO, this endpoint resides
@@ -23,6 +23,7 @@ def generate_instrument_configs(ins_s: str) -> str:
 
     Args:
         ins_s (str): The input json containing instrument data.
+        soar (bool): Whether to generate SOAR instruments.
 
     Returns:
         str: Generated Python Pydantic models as a string.
@@ -36,13 +37,20 @@ def generate_instrument_configs(ins_s: str) -> str:
     template = j_env.get_template("instruments.jinja")
     ins_data = json.loads(ins_s)
     instruments = []
+    if soar:
+        prefix = ""
+        filtered = {k: v for k, v in ins_data.items() if 'soar' in k.lower()}
+    else:
+        prefix = "Lco"
+        filtered = {k: v for k, v in ins_data.items() if 'soar' not in k.lower()}
+
     # Instruments endpoint seems inconsistent, this should keep our output consistent
-    ordered = dict(sorted(ins_data.items()))
+    ordered = dict(sorted(filtered.items()))
     for instrument_type, ins in ordered.items():
         instruments.append(
             {
                 "instrument_type": instrument_type,
-                "class_name": f"Lco{textcase.pascal(instrument_type)}",
+                "class_name": f"{prefix}{textcase.pascal(instrument_type)}",
                 "config_types": [
                     c["code"] for c in ins["configuration_types"].values()
                 ],
@@ -58,11 +66,16 @@ def generate_instrument_configs(ins_s: str) -> str:
             }
         )
 
-    return template.render(instruments=instruments)
+    return template.render(instruments=instruments, soar=soar)
 
 
 if __name__ == "__main__":
+    try:
+        # soar = sys.argv[1] == 'soar'
+        soar = sys.argv.pop(1) == 'soar'
+    except IndexError:
+        soar = False
     # Accepts input from stdin or a file argument
     with fileinput.input() as f:
         ins_json = "".join(list(f))
-        sys.stdout.write(generate_instrument_configs(ins_json))
+        sys.stdout.write(generate_instrument_configs(ins_json, soar=soar))

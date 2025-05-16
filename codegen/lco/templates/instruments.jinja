@@ -8,6 +8,11 @@ from aeonlib.models import SiderealTarget, NonSiderealTarget
 from aeonlib.ocs.target_models import Constraints
 from aeonlib.ocs.config_models import Roi
 
+{% if soar %}
+    {% set obs = "SOAR" %}
+{% else %}
+    {% set obs = "LCO" %}
+{% endif %}
 
 {% for ctx in instruments %}
 class {{ ctx.class_name }}OpticalElements(BaseModel):
@@ -70,7 +75,7 @@ class {{ ctx.class_name }}(BaseModel):
 
 {% endfor %}
 # Export a type that encompasses all instruments
-LCO_INSTRUMENTS = Union[
+{{ obs }}_INSTRUMENTS = Union[
 {% for ctx in instruments %}
     {{ ctx.class_name }},
 {% endfor %}
