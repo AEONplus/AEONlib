@@ -72,7 +72,7 @@ class NonSiderealTarget(BaseModel):
     """Mean anomaly (angle in degrees)"""
     perihdist: Annotated[float, NonNegativeFloat] | None = None
     """Perihelion distance (AU)"""  # Comet Only
-    epochofperih: Annotated[float, Le(240_000), Le(100_000)] | None = None
+    epochofperih: Annotated[float, Ge(10_000), Le(100_000)] | None = None
     """Epoch of perihelion (MJD)"""  # Comet Only
     dailymot: float | None = None
     """Daily motion (angle in degrees)"""  # Major Planet Only
@@ -91,9 +91,9 @@ class NonSiderealTarget(BaseModel):
     diff_azimuth_acceleration: float | None = None
     """Differential azimuth acceleration (arcsec/s^2)"""  # Satellite Only
     meanlong: Angle | None = None
-    """Mean longitude (angle in degrees)"""  # No idea what this is.
+    """Mean longitude (angle in degrees)"""  # Major Planet Only
     longofperih: Angle | None = None
-    """Longitude of perihelion (angle in degrees)"""  # No idea what this is.
+    """Longitude of perihelion (angle in degrees)"""  # Major Planet Only
     extra_params: dict[Any, Any] = {}
 
 
