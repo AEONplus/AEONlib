@@ -41,9 +41,16 @@ class _AstropyTimeType:
         ) -> Union[datetime, str, float]:
             """
             Determines how to serialize an astropy.time.Time object when model_dump()
-            is called. Potentially we could leave this as is and have astropy times
-            in dictionaries, but Pydantic handles datetimes natively so this seems to
-            be the path of least resistance.
+            is called. This can be configured dynamically on the calling class by setting the
+            `output_mapping` context. Here is an example:
+
+            ```python
+            output_mapping = {"epochofel": "mjd", "epochofperih": "mjd"}
+            request_group.model_dump(
+                mode="json", exclude_none=True, context={"output_mapping": output_mapping}
+            )
+            ```
+            This would result in the epochofel and epochofperih values being output as mjd.
             """
             field_name = getattr(info, "field_name", "")
             context = getattr(info, "context", {})
@@ -81,6 +88,77 @@ class _AstropyTimeType:
     ) -> JsonSchemaValue:
         # Use the same schema that would be used for `datetime`
         return handler(core_schema.datetime_schema())
+
+
+class _AstropyTimeMJDType:
+    """
+    Custom Pydantic type that handles astropy.time.Time serialization and parsing.
+    Accepts floats as M/JD values and serializes output as MJD.
+    """
+
+    @classmethod
+    def __get_pydantic_core_schema__(
+        cls,
+        _source_type: Type[Any],
+        handler: GetCoreSchemaHandler,
+    ) -> core_schema.CoreSchema:
+        """https://docs.pydantic.dev/latest/concepts/types/#handling-third-party-types"""
+
+        def validate_from_datetime(datetime_value: datetime) -> astropy.time.Time:
+            return astropy.time.Time(datetime_value)
+
+        def validate_from_float(value: float) -> astropy.time.Time:
+            if value - 2400000.5 > 0:
+                return astropy.time.Time(value, format="jd", scale="tt")
+            else:
+                return astropy.time.Time(value, format="mjd", scale="tt")
+
+        from_datetime_schema = core_schema.chain_schema(
+            [
+                core_schema.datetime_schema(),
+                core_schema.no_info_plain_validator_function(validate_from_datetime),
+            ]
+        )
+
+        from_float_schema = core_schema.chain_schema(
+            [
+                core_schema.float_schema(),
+                core_schema.no_info_plain_validator_function(validate_from_float),
+            ]
+        )
+
+        def serialize_time(time_obj: astropy.time.Time, **kwargs) -> float:
+            return time_obj.mjd  # type: ignore
+
+        return core_schema.json_or_python_schema(
+            json_schema=core_schema.union_schema(
+                [from_float_schema, from_datetime_schema]
+            ),
+            python_schema=core_schema.union_schema(
+                [
+                    # Try Time directly first
+                    core_schema.is_instance_schema(astropy.time.Time),
+                    # Then try float (MJD)
+                    from_float_schema,
+                    # Then try datetime
+                    from_datetime_schema,
+                ]
+            ),
+            serialization=core_schema.plain_serializer_function_ser_schema(
+                serialize_time
+            ),
+        )
+
+    @classmethod
+    def __get_pydantic_json_schema__(
+        cls, _core_schema: core_schema.CoreSchema, handler: GetJsonSchemaHandler
+    ) -> JsonSchemaValue:
+        return {
+            "anyOf": [
+                handler(core_schema.float_schema()),
+                handler(core_schema.datetime_schema()),
+            ]
+        }
 
 
 class _AstropyAngleType:
@@ -149,4 +227,5 @@ class _AstropyAngleType:
 
 
 Time = Annotated[Union[astropy.time.Time, datetime], _AstropyTimeType]
+TimeMJD = Annotated[Union[astropy.time.Time, datetime, float], _AstropyTimeMJDType]
 Angle = Annotated[Union[astropy.coordinates.Angle, str, float], _AstropyAngleType]
