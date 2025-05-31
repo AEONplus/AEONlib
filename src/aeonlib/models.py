@@ -11,7 +11,7 @@ from pydantic.types import (
     StringConstraints,
 )
 
-from aeonlib.types import Angle, Time
+from aeonlib.types import Angle, Time, TimeMJD
 
 
 class SiderealTarget(BaseModel):
@@ -56,7 +56,7 @@ class NonSiderealTarget(BaseModel):
         "MPC_COMET",
     ]
     """The Target scheme to use"""
-    epochofel: Time
+    epochofel: TimeMJD
     """The epoch of the orbital elements (MJD)"""
     orbinc: Angle
     """Orbital inclination (angle in degrees)"""
@@ -72,7 +72,7 @@ class NonSiderealTarget(BaseModel):
     """Mean anomaly (angle in degrees)"""
     perihdist: Annotated[float, NonNegativeFloat] | None = None
     """Perihelion distance (AU)"""  # Comet Only
-    epochofperih: Time | None = None
+    epochofperih: TimeMJD | None = None
     """Epoch of perihelion (MJD)"""  # Comet Only
     dailymot: float | None = None
     """Daily motion (angle in degrees)"""  # Major Planet Only
