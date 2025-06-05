@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 
+import pytest
 from astropy.coordinates import Angle
 from astropy.time import Time
 from pydantic import BaseModel
@@ -97,19 +98,21 @@ class TestAstropyAngle:
         """Test angles constructed from astropy Angle objects dump to json as strings"""
         t = Target(ra=Angle(10, unit="deg"), dec=Angle(20, unit="deg"))
         dumped = t.model_dump_json()
-        assert dumped == '{"ra":"10","dec":"20"}'
+        assert dumped == '{"ra":10.0,"dec":20.0}'
 
     def test_from_str(self):
         """Test angles constructed from strings dump to json as formatted strings"""
-        t = Target(ra="1h2m3s", dec="2d")
+        t = Target(ra="1h0m0s", dec="2d")
         dumped = t.model_dump_json()
-        assert dumped == '{"ra":"1.03417","dec":"2"}'
+        parsed = json.loads(dumped)
+        assert parsed["ra"] == pytest.approx(15)
+        assert parsed["dec"] == 2.0
 
     def test_from_float(self):
         """Test angles constructed from floats dump to json as formatted strings"""
         t = Target(ra=10.5, dec=20)
         dumped = t.model_dump_json()
-        assert dumped == '{"ra":"10.5","dec":"20"}'
+        assert dumped == '{"ra":10.5,"dec":20.0}'
 
     def test_angle_attributes(self):
         """Test angles are accessible on the model"""

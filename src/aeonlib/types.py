@@ -1,6 +1,6 @@
 import logging
 from datetime import datetime
-from typing import Annotated, Any, Type, Union
+from typing import Annotated, Any, Type, Union, cast
 
 import astropy.coordinates
 import astropy.time
@@ -119,8 +119,8 @@ class _AstropyAngleType:
             ]
         )
 
-        def serialize_angle(angle_obj: astropy.coordinates.Angle) -> str:
-            return angle_obj.to_string(decimal=True)
+        def serialize_angle(angle_obj: astropy.coordinates.Angle) -> float:
+            return cast(float, angle_obj.to_value(unit="deg"))
 
         return core_schema.json_or_python_schema(
             json_schema=core_schema.union_schema([str_schema, float_schema]),
