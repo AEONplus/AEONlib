@@ -180,3 +180,9 @@ class TestTimeMJD:
         obj = MjdObject(time=datetime(2025, 5, 31))
         dumped = obj.model_dump_json()
         assert dumped == '{"time":60826.0}'
+
+    def test_from_datetime(self):
+        obj = MjdObject(time=datetime(2025, 5, 5))
+        assert isinstance(obj.time, Time)
+        assert obj.time.scale == "tt"
+        assert obj.time.mjd == 60800.0

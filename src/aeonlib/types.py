@@ -105,7 +105,7 @@ class _AstropyTimeMJDType:
         """https://docs.pydantic.dev/latest/concepts/types/#handling-third-party-types"""
 
         def validate_from_datetime(datetime_value: datetime) -> astropy.time.Time:
-            return astropy.time.Time(datetime_value)
+            return astropy.time.Time(datetime_value, scale="tt")
 
         def validate_from_float(value: float) -> astropy.time.Time:
             if value - 2400000.5 > 0:
