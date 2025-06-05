@@ -5,7 +5,7 @@ from astropy.time import Time
 from pydantic import ValidationError
 
 from aeonlib.conf import Settings
-from aeonlib.models import NonSiderealTarget, SiderealTarget, Window
+from aeonlib.models import JplMinorPlanetTarget, SiderealTarget, Window
 from aeonlib.ocs import (
     Constraints,
     Location,
@@ -130,17 +130,14 @@ class TestSerialization:
         This is likely specific to LCO/OCS so only the LCO Facility has this behavior.
         """
         facility = LcoFacility(settings=Settings(lco_token="", lco_api_root=""))
-        target = NonSiderealTarget(
+        target = JplMinorPlanetTarget(
             name="mover",
-            type="ORBITAL_ELEMENTS",
-            scheme="JPL_MINOR_PLANET",
             epochofel=datetime(2025, 1, 1),  # Time as datetime
+            perihdist=1.0,
             orbinc=0.0,
             longascnode=0.0,
             argofperih=0.0,
             eccentricity=1.0,
-            meandist=1.0,
-            meananom=0.0,
             epochofperih=Time(2460676.5, format="jd", scale="tt"),  # Time as JD
         )
         request_group.requests[0].configurations[0].target = target
