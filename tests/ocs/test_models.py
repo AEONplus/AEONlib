@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 
 import pytest
-from astropy.time import Time
 from pydantic import ValidationError
 
 from aeonlib.conf import Settings
@@ -141,7 +140,7 @@ class TestSerialization:
             eccentricity=1.0,
             meandist=1.0,
             meananom=0.0,
-            epochofperih=Time(2460676.5, format="jd", scale="tt"),  # Time as JD
+            epochofperih=2460676.5,  # Time as JD
         )
         request_group.requests[0].configurations[0].target = target
         result = facility.serialize_request_group(request_group)
