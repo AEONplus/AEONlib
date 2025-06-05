@@ -66,9 +66,9 @@ class NonSiderealTarget(BaseModel):
     """Argument of perihelion (angle in degrees)"""
     eccentricity: NonNegativeFloat
     """Eccentricity of the orbit"""
-    meandist: Annotated[float, NonNegativeFloat]
+    meandist: Annotated[float, NonNegativeFloat] | None = None
     """Semi-major axis (AU)"""  # Not Comet
-    meananom: Angle
+    meananom: Angle | None = None
     """Mean anomaly (angle in degrees)"""
     perihdist: Annotated[float, NonNegativeFloat] | None = None
     """Perihelion distance (AU)"""  # Comet Only
