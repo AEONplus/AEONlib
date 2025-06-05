@@ -4,7 +4,7 @@ from annotated_types import Le
 from pydantic import BaseModel, ConfigDict
 from pydantic.types import NonNegativeInt, PositiveInt
 
-from aeonlib.models import SiderealTarget, NonSiderealTarget
+from aeonlib.models import TARGET_TYPES
 from aeonlib.ocs.target_models import Constraints
 from aeonlib.ocs.config_models import Roi
 
@@ -64,7 +64,7 @@ class {{ ctx.class_name }}(BaseModel):
     instrument_configs: list[{{ ctx.class_name }}Config] = []
     acquisition_config: {{ ctx.class_name }}AcquisitionConfig
     guiding_config: {{ ctx.class_name }}GuidingConfig
-    target: SiderealTarget | NonSiderealTarget
+    target: TARGET_TYPES
     constraints: Constraints
 
     config_class = {{ ctx.class_name }}Config
