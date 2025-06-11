@@ -59,12 +59,7 @@ class LcoFacility:
             return dict_table(proposals, fields)
 
     def serialize_request_group(self, request_group: RequestGroup) -> dict:
-        # The LCO api expects certain time fields to be in MJD format instead of datetime.
-        # The below mapping is accessed in the Time field to output to MJD.
-        output_mapping = {"epochofel": "mjd", "epochofperih": "mjd"}
-        return request_group.model_dump(
-            mode="json", exclude_none=True, context={"output_mapping": output_mapping}
-        )
+        return request_group.model_dump(mode="json", exclude_none=True)
 
     def validate_request_group(
         self, request_group: RequestGroup
