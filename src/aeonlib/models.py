@@ -11,7 +11,7 @@ from pydantic.types import (
     StringConstraints,
 )
 
-from aeonlib.types import Angle, Time
+from aeonlib.types import Angle, Time, TimeMJD
 
 
 class SiderealTarget(BaseModel):
@@ -54,7 +54,7 @@ class _NonSiderealTarget(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
     type: Literal["ORBITAL_ELEMENTS"] = "ORBITAL_ELEMENTS"
     name: Annotated[str, StringConstraints(max_length=50)]
-    epochofel: Time
+    epochofel: TimeMJD
     """The epoch of the orbital elements (MJD)"""
     orbinc: Angle
     """Orbital inclination (angle in degrees)"""
@@ -93,7 +93,7 @@ class AsaCometTarget(_NonSiderealTarget):
     """Argument of perihelion (angle in degrees)"""
     perihdist: Annotated[float, NonNegativeFloat]
     """Perihelion distance (AU)"""
-    epochofperih: Time
+    epochofperih: TimeMJD
     """Epoch of perihelion (MJD)"""
 
 
@@ -115,7 +115,7 @@ class JplMinorPlanetTarget(_NonSiderealTarget):
     """Argument of perihelion (angle in degrees)"""
     perihdist: Annotated[float, NonNegativeFloat]
     """Perihelion distance (AU)"""
-    epochofperih: Time
+    epochofperih: TimeMJD
     """Epoch of perihelion (MJD)"""
 
 
@@ -135,7 +135,7 @@ class MpcCometTarget(_NonSiderealTarget):
     """Argument of perihelion (angle in degrees)"""
     perihdist: Annotated[float, NonNegativeFloat]
     """Perihelion distance (AU)"""
-    epochofperih: Time
+    epochofperih: TimeMJD
     """Epoch of perihelion (MJD)"""
 
 

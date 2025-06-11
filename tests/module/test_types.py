@@ -149,3 +149,40 @@ class TestAstropyAngle:
         assert target.ra.degree == 10
         assert isinstance(target.dec, Angle)
         assert target.dec.degree == 20
+
+
+class MjdObject(BaseModel):
+    time: aeonlib.types.TimeMJD
+
+
+class TestTimeMJD:
+    def test_from_jd_float(self):
+        obj = MjdObject(time=2460826.5)
+        assert isinstance(obj.time, Time)
+        assert obj.time.to_datetime() == datetime(2025, 5, 31)
+
+    def test_from_mjd_float(self):
+        obj = MjdObject(time=60826.0)
+        assert isinstance(obj.time, Time)
+        assert obj.time.to_datetime() == datetime(2025, 5, 31)
+
+    def test_from_json_float(self):
+        target_json = json.dumps(
+            {
+                "time": 60826.0,
+            }
+        )
+        target = MjdObject.model_validate_json(target_json)
+        assert isinstance(target.time, Time)
+        assert target.time.to_datetime() == datetime(2025, 5, 31)
+
+    def test_outputs_mjd(self):
+        obj = MjdObject(time=datetime(2025, 5, 31))
+        dumped = obj.model_dump_json()
+        assert dumped == '{"time":60826.0}'
+
+    def test_from_datetime(self):
+        obj = MjdObject(time=datetime(2025, 5, 5))
+        assert isinstance(obj.time, Time)
+        assert obj.time.scale == "tt"
+        assert obj.time.mjd == 60800.0
