@@ -2,6 +2,7 @@ from datetime import datetime
 
 import pytest
 from astropy.coordinates import Angle
+from lxml import etree
 
 from aeonlib.lt.facility import LTFacility
 from aeonlib.lt.models import LT_INSTRUMENTS, Frodo, Ioo, LTConfig, Sprat
@@ -44,3 +45,11 @@ def test_submit_observation():
     # Clean Up
     cancel_result = facility.cancel_observation(result, CFG.project)
     assert cancel_result
+
+
+def test_build_rtml():
+    frodo = Frodo()
+    facility = LTFacility()
+    result = facility._observation_payload(CFG, frodo, TARGET, WINDOW)
+    result_str = etree.tostring(result, encoding="unicode")
+    assert result_str.startswith("<RTML")
