@@ -1,6 +1,7 @@
-from typing import Annotated, Literal
+from typing import Annotated, Literal, Union
 
 from annotated_types import Ge, Le
+from lxml import etree
 from pydantic import AfterValidator, BaseModel
 
 from aeonlib.conf import settings
@@ -21,25 +22,8 @@ class LTObservation(BaseModel):
     max_airmass: Annotated[float, Ge(1.0), Le(3.0)] = 2.0
     max_seeing: Annotated[float, Ge(1.0), Le(5.0)] = 1.2
     max_skybrightness: Annotated[float, Ge(0.0), Le(10.0)] = 1.0
-    photometric: bool = False
+    photometric: bool = False  # Why is this a boolean
     """True -> clear, False -> light"""
-
-
-# class Filter(BaseModel):
-#     name: str
-#     exp_time: Annotated[float, Ge(0.0)] = 120
-#     exp_count: Annotated[int, Ge(0)] = 0
-
-
-"""Instruments to support:
-IO:O
-RISE
-SPRAT
-FRODOSpec
-MOPTOP
-LIRIC
-SkyCam??
-"""
 
 
 class Ioo(BaseModel):
@@ -83,3 +67,35 @@ class Frodo(BaseModel):
     exp_time_red: Annotated[float, Ge(0.0)] = 120.0
     exp_count_red: Annotated[int, Ge(0)] = 1
     res_red: Literal["high", "low"] = "low"
+
+    def build_inst_schedule(self) -> list[etree._Element]:
+        return [
+            self.build_schedule(
+                "FrodoSpec-Blue", self.res_blue, self.exp_count_blue, self.exp_time_blue
+            ),
+            self.build_schedule(
+                "FrodoSpec-Red", self.res_red, self.exp_count_red, self.exp_time_red
+            ),
+        ]
+
+    def build_schedule(
+        self, device_name: str, grating: str, exp_count: int, exp_time: float
+    ) -> etree._Element:
+        schedule = etree.Element("schedule")
+        device = etree.SubElement(
+            schedule, "Device", name=device_name, type="spectograph"
+        )
+        etree.SubElement(device, "SpectralRegion").text = "optical"
+        setup = etree.SubElement(device, "Setup")
+        etree.SubElement(setup, "Grating", name=grating)
+        exposure = etree.SubElement(schedule, "Exposure", count=str(exp_count))
+        etree.SubElement(exposure, "Value", units="seconds").text = str(exp_time)
+
+        return schedule
+
+
+LT_INSTRUMENTS = Union[
+    # Ioo,
+    Frodo,
+    # Sprat,
+]
