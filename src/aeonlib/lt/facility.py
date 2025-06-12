@@ -18,6 +18,10 @@ LT_SCHEMA_LOCATION = (
 logger = getLogger(__name__)
 
 
+class LTException(Exception):
+    pass
+
+
 class LTFacility:
     def __init__(self):
         headers = {
@@ -29,30 +33,21 @@ class LTFacility:
         )
         self.client = Client(url, headers=headers)
 
-    def validate_observation(self, observation_payload: etree._Element) -> bool:
+    def submit_observation(self, observation_payload: etree._Element) -> str:
+        return self._send_payload(observation_payload)
+
+    def validate_observation(self, observation_payload: etree._Element) -> str:
         # Change the payload to an inquiry mode document to test connectivity
         observation_payload.set("mode", "inquiry")
-        validation_payload = etree.tostring(
-            observation_payload, encoding="unicode", pretty_print=True
-        )
-        try:
-            response = self.client.service.handle_rtml(validation_payload).replace(
-                'encoding="ISO-8859-1"', ""
-            )
-        except Exception:
-            logger.exception("Error while connection to Liverpool Telescope")
-            return False
 
-        response_rtml = etree.fromstring(response)
-        if response_rtml.get("mode") == "offer":
-            return True
-        elif response_rtml.get("mode") == "reject":
-            logger.error(
-                "Error with RTML submission to Liverpool Telescope: %s", response
-            )
+        return self._send_payload(observation_payload)
 
-        logger.error("Unexpected mode response: %s", response_rtml.get("mode"))
-        return False
+    def cancel_observation(self, uid: str, project_id: str) -> str:
+        cancel_payload = self._prolog(mode="abort", uid=uid)
+        project = self._build_project(project_id)
+        cancel_payload.append(project)
+
+        return self._send_payload(cancel_payload)
 
     def observation_payload(
         self,
@@ -61,42 +56,65 @@ class LTFacility:
         window: Window,
         obs: LTObservation,
     ) -> etree._Element:
-        payload = self.prolog()
-        project = self.build_project(obs.project)
+        uid = "aeon_" + format(int(time.time()))
+        payload = self._prolog(mode="request", uid=uid)
+        project = self._build_project(obs.project)
         payload.append(project)
         schedules = instrument.build_inst_schedule()
         for schedule in schedules:
-            schedule.append(self.build_target(target))
-            for const in self.build_constraints(obs, window):
+            schedule.append(self._build_target(target))
+            for const in self._build_constraints(obs, window):
                 schedule.append(const)
             payload.append(schedule)
 
         return payload
 
-    def prolog(self) -> etree._Element:
+    def _send_payload(self, payload: etree._Element) -> str:
+        str_payload = etree.tostring(payload, encoding="unicode", pretty_print=True)
+        try:
+            response = self.client.service.handle_rtml(str_payload).replace(
+                'encoding="ISO-8859-1"', ""
+            )
+        except Exception as e:
+            logger.exception("Error while connection to Liverpool Telescope")
+            raise LTException(e)
+
+        response_rtml = etree.fromstring(response)
+        if response_rtml.get("mode") in ["offer", "confirm"]:
+            return response_rtml.get("uid", "")
+        elif response_rtml.get("mode") == "reject":
+            logger.error(
+                "Error with RTML submission to Liverpool Telescope: %s", response
+            )
+            raise LTException(response)
+        else:
+            logger.error("Unexpected mode response: %s", response_rtml.get("mode"))
+            raise LTException()
+
+    def _prolog(self, mode: str, uid: str) -> etree._Element:
         namespaces = {"xsi": LT_XSI_NS}
         schemaLocation = str(etree.QName(LT_XSI_NS, "schemaLocation"))
-        uid = "aeon_" + format(int(time.time()))
 
         return etree.Element(
             "RTML",
             {schemaLocation: LT_SCHEMA_LOCATION},
             xmlns=LT_XML_NS,
-            mode="request",
+            mode=mode,
             uid=uid,
             version="3.1a",
             nsmap=namespaces,
         )
 
-    def build_project(self, project_id: str) -> etree._Element:
+    def _build_project(self, project_id: str) -> etree._Element:
         project = etree.Element("Project", ProjectID=project_id)
         contact = etree.SubElement(project, "Contact")
         etree.SubElement(contact, "Username").text = settings.lt_username
         etree.SubElement(contact, "Name").text = ""
+        etree.SubElement(contact, "Communication")
 
         return project
 
-    def build_target(self, aeon_target: SiderealTarget) -> etree._Element:
+    def _build_target(self, aeon_target: SiderealTarget) -> etree._Element:
         target = etree.Element("Target", name=aeon_target.name)
         coordinates = etree.SubElement(target, "Coordinates")
         etree.SubElement(coordinates, "Equinox").text = str(aeon_target.epoch)
@@ -120,7 +138,7 @@ class LTFacility:
 
         return target
 
-    def build_constraints(
+    def _build_constraints(
         self, lt_observation: LTObservation, window: Window
     ) -> list[etree._Element]:
         airmass_const = etree.Element(
