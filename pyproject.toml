@@ -24,6 +24,11 @@ codegen = [
 
 dev = ["pytest>=8.3.5"]
 eso = ["p2api>=1.0.10"]
+lt = [
+    "lxml>=5.4.0",
+    "lxml-stubs>=0.5.1",
+    "suds>=1.2.0",
+]
 
 [tool.pytest.ini_options]
 addopts = ["--import-mode=importlib",  "-m not online"]

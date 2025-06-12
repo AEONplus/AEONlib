@@ -17,5 +17,13 @@ class Settings(BaseSettings):
     eso_username: str = ""
     eso_password: str = ""
 
+    # Liverpool Telescope
+    lt_proposal_ids: list[str] = []
+    lt_username: str = ""
+    lt_password: str = ""
+    lt_host: str = ""
+    lt_port: str = ""
+    lt_debug: bool = False
+
 
 settings = Settings()
