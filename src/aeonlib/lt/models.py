@@ -1,4 +1,4 @@
-from typing import Annotated, Literal, Union
+from typing import Annotated, Literal, Tuple, Union
 
 from annotated_types import Ge, Le
 from lxml import etree
@@ -56,6 +56,21 @@ class Sprat(BaseModel):
     exp_count: Annotated[int, Ge(1)] = 1
     grating: Literal["red", "blue"] = "red"
 
+    def build_inst_schedule(self) -> list[etree._Element]:
+        schedule = etree.Element("Schedule")
+        device = etree.SubElement(schedule, "Device", name="Sprat", type="spectrograph")
+        etree.SubElement(device, "SpectralRegion").text = "optical"
+        setup = etree.SubElement(device, "Setup")
+        etree.SubElement(setup, "Grating", name=self.grating)
+        detector = etree.SubElement(setup, "Detector")
+        binning = etree.SubElement(detector, "Binning")
+        etree.SubElement(binning, "X", units="pixels").text = "1"
+        etree.SubElement(binning, "Y", units="pixels").text = "1"
+        exposure = etree.SubElement(schedule, "Exposure", count=str(self.exp_count))
+        etree.SubElement(exposure, "Value", units="seconds").text = str(self.exp_time)
+
+        return [schedule]
+
 
 class Frodo(BaseModel):
     exp_time_blue: Annotated[float, Ge(0.0)] = 120.0
@@ -94,5 +109,5 @@ class Frodo(BaseModel):
 LT_INSTRUMENTS = Union[
     # Ioo,
     Frodo,
-    # Sprat,
+    Sprat,
 ]
