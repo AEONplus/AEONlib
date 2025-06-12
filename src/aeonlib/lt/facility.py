@@ -6,7 +6,7 @@ from lxml import etree
 from suds.client import Client
 
 from aeonlib.conf import settings
-from aeonlib.lt.models import LT_INSTRUMENTS, LTObservation
+from aeonlib.lt.models import LT_INSTRUMENTS, LTConfig
 from aeonlib.models import SiderealTarget, Window
 
 LT_XML_NS = "http://www.rtml.org/v3.1a"
@@ -33,10 +33,16 @@ class LTFacility:
         )
         self.client = Client(url, headers=headers)
 
-    def submit_observation(self, observation_payload: etree._Element) -> str:
+    def submit_observation(
+        self, cfg: LTConfig, ins: LT_INSTRUMENTS, target: SiderealTarget, window: Window
+    ) -> str:
+        observation_payload = self._observation_payload(cfg, ins, target, window)
         return self._send_payload(observation_payload)
 
-    def validate_observation(self, observation_payload: etree._Element) -> str:
+    def validate_observation(
+        self, cfg: LTConfig, ins: LT_INSTRUMENTS, target: SiderealTarget, window: Window
+    ) -> str:
+        observation_payload = self._observation_payload(cfg, ins, target, window)
         # Change the payload to an inquiry mode document to test connectivity
         observation_payload.set("mode", "inquiry")
 
@@ -49,21 +55,21 @@ class LTFacility:
 
         return self._send_payload(cancel_payload)
 
-    def observation_payload(
+    def _observation_payload(
         self,
+        cfg: LTConfig,
         instrument: LT_INSTRUMENTS,
         target: SiderealTarget,
         window: Window,
-        obs: LTObservation,
     ) -> etree._Element:
         uid = "aeon_" + format(int(time.time()))
         payload = self._prolog(mode="request", uid=uid)
-        project = self._build_project(obs.project)
+        project = self._build_project(cfg.project)
         payload.append(project)
         schedules = instrument.build_inst_schedule()
         for schedule in schedules:
             schedule.append(self._build_target(target))
-            for const in self._build_constraints(obs, window):
+            for const in self._build_constraints(cfg, window):
                 schedule.append(const)
             payload.append(schedule)
 
@@ -139,7 +145,7 @@ class LTFacility:
         return target
 
     def _build_constraints(
-        self, lt_observation: LTObservation, window: Window
+        self, lt_observation: LTConfig, window: Window
     ) -> list[etree._Element]:
         airmass_const = etree.Element(
             "AirmassConstraint", maximum=str(lt_observation.max_airmass)

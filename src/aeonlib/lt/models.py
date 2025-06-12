@@ -5,7 +5,7 @@ from lxml import etree
 from pydantic import BaseModel
 
 
-class LTObservation(BaseModel):
+class LTConfig(BaseModel):
     """Some LT specific parameters, this could probably be replaced with the
     Constraints class for the main models"""
 

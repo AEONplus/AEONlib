@@ -4,12 +4,12 @@ import pytest
 from astropy.coordinates import Angle
 
 from aeonlib.lt.facility import LTFacility
-from aeonlib.lt.models import LT_INSTRUMENTS, Frodo, Ioo, LTObservation, Sprat
+from aeonlib.lt.models import LT_INSTRUMENTS, Frodo, Ioo, LTConfig, Sprat
 from aeonlib.models import SiderealTarget, Window
 
 pytestmark = pytest.mark.online
 
-OBSERVATION = LTObservation(project="LCOTesting2")
+CFG = LTConfig(project="LCOTesting2")
 TARGET = SiderealTarget(
     name="Vega",
     type="ICRS",
@@ -29,8 +29,7 @@ INSTRUMENT_TESTS = {
 def test_validate_observation(ins: LT_INSTRUMENTS):
     """Validate all the default instruments"""
     facility = LTFacility()
-    payload = facility.observation_payload(ins, TARGET, WINDOW, OBSERVATION)
-    result = facility.validate_observation(payload)
+    result = facility.validate_observation(CFG, ins, TARGET, WINDOW)
     assert result
 
 
@@ -39,10 +38,9 @@ def test_submit_observation():
     """This test creates stuff remotely so just do one test with Frodo"""
     facility = LTFacility()
     frodo = Frodo()
-    payload = facility.observation_payload(frodo, TARGET, WINDOW, OBSERVATION)
-    result = facility.submit_observation(payload)
+    result = facility.submit_observation(CFG, frodo, TARGET, WINDOW)
     assert result
 
     # Clean Up
-    cancel_result = facility.cancel_observation(result, OBSERVATION.project)
+    cancel_result = facility.cancel_observation(result, CFG.project)
     assert cancel_result
