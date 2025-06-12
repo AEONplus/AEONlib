@@ -2,25 +2,18 @@ from typing import Annotated, Literal, Tuple, Union
 
 from annotated_types import Ge, Le
 from lxml import etree
-from pydantic import AfterValidator, BaseModel
-
-from aeonlib.conf import settings
-
-
-def valid_project_id(value: str) -> str:
-    if value not in settings.lt_proposal_ids:
-        raise ValueError(f"Invalid project ID: {value}")
-
-    return value
+from pydantic import BaseModel
 
 
 class LTObservation(BaseModel):
-    project: Annotated[str, AfterValidator(valid_project_id)]
+    """Some LT specific parameters, this could probably be replaced with the
+    Constraints class for the main models"""
+
+    project: str
     max_airmass: Annotated[float, Ge(1.0), Le(3.0)] = 2.0
     max_seeing: Annotated[float, Ge(1.0), Le(5.0)] = 1.2
     max_skybrightness: Annotated[float, Ge(0.0), Le(10.0)] = 1.0
-    photometric: bool = False  # Why is this a boolean
-    """True -> clear, False -> light"""
+    photometric: Literal["clear", "light"] = "clear"
 
 
 IooFilterTimeCnt = Tuple[Annotated[float, Ge(0.0)], Annotated[int, Ge(1)]]
@@ -32,7 +25,7 @@ class Ioo(BaseModel):
     U: IooFilterTimeCnt = (120.0, 1)
     R: IooFilterTimeCnt = (120.0, 1)
     G: IooFilterTimeCnt = (120.0, 1)
-    I: IooFilterTimeCnt = (120.0, 1)
+    I: IooFilterTimeCnt = (120.0, 1)  # noqa: E741
     Z: IooFilterTimeCnt = (120.0, 1)
     B: IooFilterTimeCnt = (120.0, 1)
     V: IooFilterTimeCnt = (120.0, 1)

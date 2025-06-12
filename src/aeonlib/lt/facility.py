@@ -156,11 +156,7 @@ class LTFacility:
         )
 
         photom_const = etree.Element("ExtinctionConstraint")
-        if lt_observation.photometric:
-            etree.SubElement(photom_const, "Clouds").text = "clear"
-        else:
-            etree.SubElement(photom_const, "Clouds").text = "light"
-
+        etree.SubElement(photom_const, "Clouds").text = lt_observation.photometric
         date_const = etree.Element("DateTimeConstraint", type="include")
         assert window.start
         start = window.start.strftime("%Y-%m-%dT%H:%M:00+00:00")
