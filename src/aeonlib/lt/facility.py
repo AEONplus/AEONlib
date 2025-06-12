@@ -82,20 +82,22 @@ class LTFacility:
                 'encoding="ISO-8859-1"', ""
             )
         except Exception as e:
-            logger.exception("Error while connection to Liverpool Telescope")
-            raise LTException(e)
+            logger.debug("RTML submission failed with payload: %s", str_payload)
+            raise LTException(f"Failed to submit observation to LT: {e}") from e
 
         response_rtml = etree.fromstring(response)
-        if response_rtml.get("mode") in ["offer", "confirm"]:
+        mode = response_rtml.get("mode")
+
+        if mode in ["offer", "confirm"]:
             return response_rtml.get("uid", "")
-        elif response_rtml.get("mode") == "reject":
-            logger.error(
-                "Error with RTML submission to Liverpool Telescope: %s", response
-            )
-            raise LTException(response)
+        elif mode == "reject":
+            logger.debug("RTML submission rejected: %s", response)
+            raise LTException("LT rejected the observation request")
         else:
-            logger.error("Unexpected mode response: %s", response_rtml.get("mode"))
-            raise LTException()
+            logger.debug("Unexpected RTML mode '%s' in response: %s", mode, response)
+            raise LTException(
+                f"Unexpected response mode from Liverpool Telescope: {mode}"
+            )
 
     def _prolog(self, mode: str, uid: str) -> etree._Element:
         namespaces = {"xsi": LT_XSI_NS}
