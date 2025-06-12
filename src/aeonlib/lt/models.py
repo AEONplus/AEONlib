@@ -5,7 +5,6 @@ from lxml import etree
 from pydantic import AfterValidator, BaseModel
 
 from aeonlib.conf import settings
-from aeonlib.types import Time
 
 
 def valid_project_id(value: str) -> str:
@@ -17,8 +16,6 @@ def valid_project_id(value: str) -> str:
 
 class LTObservation(BaseModel):
     project: Annotated[str, AfterValidator(valid_project_id)]
-    start: Time
-    end: Time
     max_airmass: Annotated[float, Ge(1.0), Le(3.0)] = 2.0
     max_seeing: Annotated[float, Ge(1.0), Le(5.0)] = 1.2
     max_skybrightness: Annotated[float, Ge(0.0), Le(10.0)] = 1.0
@@ -81,9 +78,9 @@ class Frodo(BaseModel):
     def build_schedule(
         self, device_name: str, grating: str, exp_count: int, exp_time: float
     ) -> etree._Element:
-        schedule = etree.Element("schedule")
+        schedule = etree.Element("Schedule")
         device = etree.SubElement(
-            schedule, "Device", name=device_name, type="spectograph"
+            schedule, "Device", name=device_name, type="spectrograph"
         )
         etree.SubElement(device, "SpectralRegion").text = "optical"
         setup = etree.SubElement(device, "Setup")

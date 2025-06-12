@@ -29,12 +29,14 @@ class LTFacility:
         )
         self.client = Client(url, headers=headers)
 
-    def validate_observation(self, observation_payload: str) -> bool:
-        validate_payload = etree.fromstring(observation_payload)
+    def validate_observation(self, observation_payload: etree._Element) -> bool:
         # Change the payload to an inquiry mode document to test connectivity
-        validate_payload.set("mode", "inquiry")
+        observation_payload.set("mode", "inquiry")
+        validation_payload = etree.tostring(
+            observation_payload, encoding="unicode", pretty_print=True
+        )
         try:
-            response = self.client.service.handle_rtml(validate_payload).replace(
+            response = self.client.service.handle_rtml(validation_payload).replace(
                 'encoding="ISO-8859-1"', ""
             )
         except Exception:
@@ -45,8 +47,11 @@ class LTFacility:
         if response_rtml.get("mode") == "offer":
             return True
         elif response_rtml.get("mode") == "reject":
-            logger.error("Error with RTML submission to Liverpool Telescope")
+            logger.error(
+                "Error with RTML submission to Liverpool Telescope: %s", response
+            )
 
+        logger.error("Unexpected mode response: %s", response_rtml.get("mode"))
         return False
 
     def observation_payload(
@@ -55,9 +60,9 @@ class LTFacility:
         target: SiderealTarget,
         window: Window,
         obs: LTObservation,
-    ) -> str:
+    ) -> etree._Element:
         payload = self.prolog()
-        project = self.build_project("TEST-PROJECT")
+        project = self.build_project(obs.project)
         payload.append(project)
         schedules = instrument.build_inst_schedule()
         for schedule in schedules:
@@ -66,12 +71,12 @@ class LTFacility:
                 schedule.append(const)
             payload.append(schedule)
 
-        return etree.tostring(payload, encoding="unicode")
+        return payload
 
     def prolog(self) -> etree._Element:
         namespaces = {"xsi": LT_XSI_NS}
         schemaLocation = str(etree.QName(LT_XSI_NS, "schemaLocation"))
-        uid = format(int(time.time()))
+        uid = "aeon_" + format(int(time.time()))
 
         return etree.Element(
             "RTML",
@@ -84,7 +89,7 @@ class LTFacility:
         )
 
     def build_project(self, project_id: str) -> etree._Element:
-        project = etree.Element("Project", ProjectId=project_id)
+        project = etree.Element("Project", ProjectID=project_id)
         contact = etree.SubElement(project, "Contact")
         etree.SubElement(contact, "Username").text = settings.lt_username
         etree.SubElement(contact, "Name").text = ""
@@ -98,8 +103,8 @@ class LTFacility:
 
         ra = etree.SubElement(coordinates, "RightAscension")
         assert isinstance(aeon_target.ra, Angle)
-        etree.SubElement(ra, "Hours").text = str(aeon_target.ra.hms.h)
-        etree.SubElement(ra, "Minutes").text = str(aeon_target.ra.hms.m)
+        etree.SubElement(ra, "Hours").text = str(int(aeon_target.ra.hms.h))
+        etree.SubElement(ra, "Minutes").text = str(int(aeon_target.ra.hms.m))
         etree.SubElement(ra, "Seconds").text = str(aeon_target.ra.hms.s)
 
         dec = etree.SubElement(coordinates, "Declination")
@@ -134,9 +139,9 @@ class LTFacility:
 
         photom_const = etree.Element("ExtinctionConstraint")
         if lt_observation.photometric:
-            etree.SubElement(photom_const, "Photometric").text = "clear"
+            etree.SubElement(photom_const, "Clouds").text = "clear"
         else:
-            etree.SubElement(photom_const, "Photometric").text = "light"
+            etree.SubElement(photom_const, "Clouds").text = "light"
 
         date_const = etree.Element("DateTimeConstraint", type="include")
         assert window.start

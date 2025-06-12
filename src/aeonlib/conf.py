@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     eso_password: str = ""
 
     # Liverpool Telescope
+    # Proposal ids are parsed from a json list, like '["LCOTesting2","LCOTesting1"]'
     lt_proposal_ids: list[str] = []
     lt_username: str = ""
     lt_password: str = ""
