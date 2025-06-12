@@ -19,6 +19,7 @@ TARGET = SiderealTarget(
 WINDOW = Window(start=datetime(2020, 2, 18, 18), end=datetime(2020, 2, 28))
 
 INSTRUMENT_TESTS = {
+    "IOO": Ioo(),
     "FRODO": Frodo(),
     "SPRAT": Sprat(),
 }

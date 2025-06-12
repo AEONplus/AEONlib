@@ -23,32 +23,44 @@ class LTObservation(BaseModel):
     """True -> clear, False -> light"""
 
 
+IooFilterTimeCnt = Tuple[Annotated[float, Ge(0.0)], Annotated[int, Ge(1)]]
+"""Tuple of exposure time, exposure count"""
+
+
 class Ioo(BaseModel):
     binning: Literal["1x1", "2x2"] = "2x2"
-    exp_time_U: Annotated[float, Ge(0.0)] = 120.0
-    exp_count_U: Annotated[int, Ge(0)] = 0
-    exp_time_R: Annotated[float, Ge(0.0)] = 120.0
-    exp_count_R: Annotated[int, Ge(0)] = 0
-    exp_time_G: Annotated[float, Ge(0.0)] = 120.0
-    exp_count_G: Annotated[int, Ge(0)] = 0
-    exp_time_I: Annotated[float, Ge(0.0)] = 120.0
-    exp_count_I: Annotated[int, Ge(0)] = 0
-    exp_time_Z: Annotated[float, Ge(0.0)] = 120.0
-    exp_count_Z: Annotated[int, Ge(0)] = 0
-    exp_time_B: Annotated[float, Ge(0.0)] = 120.0
-    exp_count_B: Annotated[int, Ge(0)] = 0
-    exp_time_V: Annotated[float, Ge(0.0)] = 120.0
-    exp_count_V: Annotated[int, Ge(0)] = 0
-    exp_time_Halpha6566: Annotated[float, Ge(0.0)] = 120.0
-    exp_count_Halpha6566: Annotated[int, Ge(0)] = 0
-    exp_time_Halpha6634: Annotated[float, Ge(0.0)] = 120.0
-    exp_count_Halpha6634: Annotated[int, Ge(0)] = 0
-    exp_time_Halpha6705: Annotated[float, Ge(0.0)] = 120.0
-    exp_count_Halpha6705: Annotated[int, Ge(0)] = 0
-    exp_time_Halpha6755: Annotated[float, Ge(0.0)] = 120.0
-    exp_count_Halpha6755: Annotated[int, Ge(0)] = 0
-    exp_time_Halpha6822: Annotated[float, Ge(0.0)] = 120.0
-    exp_count_Halpha6822: Annotated[int, Ge(0)] = 0
+    U: IooFilterTimeCnt = (120.0, 1)
+    R: IooFilterTimeCnt = (120.0, 1)
+    G: IooFilterTimeCnt = (120.0, 1)
+    I: IooFilterTimeCnt = (120.0, 1)
+    Z: IooFilterTimeCnt = (120.0, 1)
+    B: IooFilterTimeCnt = (120.0, 1)
+    V: IooFilterTimeCnt = (120.0, 1)
+    Halpha6566: IooFilterTimeCnt = (120.0, 1)
+    Halpha6634: IooFilterTimeCnt = (120.0, 1)
+    Halpha6705: IooFilterTimeCnt = (120.0, 1)
+    Halpha6755: IooFilterTimeCnt = (120.0, 1)
+    Halpha6822: IooFilterTimeCnt = (120.0, 1)
+
+    def build_inst_schedule(self) -> list[etree._Element]:
+        filters = self.model_dump(exclude={"binning"}).items()
+
+        return [self.build_schedule(filter, cfg) for filter, cfg in filters]
+
+    def build_schedule(self, filter: str, cfg: IooFilterTimeCnt) -> etree._Element:
+        schedule = etree.Element("Schedule")
+        device = etree.SubElement(schedule, "Device", name="IO:O", type="camera")
+        etree.SubElement(device, "SpectralRegion").text = "optical"
+        setup = etree.SubElement(device, "Setup")
+        etree.SubElement(setup, "Filter", type=filter)
+        detector = etree.SubElement(setup, "Detector")
+        binning = etree.SubElement(detector, "Binning")
+        etree.SubElement(binning, "X", units="pixels").text = self.binning.split("x")[0]
+        etree.SubElement(binning, "Y", units="pixels").text = self.binning.split("x")[1]
+        exposure = etree.SubElement(schedule, "Exposure", count=str(cfg[1]))
+        etree.SubElement(exposure, "Value", units="seconds").text = str(cfg[0])
+
+        return schedule
 
 
 class Sprat(BaseModel):
@@ -107,7 +119,7 @@ class Frodo(BaseModel):
 
 
 LT_INSTRUMENTS = Union[
-    # Ioo,
+    Ioo,
     Frodo,
     Sprat,
 ]
