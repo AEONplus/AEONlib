@@ -168,3 +168,25 @@ eso_password: str = ""
 
 * [ESO Phase 2 API](https://www.eso.org/sci/observing/phase2/p2intro/Phase2API.html)
 * [ESO Phase 2 Demo Application](https://www.eso.org/p2demo/home)
+
+
+## LT (Liverpool Telescope)
+
+### Dependency Group
+To use the LT facility, you must install the `lt` group:
+```bash
+pip install aeonlib[lt]
+uv sync --group lt
+poetry install --with lt
+```
+### Configuration Values
+See [configuration](#configuration) for instructions on setting these values.
+
+```python
+lt_username: str = ""
+lt_password: str = ""
+lt_host: str = ""
+lt_port: str = ""
+```
+### Helpful links
+* [LT Phase 2 Information](https://telescope.livjm.ac.uk/PropInst/Phase2/)
