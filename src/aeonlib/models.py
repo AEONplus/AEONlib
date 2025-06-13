@@ -73,8 +73,8 @@ class AsaMajorPlanetTarget(_NonSiderealTarget):
     """Semi-major axis (AU)"""
     meanlong: Angle
     """Mean longitude"""
-    dailymot: float
-    """Daily motion """
+    dailymot: Angle
+    """Mean Daily motion"""
 
 
 class AsaMinorPlanetTarget(_NonSiderealTarget):
@@ -105,8 +105,8 @@ class JplMajorPlanetTarget(_NonSiderealTarget):
     """Semi-major axis (AU)"""
     meananom: Angle
     """Mean anomaly"""
-    dailymot: float
-    """Daily motion"""
+    dailymot: Angle
+    """Mean Daily motion"""
 
 
 class JplMinorPlanetTarget(_NonSiderealTarget):
