@@ -139,7 +139,7 @@ class MpcCometTarget(_NonSiderealTarget):
     """Epoch of perihelion (MJD)"""
 
 
-class SatelliteTarget(BaseModel):
+class GeocentricSatelliteTarget(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
     name: Annotated[str, StringConstraints(max_length=50)]
     type: Literal["SATELLITE"] = "SATELLITE"
@@ -169,5 +169,5 @@ TARGET_TYPES = Union[
     JplMinorPlanetTarget,
     MpcMinorPlanetTarget,
     MpcCometTarget,
-    SatelliteTarget,
+    GeocentricSatelliteTarget,
 ]
