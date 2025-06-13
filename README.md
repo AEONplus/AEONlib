@@ -176,7 +176,7 @@ eso_password: str = ""
 To use the LT facility, you must install the `lt` group:
 ```bash
 pip install aeonlib[lt]
-uv sync --group eso
+uv sync --group lt
 poetry install --with lt
 ```
 ### Configuration Values
