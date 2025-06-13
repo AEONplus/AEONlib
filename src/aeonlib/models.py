@@ -57,9 +57,9 @@ class _NonSiderealTarget(BaseModel):
     epochofel: TimeMJD
     """The epoch of the orbital elements (MJD)"""
     orbinc: Angle
-    """Orbital inclination (angle in degrees)"""
+    """Orbital inclination"""
     longascnode: Angle
-    """Longitude of ascending node (angle in degrees)"""
+    """Longitude of ascending node"""
     eccentricity: NonNegativeFloat
     """Eccentricity of the orbit"""
     extra_params: dict[Any, Any] = {}
@@ -68,29 +68,29 @@ class _NonSiderealTarget(BaseModel):
 class AsaMajorPlanetTarget(_NonSiderealTarget):
     scheme: Literal["ASA_MAJOR_PLANET"] = "ASA_MAJOR_PLANET"
     longofperih: Angle
-    """Longitude of perihelion (angle in degrees)"""
+    """Longitude of perihelion"""
     meandist: Annotated[float, NonNegativeFloat]
     """Semi-major axis (AU)"""
     meanlong: Angle
-    """Mean longitude (angle in degrees)"""
+    """Mean longitude"""
     dailymot: float
-    """Daily motion (angle in degrees)"""
+    """Daily motion """
 
 
 class AsaMinorPlanetTarget(_NonSiderealTarget):
     scheme: Literal["ASA_MINOR_PLANET"] = "ASA_MINOR_PLANET"
     argofperih: Angle
-    """Argument of perihelion (angle in degrees)"""
+    """Argument of perihelion"""
     meandist: Annotated[float, NonNegativeFloat]
     """Semi-major axis (AU)"""
     meananom: Angle
-    """Mean anomaly (angle in degrees)"""
+    """Mean anomaly"""
 
 
 class AsaCometTarget(_NonSiderealTarget):
     scheme: Literal["ASA_COMET"] = "ASA_COMET"
     argofperih: Angle
-    """Argument of perihelion (angle in degrees)"""
+    """Argument of perihelion"""
     perihdist: Annotated[float, NonNegativeFloat]
     """Perihelion distance (AU)"""
     epochofperih: TimeMJD
@@ -100,19 +100,19 @@ class AsaCometTarget(_NonSiderealTarget):
 class JplMajorPlanetTarget(_NonSiderealTarget):
     scheme: Literal["JPL_MAJOR_PLANET"] = "JPL_MAJOR_PLANET"
     argofperih: Angle
-    """Argument of perihelion (angle in degrees)"""
+    """Argument of perihelion"""
     meandist: Annotated[float, NonNegativeFloat]
     """Semi-major axis (AU)"""
     meananom: Angle
-    """Mean anomaly (angle in degrees)"""
+    """Mean anomaly"""
     dailymot: float
-    """Daily motion (angle in degrees)"""
+    """Daily motion"""
 
 
 class JplMinorPlanetTarget(_NonSiderealTarget):
     scheme: Literal["JPL_MINOR_PLANET"] = "JPL_MINOR_PLANET"
     argofperih: Angle
-    """Argument of perihelion (angle in degrees)"""
+    """Argument of perihelion"""
     perihdist: Annotated[float, NonNegativeFloat]
     """Perihelion distance (AU)"""
     epochofperih: TimeMJD
@@ -122,17 +122,17 @@ class JplMinorPlanetTarget(_NonSiderealTarget):
 class MpcMinorPlanetTarget(_NonSiderealTarget):
     scheme: Literal["MPC_MINOR_PLANET"] = "MPC_MINOR_PLANET"
     argofperih: Angle
-    """Argument of perihelion (angle in degrees)"""
+    """Argument of perihelion"""
     meandist: Annotated[float, NonNegativeFloat]
     """Semi-major axis (AU)"""
     meananom: Angle
-    """Mean anomaly (angle in degrees)"""
+    """Mean anomaly"""
 
 
 class MpcCometTarget(_NonSiderealTarget):
     scheme: Literal["MPC_COMET"] = "MPC_COMET"
     argofperih: Angle
-    """Argument of perihelion (angle in degrees)"""
+    """Argument of perihelion"""
     perihdist: Annotated[float, NonNegativeFloat]
     """Perihelion distance (AU)"""
     epochofperih: TimeMJD
