@@ -2,7 +2,7 @@
 Models shared between facilities.
 """
 
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any, Literal, Union
 
 from annotated_types import Le
 from pydantic import BaseModel, ConfigDict
@@ -40,66 +40,134 @@ class SiderealTarget(BaseModel):
     """Parallax of the Target in mas, max 2000. Defaults to 0."""
 
 
-class NonSiderealTarget(BaseModel):
-    model_config = ConfigDict(validate_assignment=True)
-    name: Annotated[str, StringConstraints(max_length=50)] = "string"
-    """The name of this Target"""
-    type: Literal["ORBITAL_ELEMENTS", "SATELLITE"]
-    """The type of this Target TODO: Where does HOUR_ANGLE make sense?"""
-    scheme: Literal[
-        "ASA_MAJOR_PLANET",
-        "ASA_MINOR_PLANET",
-        "ASA_COMET",
-        "JPL_MAJOR_PLANET",
-        "JPL_MINOR_PLANET",
-        "MPC_MINOR_PLANET",
-        "MPC_COMET",
-    ]
-    """The Target scheme to use"""
-    epochofel: TimeMJD
-    """The epoch of the orbital elements (MJD)"""
-    orbinc: Angle
-    """Orbital inclination (angle in degrees)"""
-    longascnode: Angle
-    """Longitude of ascending node (angle in degrees)"""
-    argofperih: Angle
-    """Argument of perihelion (angle in degrees)"""
-    eccentricity: NonNegativeFloat
-    """Eccentricity of the orbit"""
-    meandist: Annotated[float, NonNegativeFloat] | None = None
-    """Semi-major axis (AU)"""  # Not Comet
-    meananom: Angle | None = None
-    """Mean anomaly (angle in degrees)"""
-    perihdist: Annotated[float, NonNegativeFloat] | None = None
-    """Perihelion distance (AU)"""  # Comet Only
-    epochofperih: TimeMJD | None = None
-    """Epoch of perihelion (MJD)"""  # Comet Only
-    dailymot: float | None = None
-    """Daily motion (angle in degrees)"""  # Major Planet Only
-    altitude: Angle | None = None
-    """Altitude of this Target in decimal degrees"""  # Satellite Only
-    azimuth: Angle | None = None
-    """Azimuth of this Target in decimal degrees east of North"""  # Satellite Only
-    diff_altitude_rate: float | None = None
-    """Differential altitude rate (arcsec/s)"""  # Satellite Only
-    diff_azimuth_rate: float | None = None
-    """Differential azimuth rate (arcsec/s)"""  # Satellite Only
-    diff_epoch: float | None = None
-    """Reference time for non-sidereal motion (MJD)"""  # Satellite Only
-    diff_altitude_acceleration: float | None = None
-    """Differential altitude acceleration (arcsec/s^2)"""  # Satellite Only
-    diff_azimuth_acceleration: float | None = None
-    """Differential azimuth acceleration (arcsec/s^2)"""  # Satellite Only
-    meanlong: Angle | None = None
-    """Mean longitude (angle in degrees)"""  # Major Planet Only
-    longofperih: Angle | None = None
-    """Longitude of perihelion (angle in degrees)"""  # Major Planet Only
-    extra_params: dict[Any, Any] = {}
-
-
 class Window(BaseModel):
     """A general time window"""
 
     model_config = ConfigDict(validate_assignment=True)
     start: Time | None = None
     end: Time
+
+
+class _NonSiderealTarget(BaseModel):
+    """Base class for non-sidereal targets, should not be used directly"""
+
+    model_config = ConfigDict(validate_assignment=True)
+    type: Literal["ORBITAL_ELEMENTS"] = "ORBITAL_ELEMENTS"
+    name: Annotated[str, StringConstraints(max_length=50)]
+    epochofel: TimeMJD
+    """The epoch of the orbital elements (MJD)"""
+    orbinc: Angle
+    """Orbital inclination"""
+    longascnode: Angle
+    """Longitude of ascending node"""
+    eccentricity: NonNegativeFloat
+    """Eccentricity of the orbit"""
+    extra_params: dict[Any, Any] = {}
+
+
+class AsaMajorPlanetTarget(_NonSiderealTarget):
+    scheme: Literal["ASA_MAJOR_PLANET"] = "ASA_MAJOR_PLANET"
+    longofperih: Angle
+    """Longitude of perihelion"""
+    meandist: Annotated[float, NonNegativeFloat]
+    """Semi-major axis (AU)"""
+    meanlong: Angle
+    """Mean longitude"""
+    dailymot: Angle
+    """Mean Daily motion"""
+
+
+class AsaMinorPlanetTarget(_NonSiderealTarget):
+    scheme: Literal["ASA_MINOR_PLANET"] = "ASA_MINOR_PLANET"
+    argofperih: Angle
+    """Argument of perihelion"""
+    meandist: Annotated[float, NonNegativeFloat]
+    """Semi-major axis (AU)"""
+    meananom: Angle
+    """Mean anomaly"""
+
+
+class AsaCometTarget(_NonSiderealTarget):
+    scheme: Literal["ASA_COMET"] = "ASA_COMET"
+    argofperih: Angle
+    """Argument of perihelion"""
+    perihdist: Annotated[float, NonNegativeFloat]
+    """Perihelion distance (AU)"""
+    epochofperih: TimeMJD
+    """Epoch of perihelion (MJD)"""
+
+
+class JplMajorPlanetTarget(_NonSiderealTarget):
+    scheme: Literal["JPL_MAJOR_PLANET"] = "JPL_MAJOR_PLANET"
+    argofperih: Angle
+    """Argument of perihelion"""
+    meandist: Annotated[float, NonNegativeFloat]
+    """Semi-major axis (AU)"""
+    meananom: Angle
+    """Mean anomaly"""
+    dailymot: Angle
+    """Mean Daily motion"""
+
+
+class JplMinorPlanetTarget(_NonSiderealTarget):
+    scheme: Literal["JPL_MINOR_PLANET"] = "JPL_MINOR_PLANET"
+    argofperih: Angle
+    """Argument of perihelion"""
+    perihdist: Annotated[float, NonNegativeFloat]
+    """Perihelion distance (AU)"""
+    epochofperih: TimeMJD
+    """Epoch of perihelion (MJD)"""
+
+
+class MpcMinorPlanetTarget(_NonSiderealTarget):
+    scheme: Literal["MPC_MINOR_PLANET"] = "MPC_MINOR_PLANET"
+    argofperih: Angle
+    """Argument of perihelion"""
+    meandist: Annotated[float, NonNegativeFloat]
+    """Semi-major axis (AU)"""
+    meananom: Angle
+    """Mean anomaly"""
+
+
+class MpcCometTarget(_NonSiderealTarget):
+    scheme: Literal["MPC_COMET"] = "MPC_COMET"
+    argofperih: Angle
+    """Argument of perihelion"""
+    perihdist: Annotated[float, NonNegativeFloat]
+    """Perihelion distance (AU)"""
+    epochofperih: TimeMJD
+    """Epoch of perihelion (MJD)"""
+
+
+class GeocentricSatelliteTarget(BaseModel):
+    model_config = ConfigDict(validate_assignment=True)
+    name: Annotated[str, StringConstraints(max_length=50)]
+    type: Literal["SATELLITE"] = "SATELLITE"
+    altitude: Angle
+    """Altitude of this Target in decimal degrees"""
+    azimuth: Angle
+    """Azimuth of this Target in decimal degrees east of North"""
+    diff_altitude_rate: float
+    """Differential altitude rate (arcsec/s)"""
+    diff_azimuth_rate: float
+    """Differential azimuth rate (arcsec/s)"""
+    diff_epoch: float
+    """Reference time for non-sidereal motion (MJD)"""
+    diff_altitude_acceleration: float
+    """Differential altitude acceleration (arcsec/s^2)"""
+    diff_azimuth_acceleration: float
+    """Differential azimuth acceleration (arcsec/s^2)"""
+    extra_params: dict[Any, Any] = {}
+
+
+TARGET_TYPES = Union[
+    SiderealTarget,
+    AsaMajorPlanetTarget,
+    AsaMinorPlanetTarget,
+    AsaCometTarget,
+    JplMajorPlanetTarget,
+    JplMinorPlanetTarget,
+    MpcMinorPlanetTarget,
+    MpcCometTarget,
+    GeocentricSatelliteTarget,
+]

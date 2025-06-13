@@ -4,7 +4,7 @@ from annotated_types import Le
 from pydantic import BaseModel, ConfigDict
 from pydantic.types import NonNegativeInt, PositiveInt
 
-from aeonlib.models import SiderealTarget, NonSiderealTarget
+from aeonlib.models import TARGET_TYPES
 from aeonlib.ocs.target_models import Constraints
 from aeonlib.ocs.config_models import Roi
 
@@ -53,7 +53,7 @@ class Lco0M4ScicamQhy600(BaseModel):
     instrument_configs: list[Lco0M4ScicamQhy600Config] = []
     acquisition_config: Lco0M4ScicamQhy600AcquisitionConfig
     guiding_config: Lco0M4ScicamQhy600GuidingConfig
-    target: SiderealTarget | NonSiderealTarget
+    target: TARGET_TYPES
     constraints: Constraints
 
     config_class = Lco0M4ScicamQhy600Config
@@ -105,7 +105,7 @@ class Lco1M0NresScicam(BaseModel):
     instrument_configs: list[Lco1M0NresScicamConfig] = []
     acquisition_config: Lco1M0NresScicamAcquisitionConfig
     guiding_config: Lco1M0NresScicamGuidingConfig
-    target: SiderealTarget | NonSiderealTarget
+    target: TARGET_TYPES
     constraints: Constraints
 
     config_class = Lco1M0NresScicamConfig
@@ -158,7 +158,7 @@ class Lco1M0ScicamSinistro(BaseModel):
     instrument_configs: list[Lco1M0ScicamSinistroConfig] = []
     acquisition_config: Lco1M0ScicamSinistroAcquisitionConfig
     guiding_config: Lco1M0ScicamSinistroGuidingConfig
-    target: SiderealTarget | NonSiderealTarget
+    target: TARGET_TYPES
     constraints: Constraints
 
     config_class = Lco1M0ScicamSinistroConfig
@@ -212,7 +212,7 @@ class Lco2M0FloydsScicam(BaseModel):
     instrument_configs: list[Lco2M0FloydsScicamConfig] = []
     acquisition_config: Lco2M0FloydsScicamAcquisitionConfig
     guiding_config: Lco2M0FloydsScicamGuidingConfig
-    target: SiderealTarget | NonSiderealTarget
+    target: TARGET_TYPES
     constraints: Constraints
 
     config_class = Lco2M0FloydsScicamConfig
@@ -268,7 +268,7 @@ class Lco2M0ScicamMuscat(BaseModel):
     instrument_configs: list[Lco2M0ScicamMuscatConfig] = []
     acquisition_config: Lco2M0ScicamMuscatAcquisitionConfig
     guiding_config: Lco2M0ScicamMuscatGuidingConfig
-    target: SiderealTarget | NonSiderealTarget
+    target: TARGET_TYPES
     constraints: Constraints
 
     config_class = Lco2M0ScicamMuscatConfig
@@ -321,7 +321,7 @@ class LcoBlancoNewfirm(BaseModel):
     instrument_configs: list[LcoBlancoNewfirmConfig] = []
     acquisition_config: LcoBlancoNewfirmAcquisitionConfig
     guiding_config: LcoBlancoNewfirmGuidingConfig
-    target: SiderealTarget | NonSiderealTarget
+    target: TARGET_TYPES
     constraints: Constraints
 
     config_class = LcoBlancoNewfirmConfig

@@ -4,7 +4,7 @@ from annotated_types import Le
 from pydantic import BaseModel, ConfigDict
 from pydantic.types import NonNegativeInt, PositiveInt
 
-from aeonlib.models import SiderealTarget, NonSiderealTarget
+from aeonlib.models import TARGET_TYPES
 from aeonlib.ocs.target_models import Constraints
 from aeonlib.ocs.config_models import Roi
 
@@ -53,7 +53,7 @@ class SoarGhtsBluecam(BaseModel):
     instrument_configs: list[SoarGhtsBluecamConfig] = []
     acquisition_config: SoarGhtsBluecamAcquisitionConfig
     guiding_config: SoarGhtsBluecamGuidingConfig
-    target: SiderealTarget | NonSiderealTarget
+    target: TARGET_TYPES
     constraints: Constraints
 
     config_class = SoarGhtsBluecamConfig
@@ -107,7 +107,7 @@ class SoarGhtsBluecamImager(BaseModel):
     instrument_configs: list[SoarGhtsBluecamImagerConfig] = []
     acquisition_config: SoarGhtsBluecamImagerAcquisitionConfig
     guiding_config: SoarGhtsBluecamImagerGuidingConfig
-    target: SiderealTarget | NonSiderealTarget
+    target: TARGET_TYPES
     constraints: Constraints
 
     config_class = SoarGhtsBluecamImagerConfig
@@ -160,7 +160,7 @@ class SoarGhtsRedcam(BaseModel):
     instrument_configs: list[SoarGhtsRedcamConfig] = []
     acquisition_config: SoarGhtsRedcamAcquisitionConfig
     guiding_config: SoarGhtsRedcamGuidingConfig
-    target: SiderealTarget | NonSiderealTarget
+    target: TARGET_TYPES
     constraints: Constraints
 
     config_class = SoarGhtsRedcamConfig
@@ -214,7 +214,7 @@ class SoarGhtsRedcamImager(BaseModel):
     instrument_configs: list[SoarGhtsRedcamImagerConfig] = []
     acquisition_config: SoarGhtsRedcamImagerAcquisitionConfig
     guiding_config: SoarGhtsRedcamImagerGuidingConfig
-    target: SiderealTarget | NonSiderealTarget
+    target: TARGET_TYPES
     constraints: Constraints
 
     config_class = SoarGhtsRedcamImagerConfig
@@ -267,7 +267,7 @@ class SoarTriplespec(BaseModel):
     instrument_configs: list[SoarTriplespecConfig] = []
     acquisition_config: SoarTriplespecAcquisitionConfig
     guiding_config: SoarTriplespecGuidingConfig
-    target: SiderealTarget | NonSiderealTarget
+    target: TARGET_TYPES
     constraints: Constraints
 
     config_class = SoarTriplespecConfig
