@@ -3,6 +3,9 @@
 ## Adding a Facility
 Before implementing a new facility it may be worth studying the current facility implementations for common practices and examples.
 
+* [LcoFacility](./src/aeonlib/ocs/lco/facility.py)
+* [EsoFacility](./src/aeonlib/eso/facility.py)
+
 ### Declaring dependencies
 AEONlib uses [dependency groups](https://peps.python.org/pep-0735/) to separate the dependencies of each facility module. This is because it is unlikely that one will utilize all facilities offered by AEONlib. Because some facilities have completely unique transitive dependencies, this ends up saving a lot of unnecessary package installations.
 
