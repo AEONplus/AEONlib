@@ -1,5 +1,4 @@
 # Contribution Guide
-All contributions are subject to the code of conduct.
 
 ## Adding a Facility
 Before implementing a new facility it may be worth studying the current facility implementations for common practices and examples.
@@ -14,7 +13,7 @@ If the facility does need additional dependencies, add a group to `pyproject.tom
 ### Configuration values
 Most facilities will require some kind of runtime configuration, such as authentication keys. AEONlib leverages [pydantic-settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/) for settings management. Any facility that requires runtime configuration must place the keys in `src/aenlib/conf.py`. Reading from files or environmental variables directly inside a facility will not be accepted.
 
-Using to `conf.py` ensures that consumers have a consistent and facility agnostic means of providing configuration to AEONlib powered applications, whether it be via .env files, environmental variables, or direct instantiation. 
+Using to `conf.py` ensures that consumers have a consistent and facility agnostic means of providing configuration to AEONlib powered applications, whether it be via .env files, environmental variables, or direct instantiation.
 
 ### Define data models
 Facilities should attempt to avoid making excessive use of plain Python dictionaries or JSON to model data. Wherever possible leverage [Pydantic/](https://pydantic.dev/) to define types that consumers can pass to your facility functions. The more well defined your models, the better experience the facility users will have. Well defined models eliminate malformed data structures, prevent typos and provide code completion in developer tools. They can also provide rich validation rules, sometimes negating the need for online validation altogether.
@@ -33,7 +32,7 @@ The facility class should contain all of the business logic of consuming data mo
 This is the most loosely defined set of functionality as every facility is different. Here are a few guidelines:
 
 1. Embrace the [Principle of Least Surprise](https://en.wikipedia.org/wiki/Principle_of_least_astonishment). Does the facility already provide a client library or well known API? In most cases, it's preferable that it work similarly in AEONlib - thus creating less cognitive overhead for consumers of the facility API. This is more art than science, then again sometimes science is more art than science...
-2. Expose the full power of the facility. Facilities should not hide the details behind obtuse abstractions. Remember, the person using AEONlib to interact with a facility is a being of considerable intelligence. Provide convenient abstractions where possible but also allow access to the underlying details. This is a library, not an application.  
+2. Expose the full power of the facility. Facilities should not hide the details behind obtuse abstractions. Remember, the person using AEONlib to interact with a facility is a being of considerable intelligence. Provide convenient abstractions where possible but also allow access to the underlying details. This is a library, not an application.
 
 ### Add online tests
 It's important to include tests that prove that the facility is functional. Additionally, writing the tests is a good way to write the facility as it's being developed and it is good documentation of how it's meant to be used.
@@ -44,4 +43,3 @@ Online facility tests most likely require authentication credentials. It is _not
 
 ### Open a PR!
 We look forward to your contribution!
- 
