@@ -9,21 +9,21 @@ Before implementing a new facility it may be worth studying the current facility
 ### Declaring dependencies
 AEONlib uses [dependency groups](https://peps.python.org/pep-0735/) to separate the dependencies of each facility module. This is because it is unlikely that one will utilize all facilities offered by AEONlib. Because some facilities have completely unique transitive dependencies, this ends up saving a lot of unnecessary package installations.
 
-A facility might not need any additional dependencies - the base group includes [httpx](https://www.python-httpx.org/) for http requests and [Pydantic/](https://pydantic.dev/) for data de/serialization.
+A facility might not need any additional dependencies - the base group includes [httpx](https://www.python-httpx.org/) for http requests and [Pydantic](https://pydantic.dev/) for data de/serialization.
 
 If the facility does need additional dependencies, add a group to `pyproject.toml` and list them there. Afterward make a note in the facility's README section with the name of the group library consumers will need to install.
 
 ### Configuration values
 Most facilities will require some kind of runtime configuration, such as authentication keys. AEONlib leverages [pydantic-settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/) for settings management. Any facility that requires runtime configuration must place the keys in `src/aenlib/conf.py`. Reading from files or environmental variables directly inside a facility will not be accepted.
 
-Using to `conf.py` ensures that consumers have a consistent and facility agnostic means of providing configuration to AEONlib powered applications, whether it be via .env files, environmental variables, or direct instantiation.
+Using `conf.py` ensures that consumers have a consistent and facility agnostic means of providing configuration to AEONlib powered applications, whether it be via .env files, environmental variables, or direct instantiation.
 
 ### Define data models
-Facilities should attempt to avoid making excessive use of plain Python dictionaries or JSON to model data. Wherever possible leverage [Pydantic/](https://pydantic.dev/) to define types that consumers can pass to your facility functions. The more well defined your models, the better experience the facility users will have. Well defined models eliminate malformed data structures, prevent typos and provide code completion in developer tools. They can also provide rich validation rules, sometimes negating the need for online validation altogether.
+Facilities should attempt to avoid making excessive use of plain Python dictionaries or JSON to model data. Wherever possible leverage [Pydantic](https://pydantic.dev/) to define types that consumers can pass to your facility functions. The more well defined your models, the better experience the facility users will have. Well defined models eliminate malformed data structures, prevent typos and provide code completion in developer tools. They can also provide rich validation rules, sometimes negating the need for online validation altogether.
 
 AEONlib also provides several [data types](https://github.com/AEONplus/AEONlib/blob/main/src/aeonlib/types.py) that improve Pydantic models:
 1. `aeonlib.types.Time` using this type in a Pydantic model allows consumers to pass in `astropy.time.Time` objects as well as `datetime` objects. The facility can then decide how the time is serialized to match whatever specific format is required.
-2. `aeonlib.types.Angle` similarly to the `Time` type, this allows consumers to pass in `astropy.coordinates.Angle` types as well as floats, the facility can then decide how to serialize the type.
+2. `aeonlib.types.Angle` similarly to the `Time` type, this allows consumers to pass in `astropy.coordinates.Angle` types as well as floats in decimal degrees, the facility can then decide how to serialize the type.
 
 These types eliminate the need for the facility user to need to remember which exact format a facility requires (time in hms? Or ISO UTC?) and simply pass in higher level objects instead.
 
@@ -45,4 +45,4 @@ See the other facility's `test_online` modules for examples. Tests that use `pyt
 Online facility tests most likely require authentication credentials. It is _not_ necessary to include these credentials in any pull requests. However project maintainers may request them in order to verify such tests pass.
 
 ### Open a PR!
-We look forward to your contribution!
+We look forward to your contribution! Project owners will be notified when a PR is submitted and we will review them ASAP.
