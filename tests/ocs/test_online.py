@@ -16,9 +16,11 @@ import pytest
 
 from aeonlib.ocs.lco.facility import LcoFacility
 from aeonlib.ocs.request_models import RequestGroup
+from aeonlib.ocs.saao.facility import SAAOFacility
 from aeonlib.ocs.soar.facility import SoarFacility
 
 from .lco_requests import LCO_REQUESTS
+from .saao_requests import SAAO_REQUESTS
 from .soar_requests import SOAR_REQUESTS
 
 logger = logging.getLogger(__name__)
@@ -74,3 +76,21 @@ def test_submit_soar_request(soar_facility: SoarFacility):
     assert request_group_out.id
     assert request_group_out.state == "PENDING"
     assert request_group_out.created
+
+
+# SAAO works the same as LCO and SOAR
+
+
+@pytest.fixture
+def saao_facility() -> SAAOFacility:
+    return SAAOFacility()
+
+
+@pytest.mark.parametrize(
+    "request_group", SAAO_REQUESTS.values(), ids=SAAO_REQUESTS.keys()
+)
+def test_valid_saao_requests(saao_facility: SAAOFacility, request_group: RequestGroup):
+    valid, errors = saao_facility.validate_request_group(request_group)
+    if not valid:
+        logger.error("Online validation failed. Server response: %s", errors)
+    assert valid
