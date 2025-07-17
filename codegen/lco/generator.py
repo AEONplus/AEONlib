@@ -15,7 +15,7 @@ def get_modes(ins: dict, type: str) -> list[str]:
         return []
 
 
-def generate_instrument_configs(ins_s: str, soar: bool = False) -> str:
+def generate_instrument_configs(ins_s: str, facility: str) -> str:
     """
     Generate instrument models based on the output of the OCS
     instrument data endpoint. For LCO, this endpoint resides
@@ -37,12 +37,16 @@ def generate_instrument_configs(ins_s: str, soar: bool = False) -> str:
     template = j_env.get_template("instruments.jinja")
     ins_data = json.loads(ins_s)
     instruments = []
-    if soar:
+    if facility == "SOAR":
         prefix = ""
         filtered = {k: v for k, v in ins_data.items() if "soar" in k.lower()}
-    else:
+    elif facility == "LCO":
+        # LCO And SOAR share the same instruments endpoint, so we need to filter them out
         prefix = "Lco"
         filtered = {k: v for k, v in ins_data.items() if "soar" not in k.lower()}
+    else:
+        prefix = facility
+        filtered = ins_data
 
     # Instruments endpoint seems inconsistent, this should keep our output consistent
     ordered = dict(sorted(filtered.items()))
@@ -66,15 +70,16 @@ def generate_instrument_configs(ins_s: str, soar: bool = False) -> str:
             }
         )
 
-    return template.render(instruments=instruments, soar=soar)
+    return template.render(instruments=instruments, facility=facility)
 
 
 if __name__ == "__main__":
     try:
-        soar = sys.argv.pop(1) == "soar"
+        facility = sys.argv.pop(1)
+        # Accepts input from stdin or a file argument
+        with fileinput.input() as f:
+            ins_json = "".join(list(f))
+            sys.stdout.write(generate_instrument_configs(ins_json, facility=facility))
     except IndexError:
-        soar = False
-    # Accepts input from stdin or a file argument
-    with fileinput.input() as f:
-        ins_json = "".join(list(f))
-        sys.stdout.write(generate_instrument_configs(ins_json, soar=soar))
+        sys.stdout.write("Usage: python generator.py <facility>")
+        exit(1)
