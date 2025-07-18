@@ -18,14 +18,14 @@ target = SiderealTarget(
 
 window = Window(
     start=datetime.now(),
-    end=datetime.now() + timedelta(days=60),
+    end=datetime.now() + timedelta(days=7),
 )
 
 saao_sibonise_imager = RequestGroup(
     name="test",
     observation_type="NORMAL",
     operator="SINGLE",
-    proposal="TEST_PROPOSAL",
+    proposal="IO_support_2024-1",
     ipp_value=1.0,
     requests=[
         Request(
