@@ -190,3 +190,15 @@ lt_port: str = ""
 ```
 ### Helpful links
 * [LT Phase 2 Information](https://telescope.livjm.ac.uk/PropInst/Phase2/)
+
+
+## SAAO (South African Astronomical Observatory)
+
+### Configuration Values
+```python
+    saao_token: str = ""
+    saao_api_root: str = "https://ocsio.saao.ac.za/api/"
+```
+
+### Helpful links
+* [SAAO Observatory Control System](https://ocsio.saao.ac.za/create)

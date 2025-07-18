@@ -12,6 +12,7 @@ from pydantic.types import (
 
 from aeonlib.models import Window
 from aeonlib.ocs.lco.instruments import LCO_INSTRUMENTS
+from aeonlib.ocs.saao.instruments import SAAO_INSTRUMENTS
 from aeonlib.ocs.soar.instruments import SOAR_INSTRUMENTS
 
 
@@ -40,7 +41,8 @@ class Cadence(BaseModel):
 
 # Informs Pydantic which instrument configuration type should be used during parsing
 Configuration = Annotated[
-    Union[LCO_INSTRUMENTS, SOAR_INSTRUMENTS], Field(discriminator="instrument_type")
+    Union[LCO_INSTRUMENTS, SOAR_INSTRUMENTS, SAAO_INSTRUMENTS],
+    Field(discriminator="instrument_type"),
 ]
 
 
