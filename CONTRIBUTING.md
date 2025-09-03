@@ -14,7 +14,7 @@ A facility might not need any additional dependencies - the base group includes 
 If the facility does need additional dependencies, add a group to `pyproject.toml` and list them there. Afterward make a note in the facility's README section with the name of the group library consumers will need to install.
 
 ### Configuration values
-Most facilities will require some kind of runtime configuration, such as authentication keys. AEONlib leverages [pydantic-settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/) for settings management. Any facility that requires runtime configuration must place the keys in `src/aenlib/conf.py`. Reading from files or environmental variables directly inside a facility will not be accepted.
+Most facilities will require some kind of runtime configuration, such as authentication keys. AEONlib leverages [pydantic-settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/) for settings management. Any facility that requires runtime configuration must place the keys in `src/aeonlib/conf.py`. Reading from files or environmental variables directly inside a facility will not be accepted.
 
 Using `conf.py` ensures that consumers have a consistent and facility agnostic means of providing configuration to AEONlib powered applications, whether it be via .env files, environmental variables, or direct instantiation.
 
