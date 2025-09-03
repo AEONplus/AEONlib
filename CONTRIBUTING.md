@@ -7,7 +7,7 @@ Before implementing a new facility it may be worth studying the current facility
 * [EsoFacility](./src/aeonlib/eso/facility.py)
 
 ### Declaring dependencies
-AEONlib uses [dependency groups](https://peps.python.org/pep-0735/) to separate the dependencies of each facility module. This is because it is unlikely that one will utilize all facilities offered by AEONlib. Because some facilities have completely unique transitive dependencies, this ends up saving a lot of unnecessary package installations.
+AEONlib uses [optional dependencies](https://peps.python.org/pep-0631/) to separate the dependencies of each facility module. This is because it is unlikely that one will utilize all facilities offered by AEONlib. Because some facilities have completely unique transitive dependencies, this ends up saving a lot of unnecessary package installations.
 
 A facility might not need any additional dependencies - the base group includes [httpx](https://www.python-httpx.org/) for http requests and [Pydantic](https://pydantic.dev/) for data de/serialization.
 
