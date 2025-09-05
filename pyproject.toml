@@ -22,7 +22,10 @@ codegen = [
     "textcase>=0.2.1",
 ]
 
-dev = ["pytest>=8.3.5"]
+dev = [
+    "pytest>=8.3.5",
+    "ruff>=0.12.12",
+]
 
 [project.optional-dependencies]
 eso = ["p2api>=1.0.10"]
