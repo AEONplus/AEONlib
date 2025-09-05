@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.12"
 
 [[package]]
@@ -13,14 +13,7 @@ dependencies = [
     { name = "pydantic-settings" },
 ]
 
-[package.dev-dependencies]
-codegen = [
-    { name = "jinja2" },
-    { name = "textcase" },
-]
-dev = [
-    { name = "pytest" },
-]
+[package.optional-dependencies]
 eso = [
     { name = "p2api" },
 ]
@@ -30,13 +23,27 @@ lt = [
     { name = "suds" },
 ]
 
+[package.dev-dependencies]
+codegen = [
+    { name = "jinja2" },
+    { name = "textcase" },
+]
+dev = [
+    { name = "pytest" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "astropy", specifier = ">=7.0.1" },
     { name = "httpx", specifier = ">=0.28.1" },
+    { name = "lxml", marker = "extra == 'lt'", specifier = ">=5.4.0" },
+    { name = "lxml-stubs", marker = "extra == 'lt'", specifier = ">=0.5.1" },
+    { name = "p2api", marker = "extra == 'eso'", specifier = ">=1.0.10" },
     { name = "pydantic", specifier = ">=2.11.1" },
     { name = "pydantic-settings", specifier = ">=2.9.1" },
+    { name = "suds", marker = "extra == 'lt'", specifier = ">=1.2.0" },
 ]
+provides-extras = ["eso", "lt"]
 
 [package.metadata.requires-dev]
 codegen = [
@@ -44,12 +51,6 @@ codegen = [
     { name = "textcase", specifier = ">=0.2.1" },
 ]
 dev = [{ name = "pytest", specifier = ">=8.3.5" }]
-eso = [{ name = "p2api", specifier = ">=1.0.10" }]
-lt = [
-    { name = "lxml", specifier = ">=5.4.0" },
-    { name = "lxml-stubs", specifier = ">=0.5.1" },
-    { name = "suds", specifier = ">=1.2.0" },
-]
 
 [[package]]
 name = "annotated-types"

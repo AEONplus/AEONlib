@@ -151,7 +151,7 @@ Full documentation: TODO
 To use the ESO facility, you must install the `eso` group:
 ```bash
 pip install aeonlib[eso]
-uv sync --group eso
+uv sync --extra eso
 poetry install --with eso
 ```
 
@@ -176,7 +176,7 @@ eso_password: str = ""
 To use the LT facility, you must install the `lt` group:
 ```bash
 pip install aeonlib[lt]
-uv sync --group lt
+uv sync --extra lt
 poetry install --with lt
 ```
 ### Configuration Values
