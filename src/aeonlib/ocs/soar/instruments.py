@@ -144,7 +144,14 @@ class SoarGhtsRedcamConfig(BaseModel):
     """The number of exposures to take. This field must be set to a value greater than 0"""
     exposure_time: NonNegativeInt
     """ Exposure time in seconds"""
-    mode: Literal["GHTS_R_1200_CaNIR_6300A_1x2_slit0p8", "GHTS_R_400m1_2x2", "GHTS_R_400m2_2x2", "GHTS_R_1200_CaNIR_1x2_slit0p8", "GHTS_R_2100_5000A_1x2_slit1p0", "GHTS_R_2100_6507A_1x2_slit0p45"]
+    mode: Literal[
+        "GHTS_R_1200_CaNIR_6300A_1x2_slit0p8",
+        "GHTS_R_400m1_2x2",
+        "GHTS_R_400m2_2x2",
+        "GHTS_R_1200_CaNIR_1x2_slit0p8",
+        "GHTS_R_2100_5000A_1x2_slit1p0",
+        "GHTS_R_2100_6507A_1x2_slit0p45",
+    ]
     rotator_mode: Literal["SKY"]
     rois: list[Roi] | None = None
     extra_params: dict[Any, Any] = {}
@@ -251,7 +258,13 @@ class SoarTriplespecConfig(BaseModel):
     """The number of exposures to take. This field must be set to a value greater than 0"""
     exposure_time: NonNegativeInt
     """ Exposure time in seconds"""
-    mode: Literal["fowler1_coadds2", "fowler4_coadds1", "fowler8_coadds1", "fowler16_coadds1", "fowler1_coadds1"]
+    mode: Literal[
+        "fowler1_coadds2",
+        "fowler4_coadds1",
+        "fowler8_coadds1",
+        "fowler16_coadds1",
+        "fowler1_coadds1",
+    ]
     rotator_mode: Literal["SKY"]
     rois: list[Roi] | None = None
     extra_params: dict[Any, Any] = {}
