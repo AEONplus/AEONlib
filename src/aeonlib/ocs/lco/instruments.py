@@ -11,21 +11,7 @@ from aeonlib.ocs.config_models import Roi
 
 class Lco0M4ScicamQhy600OpticalElements(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    filter: Literal[
-        "OIII",
-        "SII",
-        "Astrodon-Exo",
-        "w",
-        "opaque",
-        "up",
-        "rp",
-        "ip",
-        "gp",
-        "zs",
-        "V",
-        "B",
-        "H-Alpha",
-    ]
+    filter: Literal["OIII", "SII", "Astrodon-Exo", "w", "opaque", "up", "rp", "ip", "gp", "zs", "V", "B", "H-Alpha"]
 
 
 class Lco0M4ScicamQhy600GuidingConfig(BaseModel):
@@ -60,9 +46,7 @@ class Lco0M4ScicamQhy600Config(BaseModel):
 
 class Lco0M4ScicamQhy600(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    type: Literal[
-        "EXPOSE", "REPEAT_EXPOSE", "AUTO_FOCUS", "BIAS", "DARK", "STANDARD", "SKY_FLAT"
-    ]
+    type: Literal["EXPOSE", "REPEAT_EXPOSE", "AUTO_FOCUS", "BIAS", "DARK", "STANDARD", "SKY_FLAT"]
     instrument_type: Literal["0M4-SCICAM-QHY600"] = "0M4-SCICAM-QHY600"
     repeat_duration: NonNegativeInt | None = None
     extra_params: dict[Any, Any] = {}
@@ -114,19 +98,7 @@ class Lco1M0NresScicamConfig(BaseModel):
 
 class Lco1M0NresScicam(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    type: Literal[
-        "NRES_SPECTRUM",
-        "REPEAT_NRES_SPECTRUM",
-        "NRES_EXPOSE",
-        "NRES_TEST",
-        "SCRIPT",
-        "ENGINEERING",
-        "ARC",
-        "LAMP_FLAT",
-        "NRES_BIAS",
-        "NRES_DARK",
-        "AUTO_FOCUS",
-    ]
+    type: Literal["NRES_SPECTRUM", "REPEAT_NRES_SPECTRUM", "NRES_EXPOSE", "NRES_TEST", "SCRIPT", "ENGINEERING", "ARC", "LAMP_FLAT", "NRES_BIAS", "NRES_DARK", "AUTO_FOCUS"]
     instrument_type: Literal["1M0-NRES-SCICAM"] = "1M0-NRES-SCICAM"
     repeat_duration: NonNegativeInt | None = None
     extra_params: dict[Any, Any] = {}
@@ -144,23 +116,7 @@ class Lco1M0NresScicam(BaseModel):
 
 class Lco1M0ScicamSinistroOpticalElements(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    filter: Literal[
-        "I",
-        "R",
-        "U",
-        "w",
-        "Y",
-        "up",
-        "rp",
-        "ip",
-        "gp",
-        "zs",
-        "V",
-        "B",
-        "400um-Pinhole",
-        "150um-Pinhole",
-        "CN",
-    ]
+    filter: Literal["I", "R", "U", "w", "Y", "up", "rp", "ip", "gp", "zs", "V", "B", "400um-Pinhole", "150um-Pinhole", "CN"]
 
 
 class Lco1M0ScicamSinistroGuidingConfig(BaseModel):
@@ -195,17 +151,7 @@ class Lco1M0ScicamSinistroConfig(BaseModel):
 
 class Lco1M0ScicamSinistro(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    type: Literal[
-        "EXPOSE",
-        "REPEAT_EXPOSE",
-        "BIAS",
-        "DARK",
-        "STANDARD",
-        "SCRIPT",
-        "AUTO_FOCUS",
-        "ENGINEERING",
-        "SKY_FLAT",
-    ]
+    type: Literal["EXPOSE", "REPEAT_EXPOSE", "BIAS", "DARK", "STANDARD", "SCRIPT", "AUTO_FOCUS", "ENGINEERING", "SKY_FLAT"]
     instrument_type: Literal["1M0-SCICAM-SINISTRO"] = "1M0-SCICAM-SINISTRO"
     repeat_duration: NonNegativeInt | None = None
     extra_params: dict[Any, Any] = {}
@@ -259,9 +205,7 @@ class Lco2M0FloydsScicamConfig(BaseModel):
 
 class Lco2M0FloydsScicam(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    type: Literal[
-        "SPECTRUM", "REPEAT_SPECTRUM", "ARC", "ENGINEERING", "SCRIPT", "LAMP_FLAT"
-    ]
+    type: Literal["SPECTRUM", "REPEAT_SPECTRUM", "ARC", "ENGINEERING", "SCRIPT", "LAMP_FLAT"]
     instrument_type: Literal["2M0-FLOYDS-SCICAM"] = "2M0-FLOYDS-SCICAM"
     repeat_duration: NonNegativeInt | None = None
     extra_params: dict[Any, Any] = {}
@@ -317,17 +261,7 @@ class Lco2M0ScicamMuscatConfig(BaseModel):
 
 class Lco2M0ScicamMuscat(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    type: Literal[
-        "EXPOSE",
-        "REPEAT_EXPOSE",
-        "BIAS",
-        "DARK",
-        "STANDARD",
-        "SCRIPT",
-        "AUTO_FOCUS",
-        "ENGINEERING",
-        "SKY_FLAT",
-    ]
+    type: Literal["EXPOSE", "REPEAT_EXPOSE", "BIAS", "DARK", "STANDARD", "SCRIPT", "AUTO_FOCUS", "ENGINEERING", "SKY_FLAT"]
     instrument_type: Literal["2M0-SCICAM-MUSCAT"] = "2M0-SCICAM-MUSCAT"
     repeat_duration: NonNegativeInt | None = None
     extra_params: dict[Any, Any] = {}
@@ -345,9 +279,7 @@ class Lco2M0ScicamMuscat(BaseModel):
 
 class LcoBlancoNewfirmOpticalElements(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    filter: Literal[
-        "JX", "HX", "KXs", "1187", "2096", "1644", "2124", "2168", "J1", "1066", "DARK"
-    ]
+    filter: Literal["JX", "HX", "KXs", "1187", "2096", "1644", "2124", "2168", "J1", "1066", "DARK"]
 
 
 class LcoBlancoNewfirmGuidingConfig(BaseModel):

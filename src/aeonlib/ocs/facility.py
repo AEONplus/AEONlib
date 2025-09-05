@@ -38,7 +38,9 @@ class OCSFacility:
 
     def __init__(self, settings=default_settings):
         headers = {"Authorization": f"Token {self.api_key(settings)}"}
-        self.client = httpx.Client(base_url=self.api_root(settings), headers=headers)
+        self.client = httpx.Client(
+            base_url=self.api_root(settings), headers=headers
+        )
 
     def __del__(self):
         self.client.close()
