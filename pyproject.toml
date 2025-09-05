@@ -23,6 +23,8 @@ codegen = [
 ]
 
 dev = ["pytest>=8.3.5"]
+
+[project.optional-dependencies]
 eso = ["p2api>=1.0.10"]
 lt = [
     "lxml>=5.4.0",

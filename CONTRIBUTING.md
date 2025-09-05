@@ -7,14 +7,14 @@ Before implementing a new facility it may be worth studying the current facility
 * [EsoFacility](./src/aeonlib/eso/facility.py)
 
 ### Declaring dependencies
-AEONlib uses [dependency groups](https://peps.python.org/pep-0735/) to separate the dependencies of each facility module. This is because it is unlikely that one will utilize all facilities offered by AEONlib. Because some facilities have completely unique transitive dependencies, this ends up saving a lot of unnecessary package installations.
+AEONlib uses [optional dependencies](https://peps.python.org/pep-0631/) to separate the dependencies of each facility module. This is because it is unlikely that one will utilize all facilities offered by AEONlib. Because some facilities have completely unique transitive dependencies, this ends up saving a lot of unnecessary package installations.
 
 A facility might not need any additional dependencies - the base group includes [httpx](https://www.python-httpx.org/) for http requests and [Pydantic](https://pydantic.dev/) for data de/serialization.
 
 If the facility does need additional dependencies, add a group to `pyproject.toml` and list them there. Afterward make a note in the facility's README section with the name of the group library consumers will need to install.
 
 ### Configuration values
-Most facilities will require some kind of runtime configuration, such as authentication keys. AEONlib leverages [pydantic-settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/) for settings management. Any facility that requires runtime configuration must place the keys in `src/aenlib/conf.py`. Reading from files or environmental variables directly inside a facility will not be accepted.
+Most facilities will require some kind of runtime configuration, such as authentication keys. AEONlib leverages [pydantic-settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/) for settings management. Any facility that requires runtime configuration must place the keys in `src/aeonlib/conf.py`. Reading from files or environmental variables directly inside a facility will not be accepted.
 
 Using `conf.py` ensures that consumers have a consistent and facility agnostic means of providing configuration to AEONlib powered applications, whether it be via .env files, environmental variables, or direct instantiation.
 
