@@ -2,9 +2,14 @@
 
 from __future__ import annotations
 
-from typing import Literal
+from typing import Literal, Self
+
+from pydantic import BaseModel, NonNegativeFloat, model_validator
 
 from aeonlib.models import SiderealTarget
+
+
+Bandpass = Literal["U", "B", "V", "R", "I"]
 
 
 class SaltSiderealTarget(SiderealTarget):
@@ -25,7 +30,41 @@ class SaltSiderealTarget(SiderealTarget):
     """
 
     target_type: TargetType
-    magnitude_range: None
+    magnitude_range: MagnitudeRange
+
+
+class MagnitudeRange(BaseModel):
+    """
+    A magnitude range.
+
+    The minimum (brightest) and maximum (faintest) magnitude must be give for a
+    particular bandpass filter.
+
+    Attributes
+    ----------
+    min_magnitude
+        Minimum (brightest) magnitude.
+    max_magnitude
+        Maximum (faintest) magnitude. This must be greater than or equal to the minimum
+        magnitude.
+    bandpass
+        Bandpass filter for which the magnitude range is given.
+    """
+
+    min_magnitude: NonNegativeFloat
+
+    max_magnitude: NonNegativeFloat
+
+    bandpass: Bandpass
+
+    @model_validator(mode="after")
+    def check_max_magnitude_is_at_least_min_magnitude(self) -> Self:
+        if self.min_magnitude > self.max_magnitude:
+            raise ValueError(
+                "max_magnitude must be greater than or equal to min_magnitude."
+            )
+
+        return self
 
 
 TargetType = Literal[

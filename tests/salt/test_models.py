@@ -3,7 +3,7 @@ from contextlib import nullcontext
 import pytest
 from pydantic import ValidationError
 
-from aeonlib.salt.models import Request, Block, SaltSiderealTarget
+from aeonlib.salt.models import Request, Block, MagnitudeRange, SaltSiderealTarget
 
 
 @pytest.fixture()
@@ -28,7 +28,7 @@ def base_block(base_target):
 
 
 @pytest.fixture()
-def base_target():
+def base_target(base_magnitude_range):
     """A simple sidereal target to build or edit from."""
     return SaltSiderealTarget(
         name="Test Target",
@@ -36,8 +36,14 @@ def base_target():
         ra=0,
         dec=0,
         target_type="Nova",
-        magnitude_range=None,
+        magnitude_range=base_magnitude_range,
     )
+
+
+@pytest.fixture()
+def base_magnitude_range():
+    """A simple magnitude range to build or edit from."""
+    return MagnitudeRange(min_magnitude=17.1, max_magnitude=17.5, bandpass="V")
 
 
 class TestRequest:
@@ -87,4 +93,30 @@ class TestBlock:
 class TestSaltSiderealTarget:
     def test_salt_sidereal_target(self, base_target):
         """Test that a simple target can be built."""
+        assert True
+
+
+class TestMagnitudeRange:
+    def test_magnitude_range(self, base_magnitude_range):
+        """Test that a simple magnitude range can be built."""
+        assert True
+
+    @pytest.mark.parametrize(
+        "min_magnitude, max_magnitude, expectation",
+        [
+            (17.1, 17.4, nullcontext()),
+            (17.1, 17.1, nullcontext()),
+            (17.1, 17.09, pytest.raises(ValidationError, match="greater than")),
+        ],
+    )
+    def test_min_and_max_magnitude(
+        self, min_magnitude, max_magnitude, expectation, base_magnitude_range
+    ):
+        magnitude_range = base_magnitude_range.model_dump()
+        magnitude_range["min_magnitude"] = min_magnitude
+        magnitude_range["max_magnitude"] = max_magnitude
+
+        with expectation:
+            MagnitudeRange(**magnitude_range)
+
         assert True
