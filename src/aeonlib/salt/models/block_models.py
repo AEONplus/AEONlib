@@ -8,6 +8,7 @@ from annotated_types import Ge, Le
 from pydantic import BaseModel, NonNegativeInt, PositiveInt, model_validator
 
 from aeonlib.models import Window
+from aeonlib.salt.models import SaltSiderealTarget
 
 
 class Block(BaseModel):
@@ -93,7 +94,7 @@ class Block(BaseModel):
     min_nights_between_visits: NonNegativeInt = 0
     constraints: None
     windows: list[Window] | None = None
-    target: None
+    target: SaltSiderealTarget
     acquisition: None
     instrument: None
     pool: str | None = None

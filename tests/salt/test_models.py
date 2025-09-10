@@ -3,7 +3,7 @@ from contextlib import nullcontext
 import pytest
 from pydantic import ValidationError
 
-from aeonlib.salt.models import Request, Block
+from aeonlib.salt.models import Request, Block, SaltSiderealTarget
 
 
 @pytest.fixture()
@@ -13,7 +13,7 @@ def base_request(base_block):
 
 
 @pytest.fixture()
-def base_block():
+def base_block(base_target):
     """A simple block to build or edit from."""
     return Block(
         name="Test",
@@ -21,9 +21,22 @@ def base_block():
         ranking="high",
         num_visits=1,
         constraints=None,
-        target=None,
+        target=base_target,
         acquisition=None,
         instrument=None,
+    )
+
+
+@pytest.fixture()
+def base_target():
+    """A simple sidereal target to build or edit from."""
+    return SaltSiderealTarget(
+        name="Test Target",
+        type="ICRS",
+        ra=0,
+        dec=0,
+        target_type="Nova",
+        magnitude_range=None,
     )
 
 
@@ -68,4 +81,10 @@ class TestBlock:
         with expectation:
             Block(**block)
 
+        assert True
+
+
+class TestSaltSiderealTarget:
+    def test_salt_sidereal_target(self, base_target):
+        """Test that a simple target can be built."""
         assert True
