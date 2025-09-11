@@ -1,9 +1,16 @@
 from contextlib import nullcontext
 
+import astropy.units as u
 import pytest
 from pydantic import ValidationError
 
-from aeonlib.salt.models import Request, Block, MagnitudeRange, SaltSiderealTarget
+from aeonlib.salt.models import (
+    Request,
+    Block,
+    MagnitudeRange,
+    SaltSiderealTarget,
+    Constraints,
+)
 
 
 @pytest.fixture()
@@ -44,6 +51,16 @@ def base_target(base_magnitude_range):
 def base_magnitude_range():
     """A simple magnitude range to build or edit from."""
     return MagnitudeRange(min_magnitude=17.1, max_magnitude=17.5, bandpass="V")
+
+
+@pytest.fixture()
+def base_constraints():
+    return Constraints(
+        transparency="thick cloud",
+        max_lunar_phase_percentage=50,
+        min_lunar_distance=45 * u.deg,
+        max_seeing=3,
+    )
 
 
 class TestRequest:
@@ -112,6 +129,9 @@ class TestMagnitudeRange:
     def test_min_and_max_magnitude(
         self, min_magnitude, max_magnitude, expectation, base_magnitude_range
     ):
+        """
+        Test that the maximum magnitude must not be less than the minimum magnitude.
+        """
         magnitude_range = base_magnitude_range.model_dump()
         magnitude_range["min_magnitude"] = min_magnitude
         magnitude_range["max_magnitude"] = max_magnitude
@@ -119,4 +139,10 @@ class TestMagnitudeRange:
         with expectation:
             MagnitudeRange(**magnitude_range)
 
+        assert True
+
+
+class TestConstraints:
+    def test_constraints(self, base_constraints):
+        """Test that constraints can be built."""
         assert True

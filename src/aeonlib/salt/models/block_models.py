@@ -4,11 +4,22 @@ from __future__ import annotations
 
 from typing import Annotated, Literal, Self
 
+import astropy.units as u
 from annotated_types import Ge, Le
-from pydantic import BaseModel, NonNegativeInt, PositiveInt, model_validator
+from pydantic import (
+    BaseModel,
+    NonNegativeInt,
+    NonNegativeFloat,
+    PositiveInt,
+    PositiveFloat,
+    model_validator,
+)
 
-from aeonlib.models import Window
+from aeonlib.models import Angle, Window
 from aeonlib.salt.models import SaltSiderealTarget
+from aeonlib.salt.validators import GreaterEqual, LessEqual
+
+Transparency = Literal["clear", "thin cloud", "thick cloud", "any"]
 
 
 class Block(BaseModel):
@@ -109,3 +120,42 @@ class Block(BaseModel):
                 )
 
         return self
+
+
+class Constraints(BaseModel):
+    """
+    Observing constraints.
+
+    An observation can be constrained by the sky transparency, the Moon phase, the lunar
+    distance and the seeing.
+
+    The lunar phase is specified in terms of what percentage p of the lunar disk is
+    illuminated. For New Moon p is 0, for Full Moon it is 100. In general, p and the
+    lunar elongation e (i.e., the angle between Sun, observer on Earth and Moon) are
+    related by p = 100% * (1 - cos(e)) / 2.
+
+    The lunar distance is the angle between the target to observe, Earth and Moon.
+
+    The lunar phase and distance are only relevant if the Moon is above the horizon.
+
+    The seeing must be given for the zenith.
+
+    Attributes
+    ----------
+    transparency
+        Required sky transparency.
+    max_lunar_phase_percentage
+        Maximum allowed Lunar phase, as a percentage. This is the percentage of the
+        lunar disk which is illuminated.
+    min_lunar_distance
+        Minimum required lunar distance.
+    max_seeing
+        Maximum allowed seeing.
+    """
+
+    transparency: Transparency
+    max_lunar_phase_percentage: Annotated[NonNegativeFloat, LessEqual(100)]
+    min_lunar_distance: Annotated[
+        Angle, GreaterEqual(0 * u.deg), LessEqual(180 * u.deg)
+    ]
+    max_seeing: PositiveFloat
