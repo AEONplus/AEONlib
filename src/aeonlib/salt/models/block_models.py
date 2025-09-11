@@ -16,9 +16,8 @@ from pydantic import (
 
 from aeonlib.models import Angle, Window
 from aeonlib.salt.models import SaltSiderealTarget
+from aeonlib.salt.models.types import SkyTransparency
 from aeonlib.salt.validators import GreaterEqual, LessEqual
-
-Transparency = Literal["clear", "thin cloud", "thick cloud", "any"]
 
 
 class Block(BaseModel):
@@ -152,7 +151,7 @@ class Constraints(BaseModel):
         Maximum allowed seeing.
     """
 
-    transparency: Transparency
+    transparency: SkyTransparency
     max_lunar_phase_percentage: Annotated[NonNegativeFloat, LessEqual(100)]
     min_lunar_distance: Annotated[
         Angle, GreaterEqual(0 * u.deg), LessEqual(180 * u.deg)
