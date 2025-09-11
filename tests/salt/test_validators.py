@@ -24,6 +24,10 @@ class TestValidators:
         with expectation:
             GreaterEqualModel(a=a)
 
+    def test_greater_equal_does_not_change_field_value(self):
+        """Test that the field value is not changed by the GreaterEqual validator."""
+        assert GreaterEqualModel(a=7).a == 7
+
     @pytest.mark.parametrize(
         "a, expectation",
         [(3, nullcontext()), (4, nullcontext()), (5, pytest.raises(ValidationError))],
@@ -31,3 +35,7 @@ class TestValidators:
     def test_less_equal(self, a, expectation):
         with expectation:
             LessEqualModel(a=a)
+
+    def test_less_equal_does_not_change_field_value(self):
+        """Test that the field value is not changed by the LessEqual validator."""
+        assert LessEqualModel(a=2).a == 2

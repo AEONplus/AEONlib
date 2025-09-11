@@ -5,14 +5,16 @@ from typing import Any
 from pydantic import AfterValidator
 
 
-def _check_ge(a: Any, b: Any) -> None:
+def _check_ge(a: Any, b: Any) -> Any:
     if a < b:
         raise ValueError(f"{a} is not greater than or equal to {b}.")
+    return a
 
 
 def _check_le(a: Any, b: Any) -> None:
     if a > b:
         raise ValueError(f"{a} is not less than or equal to {b}.")
+    return a
 
 
 def GreaterEqual(value: Any):
