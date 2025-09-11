@@ -43,3 +43,10 @@ log_cli_format = "%(levelname)s [%(name)s %(filename)s:%(lineno)s %(funcName)s()
 
 [tool.ruff.lint]
 exclude = ["*.ipynb"]
+
+[tool.ruff.format]
+exclude = [
+    "*.ipynb",
+    "src/aeonlib/ocs/lco/instruments.py",
+    "src/aeonlib/ocs/soar/instruments.py",
+]
