@@ -5,7 +5,6 @@ from __future__ import annotations
 from typing import Annotated, Literal, Self
 
 import astropy.units as u
-from annotated_types import Ge, Le
 from pydantic import (
     BaseModel,
     NonNegativeInt,
@@ -98,7 +97,7 @@ class Block(BaseModel):
     name: str
     identifier: str | None = None
     comments: str | None = None
-    priority: Annotated[int, Ge(0), Le(4)]
+    priority: Annotated[int, GreaterEqual(0), LessEqual(4)]
     ranking: Literal["high", "medium", "low"]
     num_visits: PositiveInt
     max_num_visits: PositiveInt | None = None
