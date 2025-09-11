@@ -58,7 +58,7 @@ def base_constraints():
     return Constraints(
         transparency="thick cloud",
         max_lunar_phase_percentage=50,
-        min_lunar_distance=45 * u.deg,
+        min_lunar_distance=astropy.coordinates.Angle("45d"),
         max_seeing=3,
     )
 
