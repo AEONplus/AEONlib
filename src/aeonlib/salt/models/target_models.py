@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import Literal, Self
 
+import astropy.units as u
 from pydantic import BaseModel, NonNegativeFloat, model_validator
 
 from aeonlib.models import SiderealTarget
@@ -31,6 +32,13 @@ class SaltSiderealTarget(SiderealTarget):
 
     target_type: TargetType
     magnitude_range: MagnitudeRange
+
+    @model_validator(mode="after")
+    def check_target_viewable(self):
+        if self.ra < -76 * u.deg or self.ra > 11 * u.deg:
+            raise ValueError("ra not between -76 and 11 degrees.")
+
+        return self
 
 
 class MagnitudeRange(BaseModel):

@@ -1,5 +1,6 @@
 from contextlib import nullcontext
 
+import astropy.coordinates
 import astropy.units as u
 import pytest
 from pydantic import ValidationError
@@ -111,6 +112,22 @@ class TestSaltSiderealTarget:
     def test_salt_sidereal_target(self, base_target):
         """Test that a simple target can be built."""
         assert True
+
+    @pytest.mark.parametrize(
+        "ra, expectation",
+        [
+            (astropy.coordinates.Angle("-76.001d"), pytest.raises(ValueError)),
+            (astropy.coordinates.Angle("-76d"), nullcontext()),
+            (astropy.coordinates.Angle("11d"), nullcontext()),
+            (astropy.coordinates.Angle("11.0001d"), pytest.raises(ValueError)),
+        ],
+    )
+    def test_ra_range(self, ra, expectation, base_target):
+        """Test that the right ascension must be between -76 and 11 degrees."""
+        target = base_target.model_dump()
+        target["ra"] = ra
+        with expectation:
+            SaltSiderealTarget(**target)
 
 
 class TestMagnitudeRange:
