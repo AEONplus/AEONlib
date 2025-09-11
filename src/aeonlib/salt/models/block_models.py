@@ -112,7 +112,7 @@ class Block(BaseModel):
 
     @model_validator(mode="after")
     def check_max_num_visits_is_at_least_num_visits(self) -> Self:
-        if self.max_num_visits:
+        if self.max_num_visits is not None:
             if self.max_num_visits < self.num_visits:
                 raise ValueError(
                     "max_num_visits must be greater than or equal to num_visits."
