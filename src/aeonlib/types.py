@@ -4,6 +4,7 @@ from typing import Annotated, Any, Type, Union, cast
 
 import astropy.coordinates
 import astropy.time
+from astropy.units import Quantity
 from pydantic import GetCoreSchemaHandler, GetJsonSchemaHandler
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import core_schema
@@ -177,11 +178,23 @@ class _AstropyAngleType:
     ) -> core_schema.CoreSchema:
         """https://docs.pydantic.dev/latest/concepts/types/#handling-third-party-types"""
 
+        def validate_from_quantity(
+            angle_value: Quantity,
+        ) -> astropy.coordinates.Angle:
+            return astropy.coordinates.Angle(angle_value)
+
         def validate_from_str(angle_value: str) -> astropy.coordinates.Angle:
             return astropy.coordinates.Angle(angle_value)
 
         def validate_from_float(angle_value: float) -> astropy.coordinates.Angle:
             return astropy.coordinates.Angle(angle_value, unit="deg")
+
+        quantity_schema = core_schema.chain_schema(
+            [
+                core_schema.is_instance_schema(Quantity),
+                core_schema.no_info_plain_validator_function(validate_from_quantity),
+            ]
+        )
 
         str_schema = core_schema.chain_schema(
             [
@@ -205,6 +218,7 @@ class _AstropyAngleType:
             python_schema=core_schema.union_schema(
                 [
                     core_schema.is_instance_schema(astropy.coordinates.Angle),
+                    quantity_schema,
                     str_schema,
                     float_schema,
                 ]
@@ -228,4 +242,7 @@ class _AstropyAngleType:
 
 Time = Annotated[Union[astropy.time.Time, datetime], _AstropyTimeType]
 TimeMJD = Annotated[Union[astropy.time.Time, datetime, float], _AstropyTimeMJDType]
-Angle = Annotated[Union[astropy.coordinates.Angle, str, float], _AstropyAngleType]
+Angle = Annotated[
+    Union[astropy.coordinates.Angle, Quantity, str, float],
+    _AstropyAngleType,
+]
