@@ -19,7 +19,7 @@ def _check_le(a: Any, b: Any) -> None:
 
 def GreaterEqual(value: Any):
     """
-    Return a Pydantic validator for checking a greater or equal than relation.
+    Return a Pydantic validator for checking a greater than or equal to relation.
 
     The returned validator can be used in a type annotation::
 
@@ -49,7 +49,7 @@ def GreaterEqual(value: Any):
 
 def LessEqual(value: Any):
     """
-    Return a Pydantic validator for checking a less or equal than relation.
+    Return a Pydantic validator for checking a less than or equal to relation.
 
     The returned validator can be used in a type annotation::
 
