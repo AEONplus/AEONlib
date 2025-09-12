@@ -101,7 +101,7 @@ class Block(BaseModel):
     num_visits: PositiveInt
     max_num_visits: PositiveInt | None = None
     min_nights_between_visits: NonNegativeInt = 0
-    constraints: None
+    constraints: Constraints
     windows: list[Window] | None = None
     target: SaltSiderealTarget
     acquisition: None

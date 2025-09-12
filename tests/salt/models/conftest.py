@@ -17,14 +17,14 @@ def base_request(base_block):
 
 
 @pytest.fixture()
-def base_block(base_target):
+def base_block(base_constraints, base_target):
     """A simple block to build or edit from."""
     return Block(
         name="Test",
         priority=1,
         ranking="high",
         num_visits=1,
-        constraints=None,
+        constraints=base_constraints,
         target=base_target,
         acquisition=None,
         instrument=None,
