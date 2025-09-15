@@ -7,6 +7,7 @@ from typing import Annotated, Literal, Self
 import astropy.units as u
 from pydantic import (
     BaseModel,
+    FilePath,
     NonNegativeInt,
     NonNegativeFloat,
     PositiveInt,
@@ -16,8 +17,8 @@ from pydantic import (
 
 from aeonlib.models import Angle, Window
 from aeonlib.salt.models import SaltSiderealTarget
-from aeonlib.salt.models.types import SkyTransparency
-from aeonlib.salt.validators import GreaterEqual, LessEqual
+from aeonlib.salt.models.types import SalticamFilter, SkyTransparency
+from aeonlib.salt.validators import GreaterEqual, GreaterThan, LessEqual
 
 
 class Block(BaseModel):
@@ -157,3 +158,39 @@ class Constraints(BaseModel):
         Angle, GreaterEqual(0 * u.deg), LessEqual(180 * u.deg)
     ]
     max_seeing: PositiveFloat
+
+
+class Acquisition(BaseModel):
+    """
+    An acquisition.
+
+    By default, SALT acquisitions are taken with a Johnson V filter and a (nominal)
+    exposure time of 1 second, but you may choose a different filter or explicitly set
+    an exposure time.
+
+    The acquisition image is not taken in focus. If you require an in-focus image as
+    well, you must explicitly request it.
+
+    A finder chart will automatically be generated during submission. However, you may
+    include additional finder charts, for example if your target is a transient and
+    hence will not show on the automatically generate finder charts.
+
+    Attributes
+    ----------
+    finder_charts
+        Additional finder charts. The specified files must exist.
+    filter
+        Filter to use for the acquisition. Any Salticam filter may be used.
+    exposure_time
+        Exposure time to use for the acquisition.
+    reference_star
+        Reference star on which to acquire. This is only needed if acquiring on the
+        target itself is unfeasible.
+    include_in_focus_image
+        Whether an in-focus acquisition image is required.
+    """
+    finder_charts: list[FilePath]
+    filter: SalticamFilter = "Johnson V"
+    exposure_time: float = 1.
+    reference_star: None
+    include_focused_image: bool = False

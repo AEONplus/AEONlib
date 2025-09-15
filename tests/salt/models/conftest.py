@@ -1,3 +1,5 @@
+import pathlib
+
 import astropy.coordinates
 import pytest
 
@@ -8,6 +10,7 @@ from aeonlib.salt.models import (
     SaltSiderealTarget,
     Constraints,
 )
+from aeonlib.salt.models.block_models import Acquisition
 
 
 @pytest.fixture()
@@ -57,4 +60,14 @@ def base_constraints():
         max_lunar_phase_percentage=50,
         min_lunar_distance=astropy.coordinates.Angle("45d"),
         max_seeing=3,
+    )
+
+
+@pytest.fixture()
+def base_acquisition():
+    finder_chart = (
+        pathlib.Path(__file__).parent.parent / "data" / "dummy_finder_chart.pdf"
+    )
+    return Acquisition(
+        finder_charts=[finder_chart], reference_star=None, include_focused_image=False
     )

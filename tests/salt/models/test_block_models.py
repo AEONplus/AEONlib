@@ -41,3 +41,9 @@ class TestConstraints:
     def test_constraints(self, base_constraints):
         """Test that constraints can be built."""
         assert True
+
+
+class TestAcquisition:
+    def test_acquisition(self, base_acquisition):
+        """Test that acquisitions can be built."""
+        assert True
