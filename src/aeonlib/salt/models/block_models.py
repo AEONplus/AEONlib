@@ -17,8 +17,8 @@ from pydantic import (
 
 from aeonlib.models import Angle, Window
 from aeonlib.salt.models import SaltSiderealTarget
-from aeonlib.salt.models.types import SalticamFilter, SkyTransparency
-from aeonlib.salt.validators import GreaterEqual, GreaterThan, LessEqual
+from aeonlib.salt.models.types import PositiveDuration, SalticamFilter, SkyTransparency
+from aeonlib.salt.validators import GreaterEqual, LessEqual
 
 
 class Block(BaseModel):
@@ -192,6 +192,6 @@ class Acquisition(BaseModel):
 
     finder_charts: list[FilePath]
     filter: SalticamFilter = "Johnson V"
-    exposure_time: float = 1.0
+    exposure_time: PositiveDuration = 1.0 * u.s
     reference_star: None
     include_focused_image: bool = False
