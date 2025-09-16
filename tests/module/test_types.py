@@ -1,9 +1,11 @@
 import json
+import math
 from datetime import datetime
 
 import pytest
 from astropy.coordinates import Angle
 from astropy.time import Time
+from astropy import units as u
 from pydantic import BaseModel
 
 import aeonlib.types
@@ -99,6 +101,26 @@ class TestAstropyAngle:
         t = Target(ra=Angle(10, unit="deg"), dec=Angle(20, unit="deg"))
         dumped = t.model_dump_json()
         assert dumped == '{"ra":10.0,"dec":20.0}'
+
+    def test_from_quantity(self):
+        """
+        Test angles constructed from astropy Quantity objects dump to json as formatted
+        strings
+        """
+        t = Target(ra=10.5 * u.deg, dec=20 * (math.pi / 180) * u.rad)
+        dumped = t.model_dump_json()
+        assert dumped == '{"ra":10.5,"dec":20.0}'
+
+    def test_quantity_conversion(self):
+        """
+        Test angles constructed from astropy Quantity objects are converted to a
+        corresponding AstroPy Angle object
+        """
+        t = Target(ra=40 * u.deg, dec=-76.8 * (math.pi / 180) * u.rad)
+        assert isinstance(t.ra, Angle)
+        assert pytest.approx(t.ra.to(u.deg).value) == 40
+        assert pytest.approx(t.dec.to(u.deg).value) == -76.8
+        assert isinstance(t.dec, Angle)
 
     def test_from_str(self):
         """Test angles constructed from strings dump to json as formatted strings"""
