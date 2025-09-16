@@ -189,8 +189,9 @@ class Acquisition(BaseModel):
     include_in_focus_image
         Whether an in-focus acquisition image is required.
     """
+
     finder_charts: list[FilePath]
     filter: SalticamFilter = "Johnson V"
-    exposure_time: float = 1.
+    exposure_time: float = 1.0
     reference_star: None
     include_focused_image: bool = False
