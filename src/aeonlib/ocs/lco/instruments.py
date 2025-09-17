@@ -279,59 +279,6 @@ class Lco2M0ScicamMuscat(BaseModel):
     optical_elements_class = Lco2M0ScicamMuscatOpticalElements
 
 
-class LcoBlancoNewfirmOpticalElements(BaseModel):
-    model_config = ConfigDict(validate_assignment=True)
-    filter: Literal["JX", "HX", "KXs"]
-
-
-class LcoBlancoNewfirmGuidingConfig(BaseModel):
-    model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["ON"]
-    optional: bool
-    """Whether the guiding is optional or not"""
-    exposure_time: Annotated[int, NonNegativeInt, Le(120)] | None = None
-    """Guiding exposure time"""
-    extra_params: dict[Any, Any] = {}
-
-
-class LcoBlancoNewfirmAcquisitionConfig(BaseModel):
-    model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["MANUAL"]
-    exposure_time: Annotated[int, NonNegativeInt, Le(60)] | None = None
-    """Acquisition exposure time"""
-    extra_params: dict[Any, Any] = {}
-
-
-class LcoBlancoNewfirmConfig(BaseModel):
-    model_config = ConfigDict(validate_assignment=True)
-    exposure_count: PositiveInt
-    """The number of exposures to take. This field must be set to a value greater than 0"""
-    exposure_time: NonNegativeInt
-    """ Exposure time in seconds"""
-    mode: Literal["fowler1", "fowler2"]
-    rois: list[Roi] | None = None
-    extra_params: dict[Any, Any] = {}
-    optical_elements: LcoBlancoNewfirmOpticalElements
-
-
-class LcoBlancoNewfirm(BaseModel):
-    model_config = ConfigDict(validate_assignment=True)
-    type: Literal["EXPOSE", "SKY_FLAT", "STANDARD", "DARK"]
-    instrument_type: Literal["BLANCO_NEWFIRM"] = "BLANCO_NEWFIRM"
-    repeat_duration: NonNegativeInt | None = None
-    extra_params: dict[Any, Any] = {}
-    instrument_configs: list[LcoBlancoNewfirmConfig] = []
-    acquisition_config: LcoBlancoNewfirmAcquisitionConfig
-    guiding_config: LcoBlancoNewfirmGuidingConfig
-    target: TARGET_TYPES
-    constraints: Constraints
-
-    config_class = LcoBlancoNewfirmConfig
-    guiding_config_class = LcoBlancoNewfirmGuidingConfig
-    acquisition_config_class = LcoBlancoNewfirmAcquisitionConfig
-    optical_elements_class = LcoBlancoNewfirmOpticalElements
-
-
 # Export a type that encompasses all instruments
 LCO_INSTRUMENTS = Union[
     Lco0M4ScicamQhy600,
@@ -339,5 +286,4 @@ LCO_INSTRUMENTS = Union[
     Lco1M0ScicamSinistro,
     Lco2M0FloydsScicam,
     Lco2M0ScicamMuscat,
-    LcoBlancoNewfirm,
 ]
