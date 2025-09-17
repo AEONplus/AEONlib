@@ -24,4 +24,4 @@ class SoarFacility(OCSFacility):
             return settings.soar_token
 
     def api_root(self, settings: Settings) -> str:
-        return settings.lco_api_root
+        return settings.soar_api_root
