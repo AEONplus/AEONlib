@@ -11,6 +11,7 @@ from aeonlib.salt.models import (
     MagnitudeRange,
     ReferenceStar,
     Request,
+    Salticam,
     SaltSiderealTarget,
 )
 
@@ -76,3 +77,8 @@ def base_acquisition():
 @pytest.fixture()
 def base_reference_star():
     return ReferenceStar(ra=117.564 * u.deg, dec=-63.9 * u.deg)
+
+
+@pytest.fixture()
+def base_salticam():
+    return Salticam(filter_sequence=[None], detector=None, include_flats=True)
