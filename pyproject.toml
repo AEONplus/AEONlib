@@ -49,4 +49,5 @@ exclude = [
     "*.ipynb",
     "src/aeonlib/ocs/lco/instruments.py",
     "src/aeonlib/ocs/soar/instruments.py",
+    "src/aeonlib/ocs/saao/instruments.py",
 ]
