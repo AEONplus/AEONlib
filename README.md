@@ -129,7 +129,7 @@ lco_api_root: str = "https://observe.lco.global/api/"
 
 ## SOAR
 
-SOAR is functionally the same as LCO, but has its own set of instruments and can be configured seperately.
+SOAR is functionally the same as LCO, but has its own set of instruments and can be configured separately.
 
 ### Dependency group
 SOAR requires no additional dependency groups to be installed.
@@ -142,6 +142,22 @@ soar_token: str = ""
 soar_api_root: str = "https://observe.lco.global/api/"
 ```
 Note: the soar API token will default to the same value as lco_token, if it is set.
+
+## BLANCO
+
+BLANCO is functionally the same as LCO, but has its own set of instruments and can be configured separately.
+
+### Dependency group
+BLANCO requires no additional dependency groups to be installed.
+
+### Configuration Values
+See [configuration](#configuration) for instructions on setting these values.
+
+```python
+blanco_token: str = ""
+blanco_api_root: str = "https://observe.lco.global/api/"
+```
+Note: the blanco API token will default to the same value as lco_token, if it is set.
 
 ## ESO (European Southern Observatory)
 
