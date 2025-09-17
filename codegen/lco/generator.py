@@ -47,7 +47,11 @@ def generate_instrument_configs(ins_s: str, facility: str) -> str:
         # We add a prefix for LCO because some instruments start with a number,
         # which is not allowed in Python class names. For example: Lco0M4ScicamQhy600
         prefix = "Lco"
-        filtered = {k: v for k, v in ins_data.items() if "soar" not in k.lower()}
+        filtered = {
+            k: v
+            for k, v in ins_data.items()
+            if "soar" not in k.lower() and "blanco" not in k.lower()
+        }
     elif facility == "SAAO":
         # SAAO config doesn't share any instruments with other facilities so we don't need
         # to filter it
