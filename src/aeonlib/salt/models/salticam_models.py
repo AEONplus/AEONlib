@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-from typing import Annotated
+from typing import Annotated, Literal
 
 from annotated_types import MinLen
 from pydantic import BaseModel, PositiveInt
 
 from aeonlib.salt.models.types import PositiveDuration, SalticamFilter
+from aeonlib.salt.validators import GreaterEqual, LessEqual
 
 
 class Salticam(BaseModel):
@@ -44,7 +45,7 @@ class Salticam(BaseModel):
 
     num_cycles: PositiveInt = 1
     filter_sequence: Annotated[list[FilterSequenceStep], MinLen(1)]
-    detector: None
+    detector: SalticamDetector
     dither_pattern: None = None
     include_flats: bool
 
@@ -58,8 +59,29 @@ class FilterSequenceStep(BaseModel):
     filter
         Filter for the step.
     exposure_time
-        Exposure time for the step.
+        Exposure time for the step, as a `astropy.units.Quantity` or as a float in
+        seconds.
     """
 
     filter: SalticamFilter
     exposure_time: PositiveDuration
+
+
+class SalticamDetector(BaseModel):
+    """
+    A Salticam detector setup.
+
+    Only "normal" readout mode (i.e. a full frame readout) is supported. The readout
+    speed may be "fast" or "slow", the gain "bright" or "faint". Up to 9 CCD rows and
+    columns can be binned.
+
+    The setup does not include the exposure time; this is set as part of a filter
+    sequence step.
+    """
+
+    num_exposures: PositiveInt
+    readout_mode: Literal["normal"] = "normal"
+    gain: Literal["bright", "faint"]
+    readout_speed: Literal["fast", "slow"]
+    num_prebinned_rows: Annotated[int, GreaterEqual(1), LessEqual(9)]
+    num_prebinned_columns: Annotated[int, GreaterEqual(1), LessEqual(9)]

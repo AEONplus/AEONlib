@@ -14,6 +14,7 @@ from aeonlib.salt.models import (
     Salticam,
     SaltSiderealTarget,
     FilterSequenceStep,
+    SalticamDetector,
 )
 
 
@@ -81,12 +82,25 @@ def base_reference_star():
 
 
 @pytest.fixture()
-def base_salticam(base_filter_sequence_step):
+def base_salticam(base_salticam_detector, base_filter_sequence_step):
     return Salticam(
-        filter_sequence=[base_filter_sequence_step], detector=None, include_flats=True
+        filter_sequence=[base_filter_sequence_step],
+        detector=base_salticam_detector,
+        include_flats=True,
     )
 
 
 @pytest.fixture()
 def base_filter_sequence_step():
     return FilterSequenceStep(filter="Johnson B", exposure_time=409 * u.s)
+
+
+@pytest.fixture()
+def base_salticam_detector():
+    return SalticamDetector(
+        num_exposures=1,
+        gain="bright",
+        readout_speed="fast",
+        num_prebinned_rows=2,
+        num_prebinned_columns=2,
+    )

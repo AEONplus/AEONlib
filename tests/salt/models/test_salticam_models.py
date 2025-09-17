@@ -2,6 +2,7 @@ import pytest
 from pydantic import ValidationError
 
 from aeonlib.salt.models import Salticam
+from tests.salt.models.conftest import base_salticam_detector
 
 
 class TestSalticam:
@@ -20,4 +21,10 @@ class TestSalticam:
 class TestFilterSequenceStep:
     def test_filter_sequence_step(self, base_filter_sequence_step):
         """Test that filter sequence steps can be built."""
+        assert True
+
+
+class TestSalticamDetector:
+    def test_salticam_detector(self, base_salticam_detector):
+        """Test that Salticam detector setups can be built."""
         assert True
