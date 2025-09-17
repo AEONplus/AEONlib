@@ -32,9 +32,9 @@ class SaltSiderealTarget(SiderealTarget):
     target_type: TargetType
     magnitude_range: MagnitudeRange
 
-    @field_validator("ra", mode="after")
+    @field_validator("dec", mode="after")
     @classmethod
-    def check_right_ascension_viewable(cls, value: astropy.coordinates.Angle):
+    def check_declination_viewable(cls, value: astropy.coordinates.Angle):
         return check_in_visibility_range(value)
 
 

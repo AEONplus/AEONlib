@@ -13,7 +13,7 @@ class TestSaltSiderealTarget:
         assert True
 
     @pytest.mark.parametrize(
-        "ra, expectation",
+        "dec, expectation",
         [
             (astropy.coordinates.Angle("-76.001d"), pytest.raises(ValueError)),
             (astropy.coordinates.Angle("-76d"), nullcontext()),
@@ -21,10 +21,10 @@ class TestSaltSiderealTarget:
             (astropy.coordinates.Angle("11.0001d"), pytest.raises(ValueError)),
         ],
     )
-    def test_ra_range(self, ra, expectation, base_target):
-        """Test that the right ascension must be in SALT's visibility range."""
+    def test_dec_range(self, dec, expectation, base_target):
+        """Test that the declination must be in SALT's visibility range."""
         target = base_target.model_dump()
-        target["ra"] = ra
+        target["dec"] = dec
         with expectation:
             SaltSiderealTarget(**target)
 
