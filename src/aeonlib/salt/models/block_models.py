@@ -19,6 +19,7 @@ from pydantic import (
 from aeonlib.models import Angle, Window
 from aeonlib.salt.models import SaltSiderealTarget
 from aeonlib.salt.models.types import (
+    Instrument,
     PositiveDuration,
     SalticamFilter,
     SkyTransparency,
@@ -111,7 +112,7 @@ class Block(BaseModel):
     windows: list[Window] | None = None
     target: SaltSiderealTarget
     acquisition: Acquisition
-    instrument: None
+    instrument: Instrument
     pool: str | None = None
     data_notification: Literal["normal", "fast"] = "normal"
 
