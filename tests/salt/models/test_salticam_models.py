@@ -2,7 +2,6 @@ import pytest
 from pydantic import ValidationError
 
 from aeonlib.salt.models import Salticam
-from tests.salt.models.conftest import base_salticam_detector
 
 
 class TestSalticam:
