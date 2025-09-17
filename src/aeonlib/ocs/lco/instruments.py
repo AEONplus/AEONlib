@@ -1,3 +1,5 @@
+# This file is generated automatically and should not be edited by hand.
+
 from typing import Any, Annotated, Literal, Union
 
 from annotated_types import Le
@@ -279,7 +281,7 @@ class Lco2M0ScicamMuscat(BaseModel):
 
 class LcoBlancoNewfirmOpticalElements(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    filter: Literal["JX", "HX", "KXs", "1187", "2096", "1644", "2124", "2168", "J1", "1066", "DARK"]
+    filter: Literal["JX", "HX", "KXs"]
 
 
 class LcoBlancoNewfirmGuidingConfig(BaseModel):
@@ -306,7 +308,7 @@ class LcoBlancoNewfirmConfig(BaseModel):
     """The number of exposures to take. This field must be set to a value greater than 0"""
     exposure_time: NonNegativeInt
     """ Exposure time in seconds"""
-    mode: Literal["fowler1", "fowler8", "fowler16", "fowler2", "fowler4"]
+    mode: Literal["fowler1", "fowler2"]
     rois: list[Roi] | None = None
     extra_params: dict[Any, Any] = {}
     optical_elements: LcoBlancoNewfirmOpticalElements
