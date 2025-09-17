@@ -1,12 +1,14 @@
-from typing import Annotated, Any, Literal, Union
+# This file is generated automatically and should not be edited by hand.
+
+from typing import Any, Annotated, Literal, Union
 
 from annotated_types import Le
 from pydantic import BaseModel, ConfigDict
 from pydantic.types import NonNegativeInt, PositiveInt
 
 from aeonlib.models import TARGET_TYPES
-from aeonlib.ocs.config_models import Roi
 from aeonlib.ocs.target_models import Constraints
+from aeonlib.ocs.config_models import Roi
 
 
 class SAAO1M0AMookodiImgOpticalElements(BaseModel):
@@ -41,9 +43,7 @@ class SAAO1M0AMookodiImgConfig(BaseModel):
     """The number of exposures to take. This field must be set to a value greater than 0"""
     exposure_time: NonNegativeInt
     """ Exposure time in seconds"""
-    mode: Literal[
-        "1x1HighFastOpen", "1x1HighSlowAuto", "1x1HighFastAuto", "2x2HighFastOpen"
-    ]
+    mode: Literal["1x1HighFastOpen", "1x1HighSlowAuto", "1x1HighFastAuto", "2x2HighFastOpen"]
     rois: list[Roi] | None = None
     extra_params: dict[Any, Any] = {}
     optical_elements: SAAO1M0AMookodiImgOpticalElements
@@ -185,18 +185,7 @@ class SAAO1M9ASpupnicSpecOpticalElements(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
     obfilter: Literal["out", "Clear", "OrdBlck_Fltr"]
     slit: Literal["out", "mk-wide", "mk-narrow"]
-    spup_grating: Literal[
-        "spup_gr4",
-        "spup_gr5",
-        "spup_gr6",
-        "spup_gr7",
-        "spup_gr8",
-        "spup_gr9",
-        "spup_gr10",
-        "spup_gr11",
-        "spup_gr12",
-        "spup_gr13",
-    ]
+    spup_grating: Literal["spup_gr4", "spup_gr5", "spup_gr6", "spup_gr7", "spup_gr8", "spup_gr9", "spup_gr10", "spup_gr11", "spup_gr12", "spup_gr13"]
     spup_slit: Literal["spupslit_w10.5", "spupslit_w18.5", "spupslit_w12.5"]
 
 
@@ -250,19 +239,7 @@ class SAAO1M9ASpupnicSpec(BaseModel):
 
 class SAAOSiboniseImgOpticalElements(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    filter: Literal[
-        "out",
-        "U",
-        "B",
-        "V",
-        "R",
-        "I",
-        "Clear",
-        "O2p8nm",
-        "Halpha3p2nm",
-        "Halpha4p0nm",
-        "HeII4p0nm",
-    ]
+    filter: Literal["out", "U", "B", "V", "R", "I", "Clear", "O2p8nm", "Halpha3p2nm", "Halpha4p0nm", "HeII4p0nm"]
     Bin: Literal["1x1", "2x2", "3x3", "4x4", "5x5", "6x6"]
     Gain: Literal["bright_gain", "faint_gain"]
 
