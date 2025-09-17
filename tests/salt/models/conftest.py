@@ -5,13 +5,14 @@ import pytest
 from astropy import units as u
 
 from aeonlib.salt.models import (
-    Request,
+    Acquisition,
     Block,
-    MagnitudeRange,
-    SaltSiderealTarget,
     Constraints,
+    MagnitudeRange,
+    ReferenceStar,
+    Request,
+    SaltSiderealTarget,
 )
-from aeonlib.salt.models.block_models import Acquisition, ReferenceStar
 
 
 @pytest.fixture()
