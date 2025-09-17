@@ -2,6 +2,8 @@
 
 from typing import Any
 
+import astropy.coordinates
+from astropy import units as u
 from pydantic import AfterValidator
 
 
@@ -147,3 +149,12 @@ def LessEqual(value: Any):
     A validator for checking a less than or equal to relation.
     """
     return AfterValidator(lambda v: _check_le(v, value))
+
+
+def check_in_visibility_range(
+    dec: astropy.coordinates.Angle,
+) -> astropy.coordinates.Angle:
+    if dec < -76 * u.deg or dec > 11 * u.deg:
+        raise ValueError("Not in SALT's visibility range (between -76 and 11 degrees).")
+
+    return dec

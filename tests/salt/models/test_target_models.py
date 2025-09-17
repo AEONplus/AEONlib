@@ -22,7 +22,7 @@ class TestSaltSiderealTarget:
         ],
     )
     def test_ra_range(self, ra, expectation, base_target):
-        """Test that the right ascension must be between -76 and 11 degrees."""
+        """Test that the right ascension must be in SALT's visibility range."""
         target = base_target.model_dump()
         target["ra"] = ra
         with expectation:

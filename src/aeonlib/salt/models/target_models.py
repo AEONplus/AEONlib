@@ -4,11 +4,12 @@ from __future__ import annotations
 
 from typing import Self
 
-import astropy.units as u
-from pydantic import BaseModel, NonNegativeFloat, model_validator
+import astropy.coordinates
+from pydantic import BaseModel, NonNegativeFloat, field_validator, model_validator
 
 from aeonlib.models import SiderealTarget
 from aeonlib.salt.models.types import MagnitudeBandpass, TargetType
+from aeonlib.salt.validators import check_in_visibility_range
 
 
 class SaltSiderealTarget(SiderealTarget):
@@ -31,12 +32,10 @@ class SaltSiderealTarget(SiderealTarget):
     target_type: TargetType
     magnitude_range: MagnitudeRange
 
-    @model_validator(mode="after")
-    def check_target_viewable(self):
-        if self.ra < -76 * u.deg or self.ra > 11 * u.deg:
-            raise ValueError("ra not between -76 and 11 degrees.")
-
-        return self
+    @field_validator("ra", mode="after")
+    @classmethod
+    def check_right_ascension_viewable(cls, value: astropy.coordinates.Angle):
+        return check_in_visibility_range(value)
 
 
 class MagnitudeRange(BaseModel):
