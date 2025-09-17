@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from typing import Annotated
 
 from annotated_types import MinLen
 from pydantic import BaseModel, PositiveInt
+
+from aeonlib.salt.models.types import PositiveDuration, SalticamFilter
 
 
 class Salticam(BaseModel):
@@ -39,7 +43,23 @@ class Salticam(BaseModel):
     """
 
     num_cycles: PositiveInt = 1
-    filter_sequence: Annotated[list[None], MinLen(1)]
+    filter_sequence: Annotated[list[FilterSequenceStep], MinLen(1)]
     detector: None
     dither_pattern: None = None
     include_flats: bool
+
+
+class FilterSequenceStep(BaseModel):
+    """
+    A step in a filter sequence.
+
+    Attributes
+    ----------
+    filter
+        Filter for the step.
+    exposure_time
+        Exposure time for the step.
+    """
+
+    filter: SalticamFilter
+    exposure_time: PositiveDuration

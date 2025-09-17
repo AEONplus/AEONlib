@@ -15,3 +15,9 @@ class TestSalticam:
         salticam["filter_sequence"] = []
         with pytest.raises(ValidationError, match="at least 1"):
             Salticam(**salticam)
+
+
+class TestFilterSequenceStep:
+    def test_filter_sequence_step(self, base_filter_sequence_step):
+        """Test that filter sequence steps can be built."""
+        assert True
