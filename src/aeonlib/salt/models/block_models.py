@@ -18,7 +18,11 @@ from pydantic import (
 
 from aeonlib.models import Angle, Window
 from aeonlib.salt.models import SaltSiderealTarget
-from aeonlib.salt.models.types import PositiveDuration, SalticamFilter, SkyTransparency
+from aeonlib.salt.models.types import (
+    PositiveDuration,
+    SalticamFilter,
+    SkyTransparency,
+)
 from aeonlib.salt.validators import GreaterEqual, LessEqual, check_in_visibility_range
 
 
@@ -106,7 +110,7 @@ class Block(BaseModel):
     constraints: Constraints
     windows: list[Window] | None = None
     target: SaltSiderealTarget
-    acquisition: None
+    acquisition: Acquisition
     instrument: None
     pool: str | None = None
     data_notification: Literal["normal", "fast"] = "normal"

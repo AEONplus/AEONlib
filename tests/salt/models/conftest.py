@@ -21,7 +21,7 @@ def base_request(base_block):
 
 
 @pytest.fixture()
-def base_block(base_constraints, base_target):
+def base_block(base_acquisition, base_constraints, base_target):
     """A simple block to build or edit from."""
     return Block(
         name="Test",
@@ -30,7 +30,7 @@ def base_block(base_constraints, base_target):
         num_visits=1,
         constraints=base_constraints,
         target=base_target,
-        acquisition=None,
+        acquisition=base_acquisition,
         instrument=None,
     )
 
