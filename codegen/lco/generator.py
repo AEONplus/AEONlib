@@ -7,6 +7,8 @@ from pathlib import Path
 import textcase
 from jinja2 import Environment, FileSystemLoader
 
+VALID_FACILITIES = ["SOAR", "LCO", "SAAO"]
+
 
 def get_modes(ins: dict, type: str) -> list[str]:
     try:
@@ -23,7 +25,7 @@ def generate_instrument_configs(ins_s: str, facility: str) -> str:
 
     Args:
         ins_s (str): The input json containing instrument data.
-        soar (bool): Whether to generate SOAR instruments.
+        facility (str): Which facility to generate instruments for.
 
     Returns:
         str: Generated Python Pydantic models as a string.
@@ -38,15 +40,21 @@ def generate_instrument_configs(ins_s: str, facility: str) -> str:
     ins_data = json.loads(ins_s)
     instruments = []
     if facility == "SOAR":
+        # Soar instruments look like SoarGhtsBluecam, already prefixed, so no need to add a prefix.
         prefix = ""
         filtered = {k: v for k, v in ins_data.items() if "soar" in k.lower()}
     elif facility == "LCO":
-        # LCO And SOAR share the same instruments endpoint, so we need to filter them out
+        # We add a prefix for LCO because some instruments start with a number,
+        # which is not allowed in Python class names. For example: Lco0M4ScicamQhy600
         prefix = "Lco"
         filtered = {k: v for k, v in ins_data.items() if "soar" not in k.lower()}
-    else:
-        prefix = facility
+    elif facility == "SAAO":
+        # SAAO config doesn't share any instruments with other facilities so we don't need
+        # to filter it
+        prefix = "SAAO"
         filtered = ins_data
+    else:
+        raise ValueError(f"Invalid facility. Must be one of {VALID_FACILITIES}")
 
     # Instruments endpoint seems inconsistent, this should keep our output consistent
     ordered = dict(sorted(filtered.items()))
@@ -64,7 +72,7 @@ def generate_instrument_configs(ins_s: str, facility: str) -> str:
                 "rotator_modes": get_modes(ins, "rotator"),
                 "optical_elements": {
                     # This gets rid of the silly trailing s on "filters" and "narrowband_g_positions"
-                    k[:-1]: v
+                    k.rstrip("s"): v
                     for k, v in ins["optical_elements"].items()
                 },
             }
