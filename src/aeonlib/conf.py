@@ -12,6 +12,10 @@ class Settings(BaseSettings):
     soar_token: str = ""
     soar_api_root: str = "https://observe.lco.global/api/"
 
+    # BLANCO
+    blanco_token: str = ""
+    blanco_api_root: str = "https://observe.lco.global/api/"
+
     # South African Astronomical Observatory
     saao_token: str = ""
     saao_api_root: str = "https://ocsio.saao.ac.za/api/"

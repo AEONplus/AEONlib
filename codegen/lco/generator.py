@@ -7,7 +7,7 @@ from pathlib import Path
 import textcase
 from jinja2 import Environment, FileSystemLoader
 
-VALID_FACILITIES = ["SOAR", "LCO", "SAAO"]
+VALID_FACILITIES = ["SOAR", "LCO", "SAAO", "BLANCO"]
 
 
 def get_modes(ins: dict, type: str) -> list[str]:
@@ -43,6 +43,10 @@ def generate_instrument_configs(ins_s: str, facility: str) -> str:
         # Soar instruments look like SoarGhtsBluecam, already prefixed, so no need to add a prefix.
         prefix = ""
         filtered = {k: v for k, v in ins_data.items() if "soar" in k.lower()}
+    elif facility == "BLANCO":
+        # Blanco instrument(s) look like BLANCO_NEWFIRM
+        prefix = ""
+        filtered = {k: v for k, v in ins_data.items() if "blanco" in k.lower()}
     elif facility == "LCO":
         # We add a prefix for LCO because some instruments start with a number,
         # which is not allowed in Python class names. For example: Lco0M4ScicamQhy600
