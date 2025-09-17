@@ -44,13 +44,13 @@ class Salticam(BaseModel):
     """
 
     num_cycles: PositiveInt = 1
-    filter_sequence: Annotated[list[FilterSequenceStep], MinLen(1)]
+    filter_sequence: Annotated[list[SalticamFilterSequenceStep], MinLen(1)]
     detector: SalticamDetector
     dither_pattern: None = None
     include_flats: bool
 
 
-class FilterSequenceStep(BaseModel):
+class SalticamFilterSequenceStep(BaseModel):
     """
     A step in a filter sequence.
 

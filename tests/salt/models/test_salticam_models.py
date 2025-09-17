@@ -18,8 +18,8 @@ class TestSalticam:
             Salticam(**salticam)
 
 
-class TestFilterSequenceStep:
-    def test_filter_sequence_step(self, base_filter_sequence_step):
+class TestSalticamFilterSequenceStep:
+    def test_salticam_filter_sequence_step(self, base_salticam_filter_sequence_step):
         """Test that filter sequence steps can be built."""
         assert True
 
