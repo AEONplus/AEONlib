@@ -164,10 +164,11 @@ class _AstropyTimeMJDType:
 
 class _AstropyAngleType:
     """
-    Cutsom pydantic type that handles Angle types. It should accept astropy.coordinates.Angle
-    objects, strings and floats during validation. Interanally the data will be stored
-    as an angle for maximum precision and flexibility. During serialization, the angle
-    will converted to a decimal degree representation by default.
+    Custom pydantic type that handles Angle types. It accepts
+    astropy.coordinates.Angle objects, astropy.units.Quantity objects, strings and
+    floats during validation. Internally the data is stored as an angle for maximum
+    precision and flexibility. During serialization, the angle is converted to a
+    decimal degree representation by default.
     """
 
     @classmethod
