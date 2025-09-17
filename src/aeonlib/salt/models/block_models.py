@@ -13,12 +13,13 @@ from pydantic import (
     PositiveInt,
     PositiveFloat,
     model_validator,
+    AfterValidator,
 )
 
 from aeonlib.models import Angle, Window
 from aeonlib.salt.models import SaltSiderealTarget
 from aeonlib.salt.models.types import PositiveDuration, SalticamFilter, SkyTransparency
-from aeonlib.salt.validators import GreaterEqual, LessEqual
+from aeonlib.salt.validators import GreaterEqual, LessEqual, check_in_visibility_range
 
 
 class Block(BaseModel):
@@ -193,5 +194,35 @@ class Acquisition(BaseModel):
     finder_charts: list[FilePath]
     filter: SalticamFilter = "Johnson V"
     exposure_time: PositiveDuration = 1.0 * u.s
-    reference_star: None
+    reference_star: ReferenceStar | None = None
     include_focused_image: bool = False
+
+
+class ReferenceStar(BaseModel):
+    """
+    A reference star on which to acquire.
+
+    In case acquiring on the target itself is not possible (as, for example, the target
+    is too faint), you can specify a reference star. This will be used for the
+    acquisition instead, and after the acquisition a telescope offset from the
+    reference star to the actual target is applied.
+
+    The right ascension and declination can be supplied as a `astropy.coordinates.Angle`
+    instance, a `astropy.units.Quantity` instance, a string in a format understood by
+    AstroPy or a float in degrees.
+
+    By default, the equinox is assumed to be 2000.0, but you can choose another oner.
+
+    Arguments
+    ---------
+    ra
+        Right ascension of the reference star.
+    dec
+        Declination of the reference star.
+    equinox
+        Equinox of the coordinates.
+    """
+
+    ra: Angle
+    dec: Annotated[Angle, AfterValidator(check_in_visibility_range)]
+    equinox: Annotated[float, LessEqual(2100)] = 2000.0

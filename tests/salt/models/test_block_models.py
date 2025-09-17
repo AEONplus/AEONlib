@@ -1,9 +1,11 @@
 from contextlib import nullcontext
 
+import astropy.coordinates
 import pytest
 from pydantic import ValidationError
 
 from aeonlib.salt.models import Block
+from aeonlib.salt.models.block_models import ReferenceStar
 
 
 class TestBlock:
@@ -47,3 +49,24 @@ class TestAcquisition:
     def test_acquisition(self, base_acquisition):
         """Test that acquisitions can be built."""
         assert True
+
+
+class TestReferenceStar:
+    def test_reference_star(self, base_reference_star):
+        """Test that reference stars can be built."""
+        assert True
+
+    @pytest.mark.parametrize(
+        "dec, expectation",
+        [
+            (astropy.coordinates.Angle("-76.001d"), pytest.raises(ValueError)),
+            (astropy.coordinates.Angle("-76d"), nullcontext()),
+            (astropy.coordinates.Angle("11d"), nullcontext()),
+            (astropy.coordinates.Angle("11.0001d"), pytest.raises(ValueError)),
+        ],
+    )
+    def test_dec_range(self, dec, expectation, base_reference_star):
+        ref_star = base_reference_star.model_dump()
+        ref_star["dec"] = dec
+        with expectation:
+            ReferenceStar(**ref_star)

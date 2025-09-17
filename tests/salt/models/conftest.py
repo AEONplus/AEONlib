@@ -2,6 +2,7 @@ import pathlib
 
 import astropy.coordinates
 import pytest
+from astropy import units as u
 
 from aeonlib.salt.models import (
     Request,
@@ -10,7 +11,7 @@ from aeonlib.salt.models import (
     SaltSiderealTarget,
     Constraints,
 )
-from aeonlib.salt.models.block_models import Acquisition
+from aeonlib.salt.models.block_models import Acquisition, ReferenceStar
 
 
 @pytest.fixture()
@@ -68,6 +69,9 @@ def base_acquisition():
     finder_chart = (
         pathlib.Path(__file__).parent.parent / "data" / "dummy_finder_chart.pdf"
     )
-    return Acquisition(
-        finder_charts=[finder_chart], reference_star=None, include_focused_image=False
-    )
+    return Acquisition(finder_charts=[finder_chart])
+
+
+@pytest.fixture()
+def base_reference_star():
+    return ReferenceStar(ra=117.564 * u.deg, dec=-63.9 * u.deg)
