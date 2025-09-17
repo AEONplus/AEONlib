@@ -47,8 +47,5 @@ exclude = ["*.ipynb"]
 [tool.ruff.format]
 exclude = [
     "*.ipynb",
-    "src/aeonlib/ocs/lco/instruments.py",
-    "src/aeonlib/ocs/soar/instruments.py",
-    "src/aeonlib/ocs/saao/instruments.py",
-    "src/aeonlib/ocs/blanco/instruments.py",
+    "src/aeonlib/ocs/*/instruments.py",
 ]
