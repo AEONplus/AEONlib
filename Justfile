@@ -18,10 +18,14 @@ update-lco:
 update-soar:
     curl https://observe.lco.global/api/instruments/ | codegen/lco/generator.py SOAR > src/aeonlib/ocs/soar/instruments.py
 
+# Update Blanco generated instrument file
+update-blanco:
+    curl https://observe.lco.global/api/instruments/ | codegen/lco/generator.py BLANCO > src/aeonlib/ocs/blanco/instruments.py
+
 # Update SAAO generated instrument file
 update-saao:
     curl https://ocsio.saao.ac.za/api/instruments/ | codegen/lco/generator.py SAAO > src/aeonlib/ocs/saao/instruments.py
 
 # Update all generated instrument files
-update-all: update-lco update-soar update-saao
+update-all: update-lco update-soar update-saao update-blanco
     @echo "All updates completed"
