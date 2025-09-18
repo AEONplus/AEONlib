@@ -71,7 +71,7 @@ class TestCommonValidationErrors:
         Test that a ValidationError is raised when a required field (proposal) is missing.
         """
         with pytest.raises(ValidationError) as exc_info:
-            RequestGroup(  # type: ignore
+            _ = RequestGroup(  # pyright: ignore[reportCallIssue]
                 name="test",
                 observation_type="NORMAL",
                 operator="SINGLE",
@@ -96,7 +96,7 @@ class TestCommonValidationErrors:
         RequestGroup is not one of the allowed values.
         """
         with pytest.raises(ValidationError) as exc_info:
-            request_group.observation_type = "INVALID"  # type: ignore
+            request_group.observation_type = "INVALID"  # pyright: ignore[reportAttributeAccessIssue]
         assert exc_info.value.errors()[0]["loc"] == ("observation_type",)
         assert exc_info.value.errors()[0]["type"] == "literal_error"
 

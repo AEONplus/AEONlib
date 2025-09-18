@@ -1,4 +1,5 @@
-from typing import Annotated, Literal, Tuple, Union
+# pyright: reportPrivateUsage=false
+from typing import Annotated, Literal
 
 from annotated_types import Ge, Le
 from lxml import etree
@@ -16,7 +17,7 @@ class LTConfig(BaseModel):
     photometric: Literal["clear", "light"] = "clear"
 
 
-IooFilterTimeCnt = Tuple[Annotated[float, Ge(0.0)], Annotated[int, Ge(1)]]
+IooFilterTimeCnt = tuple[Annotated[float, Ge(0.0)], Annotated[int, Ge(1)]]
 """Tuple of exposure time, exposure count"""
 
 
@@ -45,7 +46,7 @@ class Ioo(BaseModel):
         device = etree.SubElement(schedule, "Device", name="IO:O", type="camera")
         etree.SubElement(device, "SpectralRegion").text = "optical"
         setup = etree.SubElement(device, "Setup")
-        etree.SubElement(setup, "Filter", type=filter)
+        _ = etree.SubElement(setup, "Filter", type=filter)
         detector = etree.SubElement(setup, "Detector")
         binning = etree.SubElement(detector, "Binning")
         etree.SubElement(binning, "X", units="pixels").text = self.binning.split("x")[0]
@@ -66,7 +67,7 @@ class Sprat(BaseModel):
         device = etree.SubElement(schedule, "Device", name="Sprat", type="spectrograph")
         etree.SubElement(device, "SpectralRegion").text = "optical"
         setup = etree.SubElement(device, "Setup")
-        etree.SubElement(setup, "Grating", name=self.grating)
+        _ = etree.SubElement(setup, "Grating", name=self.grating)
         detector = etree.SubElement(setup, "Detector")
         binning = etree.SubElement(detector, "Binning")
         etree.SubElement(binning, "X", units="pixels").text = "1"
@@ -104,15 +105,11 @@ class Frodo(BaseModel):
         )
         etree.SubElement(device, "SpectralRegion").text = "optical"
         setup = etree.SubElement(device, "Setup")
-        etree.SubElement(setup, "Grating", name=grating)
+        _ = etree.SubElement(setup, "Grating", name=grating)
         exposure = etree.SubElement(schedule, "Exposure", count=str(exp_count))
         etree.SubElement(exposure, "Value", units="seconds").text = str(exp_time)
 
         return schedule
 
 
-LT_INSTRUMENTS = Union[
-    Ioo,
-    Frodo,
-    Sprat,
-]
+LT_INSTRUMENTS = Ioo | Frodo | Sprat

@@ -2,7 +2,7 @@
 Models shared between facilities.
 """
 
-from typing import Annotated, Any, Literal, Union
+from typing import Annotated, Any, ClassVar, Literal
 
 from annotated_types import Le
 from pydantic import BaseModel, ConfigDict
@@ -15,7 +15,7 @@ from aeonlib.types import Angle, Time, TimeMJD
 
 
 class SiderealTarget(BaseModel):
-    model_config = ConfigDict(validate_assignment=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(validate_assignment=True)
     name: Annotated[str, StringConstraints(max_length=50)] = "string"
     """The name of this Target"""
     type: Literal["ICRS", "HOUR_ANGLE", "ALTAZ"]
@@ -43,7 +43,7 @@ class SiderealTarget(BaseModel):
 class Window(BaseModel):
     """A general time window"""
 
-    model_config = ConfigDict(validate_assignment=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(validate_assignment=True)
     start: Time | None = None
     end: Time
 
@@ -51,7 +51,7 @@ class Window(BaseModel):
 class _NonSiderealTarget(BaseModel):
     """Base class for non-sidereal targets, should not be used directly"""
 
-    model_config = ConfigDict(validate_assignment=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(validate_assignment=True)
     type: Literal["ORBITAL_ELEMENTS"] = "ORBITAL_ELEMENTS"
     name: Annotated[str, StringConstraints(max_length=50)]
     epochofel: TimeMJD
@@ -140,7 +140,7 @@ class MpcCometTarget(_NonSiderealTarget):
 
 
 class GeocentricSatelliteTarget(BaseModel):
-    model_config = ConfigDict(validate_assignment=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(validate_assignment=True)
     name: Annotated[str, StringConstraints(max_length=50)]
     type: Literal["SATELLITE"] = "SATELLITE"
     altitude: Angle
@@ -160,14 +160,14 @@ class GeocentricSatelliteTarget(BaseModel):
     extra_params: dict[Any, Any] = {}
 
 
-TARGET_TYPES = Union[
-    SiderealTarget,
-    AsaMajorPlanetTarget,
-    AsaMinorPlanetTarget,
-    AsaCometTarget,
-    JplMajorPlanetTarget,
-    JplMinorPlanetTarget,
-    MpcMinorPlanetTarget,
-    MpcCometTarget,
-    GeocentricSatelliteTarget,
-]
+TARGET_TYPES = (
+    SiderealTarget
+    | AsaMajorPlanetTarget
+    | AsaMinorPlanetTarget
+    | AsaCometTarget
+    | JplMajorPlanetTarget
+    | JplMinorPlanetTarget
+    | MpcMinorPlanetTarget
+    | MpcCometTarget
+    | GeocentricSatelliteTarget
+)

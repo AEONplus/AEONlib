@@ -1,7 +1,10 @@
+# pyright: reportUnknownMemberType=false
+# pyright: reportUnannotatedClassAttribute=false
 import logging
 import tempfile
-from typing import BinaryIO
+from typing import Any, BinaryIO
 
+from aeonlib.conf import Settings
 from aeonlib.conf import settings as default_settings
 from aeonlib.exceptions import ServiceNetworkError
 
@@ -28,7 +31,7 @@ class ESONetworkError(ServiceNetworkError):
 
 
 class EsoFacility:
-    def __init__(self, settings=default_settings):
+    def __init__(self, settings: Settings = default_settings):
         self.api = p2api.ApiConnection(
             settings.eso_environment,
             settings.eso_username,
@@ -58,7 +61,7 @@ class EsoFacility:
 
     def delete_container(self, container: Container) -> None:
         try:
-            self.api.deleteContainer(container.container_id, container.version)
+            _ = self.api.deleteContainer(container.container_id, container.version)
         except Exception as e:
             raise ESONetworkError("Failed to delete ESO container") from e
 
@@ -96,7 +99,7 @@ class EsoFacility:
 
     def delete_ob(self, ob: ObservationBlock) -> None:
         try:
-            self.api.deleteOB(ob.ob_id, ob.version)
+            _ = self.api.deleteOB(ob.ob_id, ob.version)
         except Exception as e:
             raise ESONetworkError("Failed to delete ESO observation block") from e
 
@@ -112,7 +115,9 @@ class EsoFacility:
 
     def delete_template(self, ob: ObservationBlock, template: Template) -> None:
         try:
-            self.api.deleteTemplate(ob.ob_id, template.template_id, template.version)
+            _ = self.api.deleteTemplate(
+                ob.ob_id, template.template_id, template.version
+            )
         except Exception as e:
             raise ESONetworkError("Failed to delete ESO template") from e
 
@@ -127,7 +132,7 @@ class EsoFacility:
         return Template.model_validate({**template_dict, "version": version})
 
     def update_template_params(
-        self, ob: ObservationBlock, template: Template, params: dict
+        self, ob: ObservationBlock, template: Template, params: dict[Any, Any]
     ) -> Template:
         """
         This method simply updates the parameter dictionary in the template object and saves it.
@@ -252,11 +257,11 @@ class EsoFacility:
             # This is a new ephemeris file so we need to request a version
             ephemeris.version = self.get_ephemeris(ob).version
         with tempfile.NamedTemporaryFile() as temp_file:
-            temp_file.write(ephemeris.text.encode())
+            _ = temp_file.write(ephemeris.text.encode())
             temp_file.flush()
             logger.debug("Saved ephemeris file to %s", temp_file.name)
             try:
-                _, version = self.api.saveEphemerisFile(
+                _, version = self.api.saveEphemerisFile(  # pyright: ignore[reportUnknownVariableType]
                     ob.ob_id, temp_file.name, ephemeris.version
                 )
                 assert version
@@ -276,17 +281,19 @@ class EsoFacility:
             raise ESONetworkError("Failed to delete ESO ephemeris file") from e
         logger.debug("<- %s", version)
 
-    def add_finding_chart(self, ob: ObservationBlock, chart: BinaryIO, name="") -> None:
+    def add_finding_chart(
+        self, ob: ObservationBlock, chart: BinaryIO, name: str = ""
+    ) -> None:
         """Add a finding chart and return a list of all charts"""
         prefix = "aeon_fc"
         if name:
             prefix += f"_{name}_"
         with tempfile.NamedTemporaryFile(delete=False, prefix=prefix) as temp_file:
-            temp_file.write(chart.read())
+            _ = temp_file.write(chart.read())
             temp_file.flush()
             logger.debug("Saved finding chart to %s", temp_file.name)
             try:
-                self.api.addFindingChart(ob.ob_id, temp_file.name)
+                _ = self.api.addFindingChart(ob.ob_id, temp_file.name)  # pyright: ignore[reportUnknownVariableType]
             except Exception as e:
                 raise ESONetworkError("Failed to add ESO finding chart") from e
 
@@ -304,7 +311,7 @@ class EsoFacility:
     def delete_finding_chart(self, ob: ObservationBlock, index: int) -> None:
         """Delete a finding chart from the ESO api."""
         try:
-            self.api.deleteFindingChart(ob.ob_id, index)
+            _ = self.api.deleteFindingChart(ob.ob_id, index)
         except Exception as e:
             raise ESONetworkError("Failed to delete ESO finding chart") from e
 

@@ -1,6 +1,7 @@
+# pyright:  reportUnannotatedClassAttribute=false
 # This file is generated automatically and should not be edited by hand.
 
-from typing import Any, Annotated, Literal, Union
+from typing import Any, Annotated, Literal
 
 from annotated_types import Le
 from pydantic import BaseModel, ConfigDict
@@ -280,10 +281,4 @@ class Lco2M0ScicamMuscat(BaseModel):
 
 
 # Export a type that encompasses all instruments
-LCO_INSTRUMENTS = Union[
-    Lco0M4ScicamQhy600,
-    Lco1M0NresScicam,
-    Lco1M0ScicamSinistro,
-    Lco2M0FloydsScicam,
-    Lco2M0ScicamMuscat,
-]
+LCO_INSTRUMENTS = Lco0M4ScicamQhy600 | Lco1M0NresScicam | Lco1M0ScicamSinistro | Lco2M0FloydsScicam | Lco2M0ScicamMuscat

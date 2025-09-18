@@ -1,4 +1,5 @@
 import logging
+from typing import override
 
 from aeonlib.conf import Settings
 from aeonlib.ocs.facility import OCSFacility
@@ -12,8 +13,10 @@ class SAAOFacility(OCSFacility):
     Uses the OCS, so this is a simple wrapper around the LCO facility.
     """
 
+    @override
     def api_key(self, settings: Settings) -> str:
         return settings.saao_token
 
+    @override
     def api_root(self, settings: Settings) -> str:
         return settings.saao_api_root

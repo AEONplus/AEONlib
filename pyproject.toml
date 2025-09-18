@@ -49,3 +49,8 @@ exclude = [
     "*.ipynb",
     "src/aeonlib/ocs/*/instruments.py",
 ]
+
+[tool.pyright]
+reportExplicitAny = false
+reportAny = false
+reportMissingTypeStubs = false

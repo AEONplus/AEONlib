@@ -1,4 +1,5 @@
 from logging import getLogger
+from typing import override
 
 from aeonlib.conf import Settings
 from aeonlib.ocs.facility import OCSFacility
@@ -16,12 +17,16 @@ class BlancoFacility(OCSFacility):
         - AEON_BLANCO_API_ROOT: Root URL of the API
     """
 
+    @override
     def api_key(self, settings: Settings) -> str:
         if not settings.blanco_token:
-            logger.warn("AEON_BLANCO_TOKEN setting is missing, trying LCO credentials")
+            logger.warning(
+                "AEON_BLANCO_TOKEN setting is missing, trying LCO credentials"
+            )
             return settings.lco_token
         else:
             return settings.blanco_token
 
+    @override
     def api_root(self, settings: Settings) -> str:
         return settings.blanco_api_root

@@ -1,4 +1,5 @@
 import logging
+from typing import override
 
 from aeonlib.conf import Settings
 from aeonlib.ocs.facility import OCSFacility
@@ -14,8 +15,10 @@ class LcoFacility(OCSFacility):
         - AEON_LCO_API_ROOT: Root URL of the API
     """
 
+    @override
     def api_root(self, settings: Settings) -> str:
         return settings.lco_api_root
 
+    @override
     def api_key(self, settings: Settings) -> str:
         return settings.lco_token

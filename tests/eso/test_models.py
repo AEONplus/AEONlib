@@ -1,3 +1,4 @@
+# pyright: reportUnknownArgumentType=false
 from datetime import datetime
 
 import pytest
@@ -22,7 +23,7 @@ def test_constraints_from_window():
 
 def test_constraints_from_window_must_enter_start():
     with pytest.raises(ValueError):
-        AbsoluteTimeConstraint.construct_from(
+        _ = AbsoluteTimeConstraint.construct_from(
             Window(start=None, end=Time(60776.0, scale="utc", format="mjd"))
         )
 

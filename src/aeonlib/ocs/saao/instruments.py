@@ -1,6 +1,7 @@
+# pyright:  reportUnannotatedClassAttribute=false
 # This file is generated automatically and should not be edited by hand.
 
-from typing import Any, Annotated, Literal, Union
+from typing import Any, Annotated, Literal
 
 from annotated_types import Le
 from pydantic import BaseModel, ConfigDict
@@ -293,10 +294,4 @@ class SAAOSiboniseImg(BaseModel):
 
 
 # Export a type that encompasses all instruments
-SAAO_INSTRUMENTS = Union[
-    SAAO1M0AMookodiImg,
-    SAAO1M0AMookodiSpec,
-    SAAO1M9AShocnwonderImg,
-    SAAO1M9ASpupnicSpec,
-    SAAOSiboniseImg,
-]
+SAAO_INSTRUMENTS = SAAO1M0AMookodiImg | SAAO1M0AMookodiSpec | SAAO1M9AShocnwonderImg | SAAO1M9ASpupnicSpec | SAAOSiboniseImg

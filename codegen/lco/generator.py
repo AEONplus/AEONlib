@@ -3,6 +3,7 @@ import fileinput
 import json
 import sys
 from pathlib import Path
+from typing import Any
 
 import textcase
 from jinja2 import Environment, FileSystemLoader
@@ -10,7 +11,7 @@ from jinja2 import Environment, FileSystemLoader
 VALID_FACILITIES = ["SOAR", "LCO", "SAAO", "BLANCO"]
 
 
-def get_modes(ins: dict, type: str) -> list[str]:
+def get_modes(ins: dict[str, Any], type: str) -> list[str]:
     try:
         return [m["code"] for m in ins["modes"][type]["modes"]]
     except Exception:
@@ -38,7 +39,7 @@ def generate_instrument_configs(ins_s: str, facility: str) -> str:
     )
     template = j_env.get_template("instruments.jinja")
     ins_data = json.loads(ins_s)
-    instruments = []
+    instruments: list[dict[str, Any]] = []
     if facility == "SOAR":
         # Soar instruments look like SoarGhtsBluecam, already prefixed, so no need to add a prefix.
         prefix = ""
@@ -95,7 +96,9 @@ if __name__ == "__main__":
         # Accepts input from stdin or a file argument
         with fileinput.input() as f:
             ins_json = "".join(list(f))
-            sys.stdout.write(generate_instrument_configs(ins_json, facility=facility))
+            _ = sys.stdout.write(
+                generate_instrument_configs(ins_json, facility=facility)
+            )
     except IndexError:
-        sys.stdout.write("Usage: python generator.py <facility>")
+        _ = sys.stdout.write("Usage: python generator.py <facility>")
         exit(1)

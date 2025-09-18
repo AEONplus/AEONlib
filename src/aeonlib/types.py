@@ -1,6 +1,8 @@
+# pyright: reportUnknownVariableType=false
+# pyright: reportUnknownMemberType=false
 import logging
 from datetime import datetime
-from typing import Annotated, Any, Type, Union, cast
+from typing import Annotated, Any, cast
 
 import astropy.coordinates
 import astropy.time
@@ -22,7 +24,7 @@ class _AstropyTimeType:
     @classmethod
     def __get_pydantic_core_schema__(
         cls,
-        _source_type: Type[Any],
+        _source_type: type[Any],
         handler: GetCoreSchemaHandler,
     ) -> core_schema.CoreSchema:
         """https://docs.pydantic.dev/latest/concepts/types/#handling-third-party-types"""
@@ -38,8 +40,10 @@ class _AstropyTimeType:
         )
 
         def serialize_time(
-            model, time_obj: astropy.time.Time, info: core_schema.SerializationInfo
-        ) -> Union[datetime, str, float]:
+            _model: Any,
+            time_obj: astropy.time.Time,
+            info: core_schema.SerializationInfo,
+        ) -> datetime | str | float:
             """
             Determines how to serialize an astropy.time.Time object when model_dump()
             is called. This can be configured dynamically on the calling class by setting the
@@ -63,10 +67,10 @@ class _AstropyTimeType:
                 except AttributeError:
                     logger.exception(
                         f"Invalid output type '{output_type}' for field '{field_name}'. "
-                        "Ensure output mapping is an attribute of astropy.time.Time.",
+                        + "Ensure output mapping is an attribute of astropy.time.Time."
                     )
 
-            return time_obj.datetime  # type: ignore
+            return time_obj.datetime  # pyright: ignore[reportReturnType]
 
         return core_schema.json_or_python_schema(
             json_schema=from_datetime_schema,
@@ -100,7 +104,7 @@ class _AstropyTimeMJDType:
     @classmethod
     def __get_pydantic_core_schema__(
         cls,
-        _source_type: Type[Any],
+        _source_type: type[Any],
         handler: GetCoreSchemaHandler,
     ) -> core_schema.CoreSchema:
         """https://docs.pydantic.dev/latest/concepts/types/#handling-third-party-types"""
@@ -128,8 +132,8 @@ class _AstropyTimeMJDType:
             ]
         )
 
-        def serialize_time(time_obj: astropy.time.Time, **kwargs) -> float:
-            return time_obj.mjd  # type: ignore
+        def serialize_time(time_obj: astropy.time.Time) -> float:
+            return time_obj.mjd  # pyright: ignore[reportReturnType]
 
         return core_schema.json_or_python_schema(
             json_schema=core_schema.union_schema(
@@ -174,7 +178,7 @@ class _AstropyAngleType:
     @classmethod
     def __get_pydantic_core_schema__(
         cls,
-        _source_type: Type[Any],
+        _source_type: type[Any],
         _handler: GetCoreSchemaHandler,
     ) -> core_schema.CoreSchema:
         """https://docs.pydantic.dev/latest/concepts/types/#handling-third-party-types"""
@@ -241,9 +245,9 @@ class _AstropyAngleType:
         }
 
 
-Time = Annotated[Union[astropy.time.Time, datetime], _AstropyTimeType]
-TimeMJD = Annotated[Union[astropy.time.Time, datetime, float], _AstropyTimeMJDType]
+Time = Annotated[astropy.time.Time | datetime, _AstropyTimeType]
+TimeMJD = Annotated[astropy.time.Time | datetime | float, _AstropyTimeMJDType]
 Angle = Annotated[
-    Union[astropy.coordinates.Angle, Quantity, str, float],
+    astropy.coordinates.Angle | Quantity | str | float,
     _AstropyAngleType,
 ]

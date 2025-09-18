@@ -1,6 +1,7 @@
+# pyright:  reportUnannotatedClassAttribute=false
 # This file is generated automatically and should not be edited by hand.
 
-from typing import Any, Annotated, Literal, Union
+from typing import Any, Annotated, Literal
 
 from annotated_types import Le
 from pydantic import BaseModel, ConfigDict
@@ -279,10 +280,4 @@ class SoarTriplespec(BaseModel):
 
 
 # Export a type that encompasses all instruments
-SOAR_INSTRUMENTS = Union[
-    SoarGhtsBluecam,
-    SoarGhtsBluecamImager,
-    SoarGhtsRedcam,
-    SoarGhtsRedcamImager,
-    SoarTriplespec,
-]
+SOAR_INSTRUMENTS = SoarGhtsBluecam | SoarGhtsBluecamImager | SoarGhtsRedcam | SoarGhtsRedcamImager | SoarTriplespec
