@@ -34,7 +34,7 @@ class TestBlock:
         block["max_num_visits"] = max_num_visits
 
         with expectation:
-            Block(**block)
+            Block(**block)  # type: ignore
 
         assert True
 
@@ -69,4 +69,4 @@ class TestReferenceStar:
         ref_star = base_reference_star.model_dump()
         ref_star["dec"] = dec
         with expectation:
-            ReferenceStar(**ref_star)
+            ReferenceStar(**ref_star)  # type: ignore

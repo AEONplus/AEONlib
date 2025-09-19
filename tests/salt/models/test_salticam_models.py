@@ -16,7 +16,7 @@ class TestSalticam:
         salticam = base_salticam.model_dump()
         salticam["filter_sequence"] = []
         with pytest.raises(ValidationError, match="at least 1"):
-            Salticam(**salticam)
+            Salticam(**salticam)  # type: ignore
 
 
 class TestSalticamFilterSequenceStep:
@@ -42,7 +42,7 @@ class TestSalticamDitherPattern:
         dither_pattern["num_columns"] = 3
         if "num_steps" in dither_pattern:
             del dither_pattern["num_steps"]
-        assert SalticamDitherPattern(**dither_pattern).num_steps == 12
+        assert SalticamDitherPattern(**dither_pattern).num_steps == 12  # type: ignore
 
     @pytest.mark.parametrize(
         "num_rows, num_columns, num_steps, expectation",
@@ -70,4 +70,4 @@ class TestSalticamDitherPattern:
         dither_pattern["num_columns"] = num_columns
         dither_pattern["num_steps"] = num_steps
         with expectation:
-            SalticamDitherPattern(**dither_pattern)
+            SalticamDitherPattern(**dither_pattern)  # type: ignore
