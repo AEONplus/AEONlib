@@ -12,6 +12,7 @@ from aeonlib.salt.models import (
     ReferenceStar,
     Request,
     Salticam,
+    SalticamDitherPattern,
     SaltSiderealTarget,
     SalticamFilterSequenceStep,
     SalticamDetector,
@@ -104,3 +105,8 @@ def base_salticam_detector():
         num_prebinned_rows=2,
         num_prebinned_columns=2,
     )
+
+
+@pytest.fixture()
+def base_salticam_dither_pattern():
+    return SalticamDitherPattern(num_rows=3, num_columns=4, offset=12.9)

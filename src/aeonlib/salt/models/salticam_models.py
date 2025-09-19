@@ -1,11 +1,17 @@
 from __future__ import annotations
 
-from typing import Annotated, Literal
+from typing import Annotated, Literal, Union
 
 from annotated_types import MinLen
-from pydantic import BaseModel, PositiveInt
+from astropy import units as u
+from astropy.units import Quantity
+from pydantic import BaseModel, PositiveInt, Field, model_validator
 
-from aeonlib.salt.models.types import PositiveDuration, SalticamFilter
+from aeonlib.salt.models.types import (
+    PositiveDuration,
+    SalticamFilter,
+    AstropyQuantityTypeAnnotation,
+)
 from aeonlib.salt.validators import GreaterEqual, LessEqual
 
 
@@ -85,3 +91,48 @@ class SalticamDetector(BaseModel):
     readout_speed: Literal["fast", "slow"]
     num_prebinned_rows: Annotated[int, GreaterEqual(1), LessEqual(9)]
     num_prebinned_columns: Annotated[int, GreaterEqual(1), LessEqual(9)]
+
+
+class SalticamDitherPattern(BaseModel):
+    """
+    A dither pattern for Salticam.
+
+    The dither pattern is characterised by the number of rows and columns it covers,
+    the number of steps to take, and the offset between the steps.
+
+    By default, the number of steps is the product of rows and columns, but you may
+    specify a multiple of that number if you want to perform the pattern more than once.
+
+    The offset is in detector coordinates, not in right ascension and declination.
+    Therefore, if a particular object orientation is desired, a suitable position
+    angle must be chosen so that the dithers coincide with the detector axes.
+
+    Attributes
+    ----------
+    num_rows
+        Number of rows in the pattern.
+    num_columns
+        Number of columns in the pattern.
+    number_steps
+        Number of steps to perform.
+    offset
+        Offset between steps, as a `astropy.units.Quantity` or as a float in arcsec.
+    """
+
+    num_rows: PositiveInt
+    num_columns: PositiveInt
+    num_steps: PositiveInt = Field(
+        default_factory=lambda data: data["num_rows"] * data["num_columns"]
+    )
+    offset: Annotated[
+        Union[Quantity, float], AstropyQuantityTypeAnnotation(default_unit=u.arcsec)
+    ]
+
+    @model_validator(mode="after")
+    def check_number_of_steps(self):
+        if self.num_steps % (self.num_rows * self.num_columns) != 0:
+            raise ValueError(
+                "The number of steps must be the number of rows times the number of "
+                "columns, or a multiple thereof."
+            )
+        return self
