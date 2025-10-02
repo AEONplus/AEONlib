@@ -12,40 +12,47 @@ VALID_FACILITIES = ["SOAR", "LCO", "SAAO", "BLANCO"]
 
 
 def get_extra_params_fields(extra_params_validation_schema: dict) -> dict:
-    """ Loops over the "extra_params" section of a validation_schema dict and creates a dictionary of
-        field to aeonlib field_class to place into the template
+    """Loops over the "extra_params" section of a validation_schema dict and creates a dictionary of
+    field to aeonlib field_class to place into the template
     """
     fields = {}
     for field, properties in extra_params_validation_schema.items():
-        field_class = ''
+        field_class = ""
         # If a set of allowed values is present, use that to make a Literal unless this is a boolean variable
-        if 'allowed' in properties and properties.get('type') != 'boolean':
-            allowed_values = [f'"{val}"' if properties['type'] == 'string' else val for val in properties['allowed']]
+        if "allowed" in properties and properties.get("type") != "boolean":
+            allowed_values = [
+                f'"{val}"' if properties["type"] == "string" else val
+                for val in properties["allowed"]
+            ]
             field_class += f"Literal[{', '.join(allowed_values)}]"
         else:
             # Otherwise form an Annotated field based on its datatype, with min/max validation if present
             field_class += "Annotated["
-            match properties['type']:
-                case 'string':
+            match properties["type"]:
+                case "string":
                     field_class += "str"
-                case 'integer':
+                case "integer":
                     field_class += "int"
-                case 'float':
+                case "float":
                     field_class += "float"
-                case 'boolean':
+                case "boolean":
                     field_class += "bool"
-            if 'min' in properties:
+            if "min" in properties:
                 field_class += f", Ge({properties['min']})"
-            if 'max' in properties:
+            if "max" in properties:
                 field_class += f", Le({properties['max']})"
             # Add description to Annotated field. Annotated fields must have at least 2 properties.
-            field_class += f', "{properties.get('description', "")}"]'
-        if not properties.get('required', False) and 'default' not in properties:
+            field_class += f', "{properties.get("description", "")}"]'
+        if not properties.get("required", False) and "default" not in properties:
             # The field is considered optional if it doesn't have a default or required is set to True
             field_class += " | None = None"
-        elif 'default' in properties:
+        elif "default" in properties:
             # If a default value is present, provide it
-            default = f'"{properties['default']}"' if properties['type'] == 'string' else properties['default']
+            default = (
+                f'"{properties["default"]}"'
+                if properties["type"] == "string"
+                else properties["default"]
+            )
             field_class += f" = {default}"
         fields[field] = field_class
     return fields
@@ -124,8 +131,17 @@ def generate_instrument_configs(ins_s: str, facility: str) -> str:
                     k.rstrip("s"): v
                     for k, v in ins["optical_elements"].items()
                 },
-                "configuration_extra_params": get_extra_params_fields(ins['validation_schema'].get('extra_params', {}).get('schema', {})),
-                "instrument_config_extra_params": get_extra_params_fields(ins['validation_schema'].get('instrument_configs', {}).get('schema', {}).get('schema', {}).get('extra_params', {}).get('schema', {}))
+                "configuration_extra_params": get_extra_params_fields(
+                    ins["validation_schema"].get("extra_params", {}).get("schema", {})
+                ),
+                "instrument_config_extra_params": get_extra_params_fields(
+                    ins["validation_schema"]
+                    .get("instrument_configs", {})
+                    .get("schema", {})
+                    .get("schema", {})
+                    .get("extra_params", {})
+                    .get("schema", {})
+                ),
             }
         )
 
