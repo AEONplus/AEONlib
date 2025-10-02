@@ -1,10 +1,10 @@
 # pyright:  reportUnannotatedClassAttribute=false
 # This file is generated automatically and should not be edited by hand.
 
-from typing import Any, Annotated, Literal
+from typing import Any, Annotated, Literal, Optional
 
-from annotated_types import Le
-from pydantic import BaseModel, ConfigDict
+from annotated_types import Le, Ge
+from pydantic import BaseModel, ConfigDict, Field
 from pydantic.types import NonNegativeInt, PositiveInt
 
 from aeonlib.models import TARGET_TYPES
@@ -13,6 +13,25 @@ from aeonlib.ocs.config_models import Roi
 
 
 {% for ctx in instruments %}
+
+class {{ ctx.class_name}}ConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    {% for field, properties in ctx.configuration_extra_params.items() %}
+    {% set optional = ('required' not in properties or not properties.required) and 'default' not in properties %}
+    {{ field }}: {% if optional %}Optional[{% endif %}{% if 'allowed' in properties %}Literal[{{ properties.allowed }}]{% else %}Annotated[{% if properties.type == 'string' %}str{% elif properties.type == 'integer' %}int{% elif properties.type == 'float' %}float{% elif properties.type == 'boolean' %}bool{% endif %}{% if 'min' in properties %}, Ge({{ properties.min }}){% endif %}{% if 'max' in properties %}, Le({{ properties.max }}){% endif %}]{% endif %}{% if optional %}] = None{% elif 'default' in properties %} = {{ properties | extract_default }}{% endif %}
+
+    {% endfor %}
+
+
+class {{ ctx.class_name}}InstrumentConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    {% for field, properties in ctx.instrument_config_extra_params.items() %}
+    {% set optional = ('required' not in properties or not properties.required) and 'default' not in properties %}
+    {{ field }}: {% if optional %}Optional[{% endif %}{% if 'allowed' in properties %}Literal[{{ properties.allowed }}]{% else %}Annotated[{% if properties.type == 'string' %}str{% elif properties.type == 'integer' %}int{% elif properties.type == 'float' %}float{% elif properties.type == 'boolean' %}bool{% endif %}{% if 'min' in properties %}, Ge({{ properties.min }}){% endif %}{% if 'max' in properties %}, Le({{ properties.max }}){% endif %}]{% endif %}{% if optional %}] = None{% elif 'default' in properties %} = {{ properties | extract_default }}{% endif %}
+
+    {% endfor %}
+
+
 class {{ ctx.class_name }}OpticalElements(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
     {% for key, values in ctx.optical_elements.items() %}
@@ -49,7 +68,7 @@ class {{ ctx.class_name }}Config(BaseModel):
     rotator_mode: Literal[{% for m in ctx.rotator_modes %}"{{ m }}"{% if not loop.last %}, {% endif %}{% endfor %}]
     {% endif %}
     rois: list[Roi] | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: {{ ctx.class_name }}InstrumentConfigExtraParams = Field(default_factory={{ ctx.class_name }}InstrumentConfigExtraParams)
     optical_elements: {{ ctx.class_name}}OpticalElements
 
 
@@ -58,7 +77,7 @@ class {{ ctx.class_name }}(BaseModel):
     type: Literal[{% for t in ctx.config_types %}"{{ t }}"{% if not loop.last %}, {% endif %}{% endfor %}]
     instrument_type: Literal["{{ ctx.instrument_type }}"] = "{{ ctx.instrument_type }}"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: {{ ctx.class_name }}ConfigExtraParams = Field(default_factory={{ ctx.class_name }}ConfigExtraParams)
     instrument_configs: list[{{ ctx.class_name }}Config] = []
     acquisition_config: {{ ctx.class_name }}AcquisitionConfig
     guiding_config: {{ ctx.class_name }}GuidingConfig

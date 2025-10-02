@@ -11,6 +11,14 @@ from jinja2 import Environment, FileSystemLoader
 VALID_FACILITIES = ["SOAR", "LCO", "SAAO", "BLANCO"]
 
 
+def extract_default(properties):
+    if properties['type'] == 'integer' or properties['type'] == 'float' or properties['type'] == 'boolean':
+        return properties['default']
+    elif properties['type'] == 'string':
+        return f'"{properties['default']}"'
+    return Any
+
+
 def get_modes(ins: dict[str, Any], type: str) -> list[str]:
     try:
         return [m["code"] for m in ins["modes"][type]["modes"]]
@@ -37,6 +45,7 @@ def generate_instrument_configs(ins_s: str, facility: str) -> str:
         trim_blocks=True,
         lstrip_blocks=True,
     )
+    j_env.filters['extract_default'] = extract_default
     template = j_env.get_template("instruments.jinja")
     ins_data = json.loads(ins_s)
     instruments: list[dict[str, Any]] = []
@@ -84,6 +93,8 @@ def generate_instrument_configs(ins_s: str, facility: str) -> str:
                     k.rstrip("s"): v
                     for k, v in ins["optical_elements"].items()
                 },
+                "configuration_extra_params": ins['validation_schema'].get('extra_params', {}).get('schema', {}),
+                "instrument_config_extra_params": ins['validation_schema'].get('instrument_configs', {}).get('schema', {}).get('schema', {}).get('extra_params', {}).get('schema', {})
             }
         )
 
