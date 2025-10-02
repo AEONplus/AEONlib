@@ -1,7 +1,7 @@
 # pyright:  reportUnannotatedClassAttribute=false
 # This file is generated automatically and should not be edited by hand.
 
-from typing import Any, Annotated, Literal, Optional
+from typing import Any, Annotated, Literal
 
 from annotated_types import Le, Ge
 from pydantic import BaseModel, ConfigDict, Field
@@ -13,13 +13,14 @@ from aeonlib.ocs.config_models import Roi
 
 
 
+
 class SoarGhtsBluecamConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
 
 
 class SoarGhtsBluecamInstrumentConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
-    defocus: Optional[Annotated[float, Ge(-5.0), Le(5.0)]] = None
+    defocus: Annotated[float, Ge(-5.0), Le(5.0), "Observations may be defocused to prevent the CCD from saturating on bright targets. This term describes the offset (in mm) of the secondary mirror from its default (focused) position. The limits are ± 5mm."] | None = None
 
 
 class SoarGhtsBluecamOpticalElements(BaseModel):
@@ -76,13 +77,14 @@ class SoarGhtsBluecam(BaseModel):
 
 
 
+
 class SoarGhtsBluecamImagerConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
 
 
 class SoarGhtsBluecamImagerInstrumentConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
-    defocus: Optional[Annotated[float, Ge(-5.0), Le(5.0)]] = None
+    defocus: Annotated[float, Ge(-5.0), Le(5.0), "Observations may be defocused to prevent the CCD from saturating on bright targets. This term describes the offset (in mm) of the secondary mirror from its default (focused) position. The limits are ± 5mm."] | None = None
 
 
 class SoarGhtsBluecamImagerOpticalElements(BaseModel):
@@ -140,13 +142,14 @@ class SoarGhtsBluecamImager(BaseModel):
 
 
 
+
 class SoarGhtsRedcamConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
 
 
 class SoarGhtsRedcamInstrumentConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
-    defocus: Optional[Annotated[float, Ge(-5.0), Le(5.0)]] = None
+    defocus: Annotated[float, Ge(-5.0), Le(5.0), "Observations may be defocused to prevent the CCD from saturating on bright targets. This term describes the offset (in mm) of the secondary mirror from its default (focused) position. The limits are ± 5mm."] | None = None
 
 
 class SoarGhtsRedcamOpticalElements(BaseModel):
@@ -203,13 +206,14 @@ class SoarGhtsRedcam(BaseModel):
 
 
 
+
 class SoarGhtsRedcamImagerConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
 
 
 class SoarGhtsRedcamImagerInstrumentConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
-    defocus: Optional[Annotated[float, Ge(-5.0), Le(5.0)]] = None
+    defocus: Annotated[float, Ge(-5.0), Le(5.0), "Observations may be defocused to prevent the CCD from saturating on bright targets. This term describes the offset (in mm) of the secondary mirror from its default (focused) position. The limits are ± 5mm."] | None = None
 
 
 class SoarGhtsRedcamImagerOpticalElements(BaseModel):
@@ -264,6 +268,7 @@ class SoarGhtsRedcamImager(BaseModel):
     guiding_config_class = SoarGhtsRedcamImagerGuidingConfig
     acquisition_config_class = SoarGhtsRedcamImagerAcquisitionConfig
     optical_elements_class = SoarGhtsRedcamImagerOpticalElements
+
 
 
 

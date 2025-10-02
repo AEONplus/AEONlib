@@ -1,7 +1,7 @@
 # pyright:  reportUnannotatedClassAttribute=false
 # This file is generated automatically and should not be edited by hand.
 
-from typing import Any, Annotated, Literal, Optional
+from typing import Any, Annotated, Literal
 
 from annotated_types import Le, Ge
 from pydantic import BaseModel, ConfigDict, Field
@@ -13,15 +13,16 @@ from aeonlib.ocs.config_models import Roi
 
 
 
+
 class Lco0M4ScicamQhy600ConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
-    sub_expose: Literal[[False, True]] = False
-    sub_exposure_time: Optional[Annotated[float, Ge(15.0)]] = None
+    sub_expose: Annotated[bool, "Whether or not to split your exposures into sub_exposures to guide during the observation, and stack them together at the end for the final data product."] = False
+    sub_exposure_time: Annotated[float, Ge(15.0), "Exposure time for the sub-exposures in seconds, if sub_expose mode is set"] | None = None
 
 
 class Lco0M4ScicamQhy600InstrumentConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
-    defocus: Optional[Annotated[float, Ge(-5.0), Le(5.0)]] = None
+    defocus: Annotated[float, Ge(-5.0), Le(5.0), "Observations may be defocused to prevent the CCD from saturating on bright targets. This term describes the offset (in mm) of the secondary mirror from its default (focused) position. The limits are ± 5mm."] | None = None
 
 
 class Lco0M4ScicamQhy600OpticalElements(BaseModel):
@@ -78,13 +79,14 @@ class Lco0M4ScicamQhy600(BaseModel):
 
 
 
+
 class Lco1M0NresScicamConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
 
 
 class Lco1M0NresScicamInstrumentConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
-    defocus: Optional[Annotated[float, Ge(-5.0), Le(5.0)]] = None
+    defocus: Annotated[float, Ge(-5.0), Le(5.0), "Observations may be defocused to prevent the CCD from saturating on bright targets. This term describes the offset (in mm) of the secondary mirror from its default (focused) position. The limits are ± 5mm."] | None = None
 
 
 class Lco1M0NresScicamOpticalElements(BaseModel):
@@ -140,13 +142,14 @@ class Lco1M0NresScicam(BaseModel):
 
 
 
+
 class Lco1M0ScicamSinistroConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
 
 
 class Lco1M0ScicamSinistroInstrumentConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
-    defocus: Optional[Annotated[float, Ge(-5.0), Le(5.0)]] = None
+    defocus: Annotated[float, Ge(-5.0), Le(5.0), "Observations may be defocused to prevent the CCD from saturating on bright targets. This term describes the offset (in mm) of the secondary mirror from its default (focused) position. The limits are ± 5mm."] | None = None
 
 
 class Lco1M0ScicamSinistroOpticalElements(BaseModel):
@@ -203,13 +206,14 @@ class Lco1M0ScicamSinistro(BaseModel):
 
 
 
+
 class Lco2M0FloydsScicamConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
 
 
 class Lco2M0FloydsScicamInstrumentConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
-    defocus: Optional[Annotated[float, Ge(-5.0), Le(5.0)]] = None
+    defocus: Annotated[float, Ge(-5.0), Le(5.0), ""] | None = None
 
 
 class Lco2M0FloydsScicamOpticalElements(BaseModel):
@@ -267,13 +271,14 @@ class Lco2M0FloydsScicam(BaseModel):
 
 
 
+
 class Lco2M0ScicamMuscatConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
 
 
 class Lco2M0ScicamMuscatInstrumentConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
-    defocus: Optional[Annotated[float, Ge(-8.0), Le(8.0)]] = None
+    defocus: Annotated[float, Ge(-8.0), Le(8.0), "Observations may be defocused to prevent the CCD from saturating on bright targets. This term describes the offset (in mm) of the secondary mirror from its default (focused) position. The limits are ± 8mm."] | None = None
 
 
 class Lco2M0ScicamMuscatOpticalElements(BaseModel):

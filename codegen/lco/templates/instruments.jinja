@@ -1,7 +1,7 @@
 # pyright:  reportUnannotatedClassAttribute=false
 # This file is generated automatically and should not be edited by hand.
 
-from typing import Any, Annotated, Literal, Optional
+from typing import Any, Annotated, Literal
 
 from annotated_types import Le, Ge
 from pydantic import BaseModel, ConfigDict, Field
@@ -14,21 +14,18 @@ from aeonlib.ocs.config_models import Roi
 
 {% for ctx in instruments %}
 
+
 class {{ ctx.class_name}}ConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
-    {% for field, properties in ctx.configuration_extra_params.items() %}
-    {% set optional = ('required' not in properties or not properties.required) and 'default' not in properties %}
-    {{ field }}: {% if optional %}Optional[{% endif %}{% if 'allowed' in properties %}Literal[{{ properties.allowed }}]{% else %}Annotated[{% if properties.type == 'string' %}str{% elif properties.type == 'integer' %}int{% elif properties.type == 'float' %}float{% elif properties.type == 'boolean' %}bool{% endif %}{% if 'min' in properties %}, Ge({{ properties.min }}){% endif %}{% if 'max' in properties %}, Le({{ properties.max }}){% endif %}]{% endif %}{% if optional %}] = None{% elif 'default' in properties %} = {{ properties | extract_default }}{% endif %}
-
+    {% for field, field_class in ctx.configuration_extra_params.items() %}
+    {{ field }}: {{ field_class }}
     {% endfor %}
 
 
 class {{ ctx.class_name}}InstrumentConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
-    {% for field, properties in ctx.instrument_config_extra_params.items() %}
-    {% set optional = ('required' not in properties or not properties.required) and 'default' not in properties %}
-    {{ field }}: {% if optional %}Optional[{% endif %}{% if 'allowed' in properties %}Literal[{{ properties.allowed }}]{% else %}Annotated[{% if properties.type == 'string' %}str{% elif properties.type == 'integer' %}int{% elif properties.type == 'float' %}float{% elif properties.type == 'boolean' %}bool{% endif %}{% if 'min' in properties %}, Ge({{ properties.min }}){% endif %}{% if 'max' in properties %}, Le({{ properties.max }}){% endif %}]{% endif %}{% if optional %}] = None{% elif 'default' in properties %} = {{ properties | extract_default }}{% endif %}
-
+    {% for field, field_class in ctx.instrument_config_extra_params.items() %}
+    {{ field }}: {{ field_class }}
     {% endfor %}
 
 
