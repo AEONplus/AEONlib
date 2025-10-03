@@ -44,7 +44,7 @@ def get_extra_params_fields(extra_params_validation_schema: dict) -> dict:
             # Add description to Annotated field. Annotated fields must have at least 2 properties.
             field_class += f', "{properties.get("description", "")}"]'
         if not properties.get("required", False) and "default" not in properties:
-            # The field is considered optional if it doesn't have a default or required is set to True
+            # The field is considered optional if it doesn't have a default or required is not set to True
             field_class += " | None = None"
         elif "default" in properties:
             # If a default value is present, provide it
