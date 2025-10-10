@@ -90,20 +90,20 @@ This ensures regular users of the library do not need to install these dependenc
 The `generate.py` script takes as input JSON as produced by the instruments endpoint:
 
 ```bash
-codegen/lco/generator.py instruments.json
+codegen/lco/generator.py {facility} instruments.json
 ```
 
 Or directly from stdin using a pipe:
 
 ```bash
-curl https://observe.lco.global/api/instruments/ | codegen/lco/generator.py
+curl https://observe.lco.global/api/instruments/ | codegen/lco/generator.py {facility}
 ```
 
 If the output looks satisfactory, you can redirect the output to overwrite the
 LCO instruments definition file:
 
 ```bash
-curl https://observe.lco.global/api/instruments/ | codegen/lco/generator.py > src/aeonlib/ocs/lco/instruments.py
+curl https://observe.lco.global/api/instruments/ | codegen/lco/generator.py {facility} > src/aeonlib/ocs/lco/instruments.py
 ```
 # Supported Facilities
 

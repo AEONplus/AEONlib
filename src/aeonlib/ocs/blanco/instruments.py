@@ -3,13 +3,29 @@
 
 from typing import Any, Annotated, Literal
 
-from annotated_types import Le
-from pydantic import BaseModel, ConfigDict
+from annotated_types import Le, Ge
+from pydantic import BaseModel, ConfigDict, Field
 from pydantic.types import NonNegativeInt, PositiveInt
 
 from aeonlib.models import TARGET_TYPES
 from aeonlib.ocs.target_models import Constraints
 from aeonlib.ocs.config_models import Roi
+
+
+
+
+class BlancoNewfirmConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    dither_value: Annotated[int, Ge(0), Le(1600), "The amount in arc seconds between dither points"] = 80
+    dither_sequence: Literal["2x2", "3x3", "4x4", "5-point"] = "2x2"
+    detector_centering: Literal["none", "det_1", "det_2", "det_3", "det_4"] = "det_1"
+    dither_sequence_random_offset: Annotated[bool, "Implements a random offset between dither patterns if repeating the dither pattern, i.e. when sequence repeats > 1"] = True
+
+
+class BlancoNewfirmInstrumentConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    coadds: Annotated[int, Ge(1), Le(100), "This reduces data volume with short integration times necessary for broadband H and Ks observations. Coadding is digital summation of the images to avoid long integrations that could cause saturation of the detector."] = 1
+    sequence_repeats: Annotated[int, Ge(1), Le(500), "The number of times to repeat the dither sequence"] = 1
 
 
 class BlancoNewfirmOpticalElements(BaseModel):
@@ -43,7 +59,7 @@ class BlancoNewfirmConfig(BaseModel):
     """ Exposure time in seconds"""
     mode: Literal["fowler1", "fowler2"]
     rois: list[Roi] | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: BlancoNewfirmInstrumentConfigExtraParams = Field(default_factory=BlancoNewfirmInstrumentConfigExtraParams)
     optical_elements: BlancoNewfirmOpticalElements
 
 
@@ -52,7 +68,7 @@ class BlancoNewfirm(BaseModel):
     type: Literal["EXPOSE", "SKY_FLAT", "STANDARD", "DARK"]
     instrument_type: Literal["BLANCO_NEWFIRM"] = "BLANCO_NEWFIRM"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: BlancoNewfirmConfigExtraParams = Field(default_factory=BlancoNewfirmConfigExtraParams)
     instrument_configs: list[BlancoNewfirmConfig] = []
     acquisition_config: BlancoNewfirmAcquisitionConfig
     guiding_config: BlancoNewfirmGuidingConfig

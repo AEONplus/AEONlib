@@ -3,13 +3,24 @@
 
 from typing import Any, Annotated, Literal
 
-from annotated_types import Le
-from pydantic import BaseModel, ConfigDict
+from annotated_types import Le, Ge
+from pydantic import BaseModel, ConfigDict, Field
 from pydantic.types import NonNegativeInt, PositiveInt
 
 from aeonlib.models import TARGET_TYPES
 from aeonlib.ocs.target_models import Constraints
 from aeonlib.ocs.config_models import Roi
+
+
+
+
+class SoarGhtsBluecamConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+
+
+class SoarGhtsBluecamInstrumentConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    defocus: Annotated[float, Ge(-5.0), Le(5.0), "Observations may be defocused to prevent the CCD from saturating on bright targets. This term describes the offset (in mm) of the secondary mirror from its default (focused) position. The limits are ± 5mm."] | None = None
 
 
 class SoarGhtsBluecamOpticalElements(BaseModel):
@@ -43,7 +54,7 @@ class SoarGhtsBluecamConfig(BaseModel):
     mode: Literal["GHTS_B_600UV_2x2_slit1p5", "GHTS_B_400m1_2x2", "GHTS_B_600UV_2x2_slit1p0", "GHTS_B_930m2_1x2_slit0p45"]
     rotator_mode: Literal["SKY"]
     rois: list[Roi] | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: SoarGhtsBluecamInstrumentConfigExtraParams = Field(default_factory=SoarGhtsBluecamInstrumentConfigExtraParams)
     optical_elements: SoarGhtsBluecamOpticalElements
 
 
@@ -52,7 +63,7 @@ class SoarGhtsBluecam(BaseModel):
     type: Literal["SPECTRUM", "ENGINEERING", "SCRIPT", "LAMP_FLAT", "ARC"]
     instrument_type: Literal["SOAR_GHTS_BLUECAM"] = "SOAR_GHTS_BLUECAM"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: SoarGhtsBluecamConfigExtraParams = Field(default_factory=SoarGhtsBluecamConfigExtraParams)
     instrument_configs: list[SoarGhtsBluecamConfig] = []
     acquisition_config: SoarGhtsBluecamAcquisitionConfig
     guiding_config: SoarGhtsBluecamGuidingConfig
@@ -63,6 +74,17 @@ class SoarGhtsBluecam(BaseModel):
     guiding_config_class = SoarGhtsBluecamGuidingConfig
     acquisition_config_class = SoarGhtsBluecamAcquisitionConfig
     optical_elements_class = SoarGhtsBluecamOpticalElements
+
+
+
+
+class SoarGhtsBluecamImagerConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+
+
+class SoarGhtsBluecamImagerInstrumentConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    defocus: Annotated[float, Ge(-5.0), Le(5.0), "Observations may be defocused to prevent the CCD from saturating on bright targets. This term describes the offset (in mm) of the secondary mirror from its default (focused) position. The limits are ± 5mm."] | None = None
 
 
 class SoarGhtsBluecamImagerOpticalElements(BaseModel):
@@ -97,7 +119,7 @@ class SoarGhtsBluecamImagerConfig(BaseModel):
     mode: Literal["GHTS_B_Image_2x2"]
     rotator_mode: Literal["SKY"]
     rois: list[Roi] | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: SoarGhtsBluecamImagerInstrumentConfigExtraParams = Field(default_factory=SoarGhtsBluecamImagerInstrumentConfigExtraParams)
     optical_elements: SoarGhtsBluecamImagerOpticalElements
 
 
@@ -106,7 +128,7 @@ class SoarGhtsBluecamImager(BaseModel):
     type: Literal["EXPOSE"]
     instrument_type: Literal["SOAR_GHTS_BLUECAM_IMAGER"] = "SOAR_GHTS_BLUECAM_IMAGER"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: SoarGhtsBluecamImagerConfigExtraParams = Field(default_factory=SoarGhtsBluecamImagerConfigExtraParams)
     instrument_configs: list[SoarGhtsBluecamImagerConfig] = []
     acquisition_config: SoarGhtsBluecamImagerAcquisitionConfig
     guiding_config: SoarGhtsBluecamImagerGuidingConfig
@@ -117,6 +139,17 @@ class SoarGhtsBluecamImager(BaseModel):
     guiding_config_class = SoarGhtsBluecamImagerGuidingConfig
     acquisition_config_class = SoarGhtsBluecamImagerAcquisitionConfig
     optical_elements_class = SoarGhtsBluecamImagerOpticalElements
+
+
+
+
+class SoarGhtsRedcamConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+
+
+class SoarGhtsRedcamInstrumentConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    defocus: Annotated[float, Ge(-5.0), Le(5.0), "Observations may be defocused to prevent the CCD from saturating on bright targets. This term describes the offset (in mm) of the secondary mirror from its default (focused) position. The limits are ± 5mm."] | None = None
 
 
 class SoarGhtsRedcamOpticalElements(BaseModel):
@@ -150,7 +183,7 @@ class SoarGhtsRedcamConfig(BaseModel):
     mode: Literal["GHTS_R_400m1_2x2", "GHTS_R_400m2_2x2"]
     rotator_mode: Literal["SKY"]
     rois: list[Roi] | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: SoarGhtsRedcamInstrumentConfigExtraParams = Field(default_factory=SoarGhtsRedcamInstrumentConfigExtraParams)
     optical_elements: SoarGhtsRedcamOpticalElements
 
 
@@ -159,7 +192,7 @@ class SoarGhtsRedcam(BaseModel):
     type: Literal["SPECTRUM", "ENGINEERING", "SCRIPT", "ARC", "LAMP_FLAT"]
     instrument_type: Literal["SOAR_GHTS_REDCAM"] = "SOAR_GHTS_REDCAM"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: SoarGhtsRedcamConfigExtraParams = Field(default_factory=SoarGhtsRedcamConfigExtraParams)
     instrument_configs: list[SoarGhtsRedcamConfig] = []
     acquisition_config: SoarGhtsRedcamAcquisitionConfig
     guiding_config: SoarGhtsRedcamGuidingConfig
@@ -170,6 +203,17 @@ class SoarGhtsRedcam(BaseModel):
     guiding_config_class = SoarGhtsRedcamGuidingConfig
     acquisition_config_class = SoarGhtsRedcamAcquisitionConfig
     optical_elements_class = SoarGhtsRedcamOpticalElements
+
+
+
+
+class SoarGhtsRedcamImagerConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+
+
+class SoarGhtsRedcamImagerInstrumentConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    defocus: Annotated[float, Ge(-5.0), Le(5.0), "Observations may be defocused to prevent the CCD from saturating on bright targets. This term describes the offset (in mm) of the secondary mirror from its default (focused) position. The limits are ± 5mm."] | None = None
 
 
 class SoarGhtsRedcamImagerOpticalElements(BaseModel):
@@ -204,7 +248,7 @@ class SoarGhtsRedcamImagerConfig(BaseModel):
     mode: Literal["GHTS_R_Image_2x2"]
     rotator_mode: Literal["SKY"]
     rois: list[Roi] | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: SoarGhtsRedcamImagerInstrumentConfigExtraParams = Field(default_factory=SoarGhtsRedcamImagerInstrumentConfigExtraParams)
     optical_elements: SoarGhtsRedcamImagerOpticalElements
 
 
@@ -213,7 +257,7 @@ class SoarGhtsRedcamImager(BaseModel):
     type: Literal["EXPOSE"]
     instrument_type: Literal["SOAR_GHTS_REDCAM_IMAGER"] = "SOAR_GHTS_REDCAM_IMAGER"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: SoarGhtsRedcamImagerConfigExtraParams = Field(default_factory=SoarGhtsRedcamImagerConfigExtraParams)
     instrument_configs: list[SoarGhtsRedcamImagerConfig] = []
     acquisition_config: SoarGhtsRedcamImagerAcquisitionConfig
     guiding_config: SoarGhtsRedcamImagerGuidingConfig
@@ -224,6 +268,16 @@ class SoarGhtsRedcamImager(BaseModel):
     guiding_config_class = SoarGhtsRedcamImagerGuidingConfig
     acquisition_config_class = SoarGhtsRedcamImagerAcquisitionConfig
     optical_elements_class = SoarGhtsRedcamImagerOpticalElements
+
+
+
+
+class SoarTriplespecConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+
+
+class SoarTriplespecInstrumentConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
 
 
 class SoarTriplespecOpticalElements(BaseModel):
@@ -257,7 +311,7 @@ class SoarTriplespecConfig(BaseModel):
     mode: Literal["fowler1_coadds2", "fowler4_coadds1", "fowler8_coadds1", "fowler16_coadds1", "fowler1_coadds1"]
     rotator_mode: Literal["SKY"]
     rois: list[Roi] | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: SoarTriplespecInstrumentConfigExtraParams = Field(default_factory=SoarTriplespecInstrumentConfigExtraParams)
     optical_elements: SoarTriplespecOpticalElements
 
 
@@ -266,7 +320,7 @@ class SoarTriplespec(BaseModel):
     type: Literal["SPECTRUM", "STANDARD", "ARC", "LAMP_FLAT", "BIAS"]
     instrument_type: Literal["SOAR_TRIPLESPEC"] = "SOAR_TRIPLESPEC"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: SoarTriplespecConfigExtraParams = Field(default_factory=SoarTriplespecConfigExtraParams)
     instrument_configs: list[SoarTriplespecConfig] = []
     acquisition_config: SoarTriplespecAcquisitionConfig
     guiding_config: SoarTriplespecGuidingConfig
