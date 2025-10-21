@@ -24,6 +24,44 @@ Facilities should attempt to avoid making excessive use of plain Python dictiona
 AEONlib also provides several [data types](https://github.com/AEONplus/AEONlib/blob/main/src/aeonlib/types.py) that improve Pydantic models:
 1. `aeonlib.types.Time` using this type in a Pydantic model allows consumers to pass in `astropy.time.Time` objects as well as `datetime` objects. The facility can then decide how the time is serialized to match whatever specific format is required.
 2. `aeonlib.types.Angle` similarly to the `Time` type, this allows consumers to pass in `astropy.coordinates.Angle` types as well as floats in decimal degrees, the facility can then decide how to serialize the type.
+3. `aeonlib.types.AstropyQuantityTypeAnnotation` can be used to define Pydantic models based on `astropy.units.Quantity`, which allow consumers to pass in values with units or as floats.
+
+The following example illustrates how these types can be used to define a model.
+
+```python
+from typing import Annotated, Union
+
+from astropy import coordinates
+from astropy import time
+from astropy import units as u
+from astropy.units import Quantity
+from pydantic import BaseModel
+
+from aeonlib.types import Angle, AstropyQuantityTypeAnnotation, Time
+
+Wavelength = Annotated[
+    Union[Quantity, float], AstropyQuantityTypeAnnotation(u.Angstrom)
+]
+
+class Observation(BaseModel):
+    start_time: Time
+    grating_angle: Angle
+    articulation_amgle: Angle
+    wavelength_range: tuple[Wavelength, Wavelength]
+
+observation = Observation(
+    start_time=time.Time(60775.0, scale="utc", format="mjd"),
+    grating_angle=22.5,
+    articulation_amgle=45 * u.deg,
+    wavelength_range=(5000, 600 * u.nm),  # 5000 Å to 6000 Å
+)
+
+assert type(observation.start_time) == time.Time
+assert type(observation.grating_angle) == coordinates.Angle
+assert type(observation.articulation_amgle) == coordinates.Angle
+assert type(observation.wavelength_range[0]) == Quantity
+assert type(observation.wavelength_range[1]) == Quantity
+```
 
 These types eliminate the need for the facility user to need to remember which exact format a facility requires (time in hms? Or ISO UTC?) and simply pass in higher level objects instead.
 
