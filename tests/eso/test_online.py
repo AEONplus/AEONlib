@@ -261,7 +261,7 @@ def test_verify_ob():
     ob.constraints.sky_transparency = "Variable, thin cirrus"
     ob.constraints.fli = 0.1
     ob.constraints.seeing = 2.0
-    facility.save_ob(ob)
+    _ = facility.save_ob(ob)
 
     # Add some instrument templates
     acq_template = facility.create_template(ob, "UVES_blue_acq_slit")
@@ -276,7 +276,7 @@ def test_verify_ob():
             )
         ]
     )
-    facility.save_absolute_time_constraints(ob, time_constraints)
+    _ = facility.save_absolute_time_constraints(ob, time_constraints)
 
     # Send it
     errors, success = facility.verify(ob, False)

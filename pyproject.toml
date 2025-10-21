@@ -1,6 +1,6 @@
 [project]
 name = "aeonlib"
-version = "0.1.0"
+version = "0.1.1"
 description = "A suite of modules to enable TDA/MMA observations"
 readme = "README.md"
 authors = [{ name = "Austin Riba", email = "ariba@lco.global" }]
@@ -47,6 +47,10 @@ exclude = ["*.ipynb"]
 [tool.ruff.format]
 exclude = [
     "*.ipynb",
-    "src/aeonlib/ocs/lco/instruments.py",
-    "src/aeonlib/ocs/soar/instruments.py",
+    "src/aeonlib/ocs/*/instruments.py",
 ]
+
+[tool.pyright]
+reportExplicitAny = false
+reportAny = false
+reportMissingTypeStubs = false

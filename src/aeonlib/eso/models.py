@@ -1,5 +1,5 @@
 from datetime import datetime, time
-from typing import Any, Self
+from typing import Any, ClassVar, Self
 
 from astropy.coordinates import Angle
 from pydantic import BaseModel, ConfigDict, Field
@@ -9,7 +9,7 @@ from aeonlib.models import SiderealTarget, Window
 
 
 class EsoModel(BaseModel):
-    model_config = ConfigDict(
+    model_config: ClassVar[ConfigDict] = ConfigDict(
         alias_generator=to_camel, validate_by_name=True, serialize_by_alias=True
     )
 
@@ -49,8 +49,8 @@ class Target(EsoModel):
         # Format angles the way ESO wants them.
         assert isinstance(st.ra, Angle)
         assert isinstance(st.dec, Angle)
-        self.ra = st.ra.to_string(sep=":", precision=3)
-        self.dec = st.dec.to_string(sep=":", precision=3)
+        self.ra = st.ra.to_string(sep=":", precision=3)  # pyright: ignore[reportUnknownMemberType]
+        self.dec = st.dec.to_string(sep=":", precision=3)  # pyright: ignore[reportUnknownMemberType]
         self.epoch = st.epoch
         self.name = st.name
         self.proper_motion_dec = st.proper_motion_dec

@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Annotated, Any, Literal, Union
+from typing import Annotated, Any, ClassVar, Literal
 
 from annotated_types import Ge, Le
 from pydantic import BaseModel, ConfigDict, Field
@@ -11,6 +11,7 @@ from pydantic.types import (
 )
 
 from aeonlib.models import Window
+from aeonlib.ocs.blanco.instruments import BLANCO_INSTRUMENTS
 from aeonlib.ocs.lco.instruments import LCO_INSTRUMENTS
 from aeonlib.ocs.saao.instruments import SAAO_INSTRUMENTS
 from aeonlib.ocs.soar.instruments import SOAR_INSTRUMENTS
@@ -22,7 +23,7 @@ class Location(BaseModel):
     TODO: Seems the OpenAPI spec does not specify values.
     """
 
-    model_config = ConfigDict(validate_assignment=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(validate_assignment=True)
     site: str | None = None
     enclosure: str | None = None
     telescope: str | None = None
@@ -32,7 +33,7 @@ class Location(BaseModel):
 class Cadence(BaseModel):
     """Request level cadence configuration"""
 
-    model_config = ConfigDict(validate_assignment=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(validate_assignment=True)
     start: datetime
     end: datetime
     period: Annotated[float, Ge(0.02)]
@@ -41,7 +42,7 @@ class Cadence(BaseModel):
 
 # Informs Pydantic which instrument configuration type should be used during parsing
 Configuration = Annotated[
-    Union[LCO_INSTRUMENTS, SOAR_INSTRUMENTS, SAAO_INSTRUMENTS],
+    LCO_INSTRUMENTS | SOAR_INSTRUMENTS | SAAO_INSTRUMENTS | BLANCO_INSTRUMENTS,
     Field(discriminator="instrument_type"),
 ]
 
@@ -50,7 +51,7 @@ class Request(BaseModel):
     """A request for a single, discrete observation. One group can contain multiple
     requests"""
 
-    model_config = ConfigDict(validate_assignment=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(validate_assignment=True)
     acceptability_threshold: Annotated[int, NonNegativeInt, Le(100)] = 90
     """
     The percentage of the observation that must be completed to mark the request as
@@ -82,7 +83,7 @@ class RequestGroup(BaseModel):
     An Observation request for any observatory that supports an OCS API.
     """
 
-    model_config = ConfigDict(validate_assignment=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(validate_assignment=True)
     name: Annotated[str, StringConstraints(max_length=50)]
     """
     Descriptive name for this RequestGroup. This string will be placed in the

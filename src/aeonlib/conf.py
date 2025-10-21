@@ -1,8 +1,12 @@
+from typing import ClassVar
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix="AEON_", env_file=".env")
+    model_config: ClassVar[SettingsConfigDict] = SettingsConfigDict(
+        env_prefix="AEON_", env_file=".env"
+    )
 
     # Las Cumbres Observatory
     lco_token: str = ""
@@ -11,6 +15,10 @@ class Settings(BaseSettings):
     # SOAR
     soar_token: str = ""
     soar_api_root: str = "https://observe.lco.global/api/"
+
+    # BLANCO
+    blanco_token: str = ""
+    blanco_api_root: str = "https://observe.lco.global/api/"
 
     # South African Astronomical Observatory
     saao_token: str = ""

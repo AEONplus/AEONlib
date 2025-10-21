@@ -1,4 +1,5 @@
 import logging
+from abc import ABC, abstractmethod
 from typing import Any, Callable, Literal
 
 import httpx
@@ -11,13 +12,15 @@ from aeonlib.ocs.request_models import RequestGroup, SubmittedRequestGroup
 logger = logging.getLogger(__name__)
 
 
-def walk_pagination(response: dict, callback: Callable[[dict], None]):
+def walk_pagination(
+    response: dict[Any, Any], callback: Callable[[dict[Any, Any]], None]
+):
     while response["next"]:
         response = httpx.get(response["next"]).json()
         callback(response)
 
 
-def dict_table(proposals: list[dict], fields: list[str]) -> Table:
+def dict_table(proposals: list[dict[Any, Any]], fields: list[str]) -> Table:
     """Construct an Astropy Table from the given list of dictionaries, containing
     only the specified fields.
     """
@@ -25,29 +28,33 @@ def dict_table(proposals: list[dict], fields: list[str]) -> Table:
     return Table(rows=ps)
 
 
-class OCSFacility:
+class OCSFacility(ABC):
     """
     Generic OCS Facility that can be utilized by any facility running the OCS.
     """
 
+    @abstractmethod
     def api_key(self, settings: Settings) -> str:
         raise NotImplementedError("Subclasses must implement this method")
 
+    @abstractmethod
     def api_root(self, settings: Settings) -> str:
         raise NotImplementedError("Subclasses must implement this method")
 
-    def __init__(self, settings=default_settings):
+    def __init__(self, settings: Settings = default_settings):
         headers = {"Authorization": f"Token {self.api_key(settings)}"}
-        self.client = httpx.Client(base_url=self.api_root(settings), headers=headers)
+        self.client: httpx.Client = httpx.Client(
+            base_url=self.api_root(settings), headers=headers
+        )
 
     def __del__(self):
         self.client.close()
 
     def proposals(
         self, format: Literal["dict", "table"] = "table"
-    ) -> Table | list[dict]:
+    ) -> Table | list[dict[Any, Any]]:
         response = self.client.get("/proposals/")
-        response.raise_for_status()
+        _ = response.raise_for_status()
         proposals = response.json()["results"]
         walk_pagination(response.json(), lambda x: proposals.extend(x["results"]))
         if format == "dict":
@@ -56,7 +63,7 @@ class OCSFacility:
             fields = ["id", "active", "title", "requestgroup_count"]
             return dict_table(proposals, fields)
 
-    def serialize_request_group(self, request_group: RequestGroup) -> dict:
+    def serialize_request_group(self, request_group: RequestGroup) -> dict[str, Any]:
         return request_group.model_dump(mode="json", exclude_none=True)
 
     def validate_request_group(
@@ -78,6 +85,6 @@ class OCSFacility:
         payload = self.serialize_request_group(request_group)
         logger.debug("-> %s", payload)
         response = self.client.post("/requestgroups/", json=payload)
-        response.raise_for_status()
+        _ = response.raise_for_status()
         logger.debug("<- %s", response.content)
         return SubmittedRequestGroup.model_validate_json(response.content)

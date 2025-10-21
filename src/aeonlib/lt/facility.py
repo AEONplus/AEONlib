@@ -1,3 +1,4 @@
+# pyright: reportPrivateUsage=false
 import time
 from logging import getLogger
 
@@ -31,7 +32,7 @@ class LTFacility:
         url = "{0}://{1}:{2}/node_agent2/node_agent?wsdl".format(
             "http", settings.lt_host, settings.lt_port
         )
-        self.client = Client(url, headers=headers)
+        self.client: Client = Client(url, headers=headers)
 
     def submit_observation(
         self, cfg: LTConfig, ins: LT_INSTRUMENTS, target: SiderealTarget, window: Window
@@ -118,7 +119,7 @@ class LTFacility:
         contact = etree.SubElement(project, "Contact")
         etree.SubElement(contact, "Username").text = settings.lt_username
         etree.SubElement(contact, "Name").text = ""
-        etree.SubElement(contact, "Communication")
+        _ = etree.SubElement(contact, "Communication")
 
         return project
 
@@ -167,9 +168,9 @@ class LTFacility:
         etree.SubElement(photom_const, "Clouds").text = lt_observation.photometric
         date_const = etree.Element("DateTimeConstraint", type="include")
         assert window.start
-        start = window.start.strftime("%Y-%m-%dT%H:%M:00+00:00")
-        end = window.end.strftime("%Y-%m-%dT%H:%M:00+00:00")
-        etree.SubElement(date_const, "DateTimeStart", system="UT", value=str(start))
-        etree.SubElement(date_const, "DateTimeEnd", system="UT", value=str(end))
+        start = window.start.strftime("%Y-%m-%dT%H:%M:00+00:00")  # pyright: ignore[reportUnknownVariableType, reportUnknownMemberType]
+        end = window.end.strftime("%Y-%m-%dT%H:%M:00+00:00")  # pyright: ignore[reportUnknownVariableType, reportUnknownMemberType]
+        _ = etree.SubElement(date_const, "DateTimeStart", system="UT", value=str(start))  # pyright: ignore[reportUnknownArgumentType]
+        _ = etree.SubElement(date_const, "DateTimeEnd", system="UT", value=str(end))  # pyright: ignore[reportUnknownArgumentType]
 
         return [airmass_const, sky_const, seeing_const, photom_const, date_const]

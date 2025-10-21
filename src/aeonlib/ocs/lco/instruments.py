@@ -1,12 +1,28 @@
-from typing import Any, Annotated, Literal, Union
+# pyright:  reportUnannotatedClassAttribute=false
+# This file is generated automatically and should not be edited by hand.
 
-from annotated_types import Le
-from pydantic import BaseModel, ConfigDict
+from typing import Any, Annotated, Literal
+
+from annotated_types import Le, Ge
+from pydantic import BaseModel, ConfigDict, Field
 from pydantic.types import NonNegativeInt, PositiveInt
 
 from aeonlib.models import TARGET_TYPES
 from aeonlib.ocs.target_models import Constraints
 from aeonlib.ocs.config_models import Roi
+
+
+
+
+class Lco0M4ScicamQhy600ConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    sub_expose: Annotated[bool, "Whether or not to split your exposures into sub_exposures to guide during the observation, and stack them together at the end for the final data product."] = False
+    sub_exposure_time: Annotated[float, Ge(15.0), "Exposure time for the sub-exposures in seconds, if sub_expose mode is set"] | None = None
+
+
+class Lco0M4ScicamQhy600InstrumentConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    defocus: Annotated[float, Ge(-5.0), Le(5.0), "Observations may be defocused to prevent the CCD from saturating on bright targets. This term describes the offset (in mm) of the secondary mirror from its default (focused) position. The limits are ± 5mm."] | None = None
 
 
 class Lco0M4ScicamQhy600OpticalElements(BaseModel):
@@ -40,7 +56,7 @@ class Lco0M4ScicamQhy600Config(BaseModel):
     """ Exposure time in seconds"""
     mode: Literal["central30x30", "full_frame"]
     rois: list[Roi] | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: Lco0M4ScicamQhy600InstrumentConfigExtraParams = Field(default_factory=Lco0M4ScicamQhy600InstrumentConfigExtraParams)
     optical_elements: Lco0M4ScicamQhy600OpticalElements
 
 
@@ -49,7 +65,7 @@ class Lco0M4ScicamQhy600(BaseModel):
     type: Literal["EXPOSE", "REPEAT_EXPOSE", "AUTO_FOCUS", "BIAS", "DARK", "STANDARD", "SKY_FLAT"]
     instrument_type: Literal["0M4-SCICAM-QHY600"] = "0M4-SCICAM-QHY600"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: Lco0M4ScicamQhy600ConfigExtraParams = Field(default_factory=Lco0M4ScicamQhy600ConfigExtraParams)
     instrument_configs: list[Lco0M4ScicamQhy600Config] = []
     acquisition_config: Lco0M4ScicamQhy600AcquisitionConfig
     guiding_config: Lco0M4ScicamQhy600GuidingConfig
@@ -60,6 +76,17 @@ class Lco0M4ScicamQhy600(BaseModel):
     guiding_config_class = Lco0M4ScicamQhy600GuidingConfig
     acquisition_config_class = Lco0M4ScicamQhy600AcquisitionConfig
     optical_elements_class = Lco0M4ScicamQhy600OpticalElements
+
+
+
+
+class Lco1M0NresScicamConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+
+
+class Lco1M0NresScicamInstrumentConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    defocus: Annotated[float, Ge(-5.0), Le(5.0), "Observations may be defocused to prevent the CCD from saturating on bright targets. This term describes the offset (in mm) of the secondary mirror from its default (focused) position. The limits are ± 5mm."] | None = None
 
 
 class Lco1M0NresScicamOpticalElements(BaseModel):
@@ -92,7 +119,7 @@ class Lco1M0NresScicamConfig(BaseModel):
     """ Exposure time in seconds"""
     mode: Literal["default"]
     rois: list[Roi] | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: Lco1M0NresScicamInstrumentConfigExtraParams = Field(default_factory=Lco1M0NresScicamInstrumentConfigExtraParams)
     optical_elements: Lco1M0NresScicamOpticalElements
 
 
@@ -101,7 +128,7 @@ class Lco1M0NresScicam(BaseModel):
     type: Literal["NRES_SPECTRUM", "REPEAT_NRES_SPECTRUM", "NRES_EXPOSE", "NRES_TEST", "SCRIPT", "ENGINEERING", "ARC", "LAMP_FLAT", "NRES_BIAS", "NRES_DARK", "AUTO_FOCUS"]
     instrument_type: Literal["1M0-NRES-SCICAM"] = "1M0-NRES-SCICAM"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: Lco1M0NresScicamConfigExtraParams = Field(default_factory=Lco1M0NresScicamConfigExtraParams)
     instrument_configs: list[Lco1M0NresScicamConfig] = []
     acquisition_config: Lco1M0NresScicamAcquisitionConfig
     guiding_config: Lco1M0NresScicamGuidingConfig
@@ -112,6 +139,17 @@ class Lco1M0NresScicam(BaseModel):
     guiding_config_class = Lco1M0NresScicamGuidingConfig
     acquisition_config_class = Lco1M0NresScicamAcquisitionConfig
     optical_elements_class = Lco1M0NresScicamOpticalElements
+
+
+
+
+class Lco1M0ScicamSinistroConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+
+
+class Lco1M0ScicamSinistroInstrumentConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    defocus: Annotated[float, Ge(-5.0), Le(5.0), "Observations may be defocused to prevent the CCD from saturating on bright targets. This term describes the offset (in mm) of the secondary mirror from its default (focused) position. The limits are ± 5mm."] | None = None
 
 
 class Lco1M0ScicamSinistroOpticalElements(BaseModel):
@@ -145,7 +183,7 @@ class Lco1M0ScicamSinistroConfig(BaseModel):
     """ Exposure time in seconds"""
     mode: Literal["full_frame", "central_2k_2x2"]
     rois: list[Roi] | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: Lco1M0ScicamSinistroInstrumentConfigExtraParams = Field(default_factory=Lco1M0ScicamSinistroInstrumentConfigExtraParams)
     optical_elements: Lco1M0ScicamSinistroOpticalElements
 
 
@@ -154,7 +192,7 @@ class Lco1M0ScicamSinistro(BaseModel):
     type: Literal["EXPOSE", "REPEAT_EXPOSE", "BIAS", "DARK", "STANDARD", "SCRIPT", "AUTO_FOCUS", "ENGINEERING", "SKY_FLAT"]
     instrument_type: Literal["1M0-SCICAM-SINISTRO"] = "1M0-SCICAM-SINISTRO"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: Lco1M0ScicamSinistroConfigExtraParams = Field(default_factory=Lco1M0ScicamSinistroConfigExtraParams)
     instrument_configs: list[Lco1M0ScicamSinistroConfig] = []
     acquisition_config: Lco1M0ScicamSinistroAcquisitionConfig
     guiding_config: Lco1M0ScicamSinistroGuidingConfig
@@ -165,6 +203,17 @@ class Lco1M0ScicamSinistro(BaseModel):
     guiding_config_class = Lco1M0ScicamSinistroGuidingConfig
     acquisition_config_class = Lco1M0ScicamSinistroAcquisitionConfig
     optical_elements_class = Lco1M0ScicamSinistroOpticalElements
+
+
+
+
+class Lco2M0FloydsScicamConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+
+
+class Lco2M0FloydsScicamInstrumentConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    defocus: Annotated[float, Ge(-5.0), Le(5.0), ""] | None = None
 
 
 class Lco2M0FloydsScicamOpticalElements(BaseModel):
@@ -199,7 +248,7 @@ class Lco2M0FloydsScicamConfig(BaseModel):
     mode: Literal["default"]
     rotator_mode: Literal["VFLOAT", "SKY"]
     rois: list[Roi] | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: Lco2M0FloydsScicamInstrumentConfigExtraParams = Field(default_factory=Lco2M0FloydsScicamInstrumentConfigExtraParams)
     optical_elements: Lco2M0FloydsScicamOpticalElements
 
 
@@ -208,7 +257,7 @@ class Lco2M0FloydsScicam(BaseModel):
     type: Literal["SPECTRUM", "REPEAT_SPECTRUM", "ARC", "ENGINEERING", "SCRIPT", "LAMP_FLAT"]
     instrument_type: Literal["2M0-FLOYDS-SCICAM"] = "2M0-FLOYDS-SCICAM"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: Lco2M0FloydsScicamConfigExtraParams = Field(default_factory=Lco2M0FloydsScicamConfigExtraParams)
     instrument_configs: list[Lco2M0FloydsScicamConfig] = []
     acquisition_config: Lco2M0FloydsScicamAcquisitionConfig
     guiding_config: Lco2M0FloydsScicamGuidingConfig
@@ -219,6 +268,17 @@ class Lco2M0FloydsScicam(BaseModel):
     guiding_config_class = Lco2M0FloydsScicamGuidingConfig
     acquisition_config_class = Lco2M0FloydsScicamAcquisitionConfig
     optical_elements_class = Lco2M0FloydsScicamOpticalElements
+
+
+
+
+class Lco2M0ScicamMuscatConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+
+
+class Lco2M0ScicamMuscatInstrumentConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    defocus: Annotated[float, Ge(-8.0), Le(8.0), "Observations may be defocused to prevent the CCD from saturating on bright targets. This term describes the offset (in mm) of the secondary mirror from its default (focused) position. The limits are ± 8mm."] | None = None
 
 
 class Lco2M0ScicamMuscatOpticalElements(BaseModel):
@@ -255,7 +315,7 @@ class Lco2M0ScicamMuscatConfig(BaseModel):
     """ Exposure time in seconds"""
     mode: Literal["MUSCAT_SLOW", "MUSCAT_FAST"]
     rois: list[Roi] | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: Lco2M0ScicamMuscatInstrumentConfigExtraParams = Field(default_factory=Lco2M0ScicamMuscatInstrumentConfigExtraParams)
     optical_elements: Lco2M0ScicamMuscatOpticalElements
 
 
@@ -264,7 +324,7 @@ class Lco2M0ScicamMuscat(BaseModel):
     type: Literal["EXPOSE", "REPEAT_EXPOSE", "BIAS", "DARK", "STANDARD", "SCRIPT", "AUTO_FOCUS", "ENGINEERING", "SKY_FLAT"]
     instrument_type: Literal["2M0-SCICAM-MUSCAT"] = "2M0-SCICAM-MUSCAT"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: dict[Any, Any] = {}
+    extra_params: Lco2M0ScicamMuscatConfigExtraParams = Field(default_factory=Lco2M0ScicamMuscatConfigExtraParams)
     instrument_configs: list[Lco2M0ScicamMuscatConfig] = []
     acquisition_config: Lco2M0ScicamMuscatAcquisitionConfig
     guiding_config: Lco2M0ScicamMuscatGuidingConfig
@@ -277,65 +337,5 @@ class Lco2M0ScicamMuscat(BaseModel):
     optical_elements_class = Lco2M0ScicamMuscatOpticalElements
 
 
-class LcoBlancoNewfirmOpticalElements(BaseModel):
-    model_config = ConfigDict(validate_assignment=True)
-    filter: Literal["JX", "HX", "KXs", "1187", "2096", "1644", "2124", "2168", "J1", "1066", "DARK"]
-
-
-class LcoBlancoNewfirmGuidingConfig(BaseModel):
-    model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["ON"]
-    optional: bool
-    """Whether the guiding is optional or not"""
-    exposure_time: Annotated[int, NonNegativeInt, Le(120)] | None = None
-    """Guiding exposure time"""
-    extra_params: dict[Any, Any] = {}
-
-
-class LcoBlancoNewfirmAcquisitionConfig(BaseModel):
-    model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["MANUAL"]
-    exposure_time: Annotated[int, NonNegativeInt, Le(60)] | None = None
-    """Acquisition exposure time"""
-    extra_params: dict[Any, Any] = {}
-
-
-class LcoBlancoNewfirmConfig(BaseModel):
-    model_config = ConfigDict(validate_assignment=True)
-    exposure_count: PositiveInt
-    """The number of exposures to take. This field must be set to a value greater than 0"""
-    exposure_time: NonNegativeInt
-    """ Exposure time in seconds"""
-    mode: Literal["fowler1", "fowler8", "fowler16", "fowler2", "fowler4"]
-    rois: list[Roi] | None = None
-    extra_params: dict[Any, Any] = {}
-    optical_elements: LcoBlancoNewfirmOpticalElements
-
-
-class LcoBlancoNewfirm(BaseModel):
-    model_config = ConfigDict(validate_assignment=True)
-    type: Literal["EXPOSE", "SKY_FLAT", "STANDARD", "DARK"]
-    instrument_type: Literal["BLANCO_NEWFIRM"] = "BLANCO_NEWFIRM"
-    repeat_duration: NonNegativeInt | None = None
-    extra_params: dict[Any, Any] = {}
-    instrument_configs: list[LcoBlancoNewfirmConfig] = []
-    acquisition_config: LcoBlancoNewfirmAcquisitionConfig
-    guiding_config: LcoBlancoNewfirmGuidingConfig
-    target: TARGET_TYPES
-    constraints: Constraints
-
-    config_class = LcoBlancoNewfirmConfig
-    guiding_config_class = LcoBlancoNewfirmGuidingConfig
-    acquisition_config_class = LcoBlancoNewfirmAcquisitionConfig
-    optical_elements_class = LcoBlancoNewfirmOpticalElements
-
-
 # Export a type that encompasses all instruments
-LCO_INSTRUMENTS = Union[
-    Lco0M4ScicamQhy600,
-    Lco1M0NresScicam,
-    Lco1M0ScicamSinistro,
-    Lco2M0FloydsScicam,
-    Lco2M0ScicamMuscat,
-    LcoBlancoNewfirm,
-]
+LCO_INSTRUMENTS = Lco0M4ScicamQhy600 | Lco1M0NresScicam | Lco1M0ScicamSinistro | Lco2M0FloydsScicam | Lco2M0ScicamMuscat
