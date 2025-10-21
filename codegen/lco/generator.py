@@ -132,10 +132,12 @@ def generate_instrument_configs(ins_s: str, facility: str) -> str:
                     for k, v in ins["optical_elements"].items()
                 },
                 "configuration_extra_params": get_extra_params_fields(
-                    ins["validation_schema"].get("extra_params", {}).get("schema", {})
+                    ins.get("validation_schema", {})
+                    .get("extra_params", {})
+                    .get("schema", {})
                 ),
                 "instrument_config_extra_params": get_extra_params_fields(
-                    ins["validation_schema"]
+                    ins.get("validation_schema", {})
                     .get("instrument_configs", {})
                     .get("schema", {})
                     .get("schema", {})

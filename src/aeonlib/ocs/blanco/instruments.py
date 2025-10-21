@@ -1,7 +1,7 @@
 # pyright:  reportUnannotatedClassAttribute=false
 # This file is generated automatically and should not be edited by hand.
 
-from typing import Any, Annotated, Literal
+from typing import Any, Annotated, ClassVar, Literal
 
 from annotated_types import Le, Ge
 from pydantic import BaseModel, ConfigDict, Field
@@ -10,8 +10,6 @@ from pydantic.types import NonNegativeInt, PositiveInt
 from aeonlib.models import TARGET_TYPES
 from aeonlib.ocs.target_models import Constraints
 from aeonlib.ocs.config_models import Roi
-
-
 
 
 class BlancoNewfirmConfigExtraParams(BaseModel):
@@ -75,10 +73,10 @@ class BlancoNewfirm(BaseModel):
     target: TARGET_TYPES
     constraints: Constraints
 
-    config_class = BlancoNewfirmConfig
-    guiding_config_class = BlancoNewfirmGuidingConfig
-    acquisition_config_class = BlancoNewfirmAcquisitionConfig
-    optical_elements_class = BlancoNewfirmOpticalElements
+    config_class: ClassVar = BlancoNewfirmConfig
+    guiding_config_class: ClassVar = BlancoNewfirmGuidingConfig
+    acquisition_config_class: ClassVar = BlancoNewfirmAcquisitionConfig
+    optical_elements_class: ClassVar = BlancoNewfirmOpticalElements
 
 
 # Export a type that encompasses all instruments

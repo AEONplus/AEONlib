@@ -1,7 +1,7 @@
 # pyright:  reportUnannotatedClassAttribute=false
 # This file is generated automatically and should not be edited by hand.
 
-from typing import Any, Annotated, Literal
+from typing import Any, Annotated, ClassVar, Literal
 
 from annotated_types import Le, Ge
 from pydantic import BaseModel, ConfigDict, Field
@@ -10,8 +10,6 @@ from pydantic.types import NonNegativeInt, PositiveInt
 from aeonlib.models import TARGET_TYPES
 from aeonlib.ocs.target_models import Constraints
 from aeonlib.ocs.config_models import Roi
-
-
 
 
 class Lco0M4ScicamQhy600ConfigExtraParams(BaseModel):
@@ -72,16 +70,10 @@ class Lco0M4ScicamQhy600(BaseModel):
     target: TARGET_TYPES
     constraints: Constraints
 
-    config_class = Lco0M4ScicamQhy600Config
-    guiding_config_class = Lco0M4ScicamQhy600GuidingConfig
-    acquisition_config_class = Lco0M4ScicamQhy600AcquisitionConfig
-    optical_elements_class = Lco0M4ScicamQhy600OpticalElements
-
-
-
-
-class Lco1M0NresScicamConfigExtraParams(BaseModel):
-    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    config_class: ClassVar = Lco0M4ScicamQhy600Config
+    guiding_config_class: ClassVar = Lco0M4ScicamQhy600GuidingConfig
+    acquisition_config_class: ClassVar = Lco0M4ScicamQhy600AcquisitionConfig
+    optical_elements_class: ClassVar = Lco0M4ScicamQhy600OpticalElements
 
 
 class Lco1M0NresScicamInstrumentConfigExtraParams(BaseModel):
@@ -128,23 +120,16 @@ class Lco1M0NresScicam(BaseModel):
     type: Literal["NRES_SPECTRUM", "REPEAT_NRES_SPECTRUM", "NRES_EXPOSE", "NRES_TEST", "SCRIPT", "ENGINEERING", "ARC", "LAMP_FLAT", "NRES_BIAS", "NRES_DARK", "AUTO_FOCUS"]
     instrument_type: Literal["1M0-NRES-SCICAM"] = "1M0-NRES-SCICAM"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: Lco1M0NresScicamConfigExtraParams = Field(default_factory=Lco1M0NresScicamConfigExtraParams)
     instrument_configs: list[Lco1M0NresScicamConfig] = []
     acquisition_config: Lco1M0NresScicamAcquisitionConfig
     guiding_config: Lco1M0NresScicamGuidingConfig
     target: TARGET_TYPES
     constraints: Constraints
 
-    config_class = Lco1M0NresScicamConfig
-    guiding_config_class = Lco1M0NresScicamGuidingConfig
-    acquisition_config_class = Lco1M0NresScicamAcquisitionConfig
-    optical_elements_class = Lco1M0NresScicamOpticalElements
-
-
-
-
-class Lco1M0ScicamSinistroConfigExtraParams(BaseModel):
-    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    config_class: ClassVar = Lco1M0NresScicamConfig
+    guiding_config_class: ClassVar = Lco1M0NresScicamGuidingConfig
+    acquisition_config_class: ClassVar = Lco1M0NresScicamAcquisitionConfig
+    optical_elements_class: ClassVar = Lco1M0NresScicamOpticalElements
 
 
 class Lco1M0ScicamSinistroInstrumentConfigExtraParams(BaseModel):
@@ -192,23 +177,16 @@ class Lco1M0ScicamSinistro(BaseModel):
     type: Literal["EXPOSE", "REPEAT_EXPOSE", "BIAS", "DARK", "STANDARD", "SCRIPT", "AUTO_FOCUS", "ENGINEERING", "SKY_FLAT"]
     instrument_type: Literal["1M0-SCICAM-SINISTRO"] = "1M0-SCICAM-SINISTRO"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: Lco1M0ScicamSinistroConfigExtraParams = Field(default_factory=Lco1M0ScicamSinistroConfigExtraParams)
     instrument_configs: list[Lco1M0ScicamSinistroConfig] = []
     acquisition_config: Lco1M0ScicamSinistroAcquisitionConfig
     guiding_config: Lco1M0ScicamSinistroGuidingConfig
     target: TARGET_TYPES
     constraints: Constraints
 
-    config_class = Lco1M0ScicamSinistroConfig
-    guiding_config_class = Lco1M0ScicamSinistroGuidingConfig
-    acquisition_config_class = Lco1M0ScicamSinistroAcquisitionConfig
-    optical_elements_class = Lco1M0ScicamSinistroOpticalElements
-
-
-
-
-class Lco2M0FloydsScicamConfigExtraParams(BaseModel):
-    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    config_class: ClassVar = Lco1M0ScicamSinistroConfig
+    guiding_config_class: ClassVar = Lco1M0ScicamSinistroGuidingConfig
+    acquisition_config_class: ClassVar = Lco1M0ScicamSinistroAcquisitionConfig
+    optical_elements_class: ClassVar = Lco1M0ScicamSinistroOpticalElements
 
 
 class Lco2M0FloydsScicamInstrumentConfigExtraParams(BaseModel):
@@ -257,23 +235,16 @@ class Lco2M0FloydsScicam(BaseModel):
     type: Literal["SPECTRUM", "REPEAT_SPECTRUM", "ARC", "ENGINEERING", "SCRIPT", "LAMP_FLAT"]
     instrument_type: Literal["2M0-FLOYDS-SCICAM"] = "2M0-FLOYDS-SCICAM"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: Lco2M0FloydsScicamConfigExtraParams = Field(default_factory=Lco2M0FloydsScicamConfigExtraParams)
     instrument_configs: list[Lco2M0FloydsScicamConfig] = []
     acquisition_config: Lco2M0FloydsScicamAcquisitionConfig
     guiding_config: Lco2M0FloydsScicamGuidingConfig
     target: TARGET_TYPES
     constraints: Constraints
 
-    config_class = Lco2M0FloydsScicamConfig
-    guiding_config_class = Lco2M0FloydsScicamGuidingConfig
-    acquisition_config_class = Lco2M0FloydsScicamAcquisitionConfig
-    optical_elements_class = Lco2M0FloydsScicamOpticalElements
-
-
-
-
-class Lco2M0ScicamMuscatConfigExtraParams(BaseModel):
-    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    config_class: ClassVar = Lco2M0FloydsScicamConfig
+    guiding_config_class: ClassVar = Lco2M0FloydsScicamGuidingConfig
+    acquisition_config_class: ClassVar = Lco2M0FloydsScicamAcquisitionConfig
+    optical_elements_class: ClassVar = Lco2M0FloydsScicamOpticalElements
 
 
 class Lco2M0ScicamMuscatInstrumentConfigExtraParams(BaseModel):
@@ -324,17 +295,16 @@ class Lco2M0ScicamMuscat(BaseModel):
     type: Literal["EXPOSE", "REPEAT_EXPOSE", "BIAS", "DARK", "STANDARD", "SCRIPT", "AUTO_FOCUS", "ENGINEERING", "SKY_FLAT"]
     instrument_type: Literal["2M0-SCICAM-MUSCAT"] = "2M0-SCICAM-MUSCAT"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: Lco2M0ScicamMuscatConfigExtraParams = Field(default_factory=Lco2M0ScicamMuscatConfigExtraParams)
     instrument_configs: list[Lco2M0ScicamMuscatConfig] = []
     acquisition_config: Lco2M0ScicamMuscatAcquisitionConfig
     guiding_config: Lco2M0ScicamMuscatGuidingConfig
     target: TARGET_TYPES
     constraints: Constraints
 
-    config_class = Lco2M0ScicamMuscatConfig
-    guiding_config_class = Lco2M0ScicamMuscatGuidingConfig
-    acquisition_config_class = Lco2M0ScicamMuscatAcquisitionConfig
-    optical_elements_class = Lco2M0ScicamMuscatOpticalElements
+    config_class: ClassVar = Lco2M0ScicamMuscatConfig
+    guiding_config_class: ClassVar = Lco2M0ScicamMuscatGuidingConfig
+    acquisition_config_class: ClassVar = Lco2M0ScicamMuscatAcquisitionConfig
+    optical_elements_class: ClassVar = Lco2M0ScicamMuscatOpticalElements
 
 
 # Export a type that encompasses all instruments

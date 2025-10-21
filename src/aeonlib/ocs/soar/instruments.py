@@ -1,7 +1,7 @@
 # pyright:  reportUnannotatedClassAttribute=false
 # This file is generated automatically and should not be edited by hand.
 
-from typing import Any, Annotated, Literal
+from typing import Any, Annotated, ClassVar, Literal
 
 from annotated_types import Le, Ge
 from pydantic import BaseModel, ConfigDict, Field
@@ -10,12 +10,6 @@ from pydantic.types import NonNegativeInt, PositiveInt
 from aeonlib.models import TARGET_TYPES
 from aeonlib.ocs.target_models import Constraints
 from aeonlib.ocs.config_models import Roi
-
-
-
-
-class SoarGhtsBluecamConfigExtraParams(BaseModel):
-    model_config = ConfigDict(validate_assignment=True, extra='allow')
 
 
 class SoarGhtsBluecamInstrumentConfigExtraParams(BaseModel):
@@ -63,23 +57,16 @@ class SoarGhtsBluecam(BaseModel):
     type: Literal["SPECTRUM", "ENGINEERING", "SCRIPT", "LAMP_FLAT", "ARC"]
     instrument_type: Literal["SOAR_GHTS_BLUECAM"] = "SOAR_GHTS_BLUECAM"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: SoarGhtsBluecamConfigExtraParams = Field(default_factory=SoarGhtsBluecamConfigExtraParams)
     instrument_configs: list[SoarGhtsBluecamConfig] = []
     acquisition_config: SoarGhtsBluecamAcquisitionConfig
     guiding_config: SoarGhtsBluecamGuidingConfig
     target: TARGET_TYPES
     constraints: Constraints
 
-    config_class = SoarGhtsBluecamConfig
-    guiding_config_class = SoarGhtsBluecamGuidingConfig
-    acquisition_config_class = SoarGhtsBluecamAcquisitionConfig
-    optical_elements_class = SoarGhtsBluecamOpticalElements
-
-
-
-
-class SoarGhtsBluecamImagerConfigExtraParams(BaseModel):
-    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    config_class: ClassVar = SoarGhtsBluecamConfig
+    guiding_config_class: ClassVar = SoarGhtsBluecamGuidingConfig
+    acquisition_config_class: ClassVar = SoarGhtsBluecamAcquisitionConfig
+    optical_elements_class: ClassVar = SoarGhtsBluecamOpticalElements
 
 
 class SoarGhtsBluecamImagerInstrumentConfigExtraParams(BaseModel):
@@ -128,23 +115,16 @@ class SoarGhtsBluecamImager(BaseModel):
     type: Literal["EXPOSE"]
     instrument_type: Literal["SOAR_GHTS_BLUECAM_IMAGER"] = "SOAR_GHTS_BLUECAM_IMAGER"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: SoarGhtsBluecamImagerConfigExtraParams = Field(default_factory=SoarGhtsBluecamImagerConfigExtraParams)
     instrument_configs: list[SoarGhtsBluecamImagerConfig] = []
     acquisition_config: SoarGhtsBluecamImagerAcquisitionConfig
     guiding_config: SoarGhtsBluecamImagerGuidingConfig
     target: TARGET_TYPES
     constraints: Constraints
 
-    config_class = SoarGhtsBluecamImagerConfig
-    guiding_config_class = SoarGhtsBluecamImagerGuidingConfig
-    acquisition_config_class = SoarGhtsBluecamImagerAcquisitionConfig
-    optical_elements_class = SoarGhtsBluecamImagerOpticalElements
-
-
-
-
-class SoarGhtsRedcamConfigExtraParams(BaseModel):
-    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    config_class: ClassVar = SoarGhtsBluecamImagerConfig
+    guiding_config_class: ClassVar = SoarGhtsBluecamImagerGuidingConfig
+    acquisition_config_class: ClassVar = SoarGhtsBluecamImagerAcquisitionConfig
+    optical_elements_class: ClassVar = SoarGhtsBluecamImagerOpticalElements
 
 
 class SoarGhtsRedcamInstrumentConfigExtraParams(BaseModel):
@@ -180,7 +160,7 @@ class SoarGhtsRedcamConfig(BaseModel):
     """The number of exposures to take. This field must be set to a value greater than 0"""
     exposure_time: NonNegativeInt
     """ Exposure time in seconds"""
-    mode: Literal["GHTS_R_400m1_2x2", "GHTS_R_400m2_2x2"]
+    mode: Literal["GHTS_R_2100_5000A_1x2_slit1p0", "GHTS_R_400m1_2x2", "GHTS_R_400m2_2x2"]
     rotator_mode: Literal["SKY"]
     rois: list[Roi] | None = None
     extra_params: SoarGhtsRedcamInstrumentConfigExtraParams = Field(default_factory=SoarGhtsRedcamInstrumentConfigExtraParams)
@@ -192,23 +172,16 @@ class SoarGhtsRedcam(BaseModel):
     type: Literal["SPECTRUM", "ENGINEERING", "SCRIPT", "ARC", "LAMP_FLAT"]
     instrument_type: Literal["SOAR_GHTS_REDCAM"] = "SOAR_GHTS_REDCAM"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: SoarGhtsRedcamConfigExtraParams = Field(default_factory=SoarGhtsRedcamConfigExtraParams)
     instrument_configs: list[SoarGhtsRedcamConfig] = []
     acquisition_config: SoarGhtsRedcamAcquisitionConfig
     guiding_config: SoarGhtsRedcamGuidingConfig
     target: TARGET_TYPES
     constraints: Constraints
 
-    config_class = SoarGhtsRedcamConfig
-    guiding_config_class = SoarGhtsRedcamGuidingConfig
-    acquisition_config_class = SoarGhtsRedcamAcquisitionConfig
-    optical_elements_class = SoarGhtsRedcamOpticalElements
-
-
-
-
-class SoarGhtsRedcamImagerConfigExtraParams(BaseModel):
-    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    config_class: ClassVar = SoarGhtsRedcamConfig
+    guiding_config_class: ClassVar = SoarGhtsRedcamGuidingConfig
+    acquisition_config_class: ClassVar = SoarGhtsRedcamAcquisitionConfig
+    optical_elements_class: ClassVar = SoarGhtsRedcamOpticalElements
 
 
 class SoarGhtsRedcamImagerInstrumentConfigExtraParams(BaseModel):
@@ -257,27 +230,16 @@ class SoarGhtsRedcamImager(BaseModel):
     type: Literal["EXPOSE"]
     instrument_type: Literal["SOAR_GHTS_REDCAM_IMAGER"] = "SOAR_GHTS_REDCAM_IMAGER"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: SoarGhtsRedcamImagerConfigExtraParams = Field(default_factory=SoarGhtsRedcamImagerConfigExtraParams)
     instrument_configs: list[SoarGhtsRedcamImagerConfig] = []
     acquisition_config: SoarGhtsRedcamImagerAcquisitionConfig
     guiding_config: SoarGhtsRedcamImagerGuidingConfig
     target: TARGET_TYPES
     constraints: Constraints
 
-    config_class = SoarGhtsRedcamImagerConfig
-    guiding_config_class = SoarGhtsRedcamImagerGuidingConfig
-    acquisition_config_class = SoarGhtsRedcamImagerAcquisitionConfig
-    optical_elements_class = SoarGhtsRedcamImagerOpticalElements
-
-
-
-
-class SoarTriplespecConfigExtraParams(BaseModel):
-    model_config = ConfigDict(validate_assignment=True, extra='allow')
-
-
-class SoarTriplespecInstrumentConfigExtraParams(BaseModel):
-    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    config_class: ClassVar = SoarGhtsRedcamImagerConfig
+    guiding_config_class: ClassVar = SoarGhtsRedcamImagerGuidingConfig
+    acquisition_config_class: ClassVar = SoarGhtsRedcamImagerAcquisitionConfig
+    optical_elements_class: ClassVar = SoarGhtsRedcamImagerOpticalElements
 
 
 class SoarTriplespecOpticalElements(BaseModel):
@@ -311,7 +273,6 @@ class SoarTriplespecConfig(BaseModel):
     mode: Literal["fowler1_coadds2", "fowler4_coadds1", "fowler8_coadds1", "fowler16_coadds1", "fowler1_coadds1"]
     rotator_mode: Literal["SKY"]
     rois: list[Roi] | None = None
-    extra_params: SoarTriplespecInstrumentConfigExtraParams = Field(default_factory=SoarTriplespecInstrumentConfigExtraParams)
     optical_elements: SoarTriplespecOpticalElements
 
 
@@ -320,17 +281,16 @@ class SoarTriplespec(BaseModel):
     type: Literal["SPECTRUM", "STANDARD", "ARC", "LAMP_FLAT", "BIAS"]
     instrument_type: Literal["SOAR_TRIPLESPEC"] = "SOAR_TRIPLESPEC"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: SoarTriplespecConfigExtraParams = Field(default_factory=SoarTriplespecConfigExtraParams)
     instrument_configs: list[SoarTriplespecConfig] = []
     acquisition_config: SoarTriplespecAcquisitionConfig
     guiding_config: SoarTriplespecGuidingConfig
     target: TARGET_TYPES
     constraints: Constraints
 
-    config_class = SoarTriplespecConfig
-    guiding_config_class = SoarTriplespecGuidingConfig
-    acquisition_config_class = SoarTriplespecAcquisitionConfig
-    optical_elements_class = SoarTriplespecOpticalElements
+    config_class: ClassVar = SoarTriplespecConfig
+    guiding_config_class: ClassVar = SoarTriplespecGuidingConfig
+    acquisition_config_class: ClassVar = SoarTriplespecAcquisitionConfig
+    optical_elements_class: ClassVar = SoarTriplespecOpticalElements
 
 
 # Export a type that encompasses all instruments

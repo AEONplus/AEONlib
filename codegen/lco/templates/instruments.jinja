@@ -1,7 +1,7 @@
 # pyright:  reportUnannotatedClassAttribute=false
 # This file is generated automatically and should not be edited by hand.
 
-from typing import Any, Annotated, Literal
+from typing import Any, Annotated, ClassVar, Literal
 
 from annotated_types import Le, Ge
 from pydantic import BaseModel, ConfigDict, Field
@@ -13,8 +13,7 @@ from aeonlib.ocs.config_models import Roi
 
 
 {% for ctx in instruments %}
-
-
+{% if ctx.configuration_extra_params %}
 class {{ ctx.class_name}}ConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
     {% for field, field_class in ctx.configuration_extra_params.items() %}
@@ -22,6 +21,8 @@ class {{ ctx.class_name}}ConfigExtraParams(BaseModel):
     {% endfor %}
 
 
+{% endif %}
+{% if ctx.instrument_config_extra_params %}
 class {{ ctx.class_name}}InstrumentConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
     {% for field, field_class in ctx.instrument_config_extra_params.items() %}
@@ -29,6 +30,7 @@ class {{ ctx.class_name}}InstrumentConfigExtraParams(BaseModel):
     {% endfor %}
 
 
+{% endif %}
 class {{ ctx.class_name }}OpticalElements(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
     {% for key, values in ctx.optical_elements.items() %}
@@ -38,7 +40,7 @@ class {{ ctx.class_name }}OpticalElements(BaseModel):
 
 class {{ ctx.class_name }}GuidingConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal[{% for m in ctx.guiding_modes %}"{{ m }}"{% if not loop.last %}, {% endif %}{% endfor %}]
+    mode: Literal[{% for m in ctx.guiding_modes %}"{{ m }}"{% if not loop.last %}, {% endif %}{% else %}""{% endfor %}]
     optional: bool
     """Whether the guiding is optional or not"""
     exposure_time: Annotated[int, NonNegativeInt, Le(120)] | None = None
@@ -48,7 +50,7 @@ class {{ ctx.class_name }}GuidingConfig(BaseModel):
 
 class {{ ctx.class_name }}AcquisitionConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal[{% for m in ctx.acquisition_modes %}"{{ m }}"{% if not loop.last %}, {% endif %}{% endfor %}]
+    mode: Literal[{% for m in ctx.acquisition_modes %}"{{ m }}"{% if not loop.last %}, {% endif %}{% else %}""{% endfor %}]
     exposure_time: Annotated[int, NonNegativeInt, Le(60)] | None = None
     """Acquisition exposure time"""
     extra_params: dict[Any, Any] = {}
@@ -60,12 +62,14 @@ class {{ ctx.class_name }}Config(BaseModel):
     """The number of exposures to take. This field must be set to a value greater than 0"""
     exposure_time: NonNegativeInt
     """ Exposure time in seconds"""
-    mode: Literal[{% for m in ctx.readout_modes %}"{{ m }}"{% if not loop.last %}, {% endif %}{% endfor %}]
+    mode: Literal[{% for m in ctx.readout_modes %}"{{ m }}"{% if not loop.last %}, {% endif %}{% else %}""{% endfor %}]
     {% if ctx.rotator_modes %}
-    rotator_mode: Literal[{% for m in ctx.rotator_modes %}"{{ m }}"{% if not loop.last %}, {% endif %}{% endfor %}]
+    rotator_mode: Literal[{% for m in ctx.rotator_modes %}"{{ m }}"{% if not loop.last %}, {% endif %}{% else %}""{% endfor %}]
     {% endif %}
     rois: list[Roi] | None = None
+    {% if ctx.instrument_config_extra_params %}
     extra_params: {{ ctx.class_name }}InstrumentConfigExtraParams = Field(default_factory={{ ctx.class_name }}InstrumentConfigExtraParams)
+    {% endif %}
     optical_elements: {{ ctx.class_name}}OpticalElements
 
 
@@ -74,17 +78,19 @@ class {{ ctx.class_name }}(BaseModel):
     type: Literal[{% for t in ctx.config_types %}"{{ t }}"{% if not loop.last %}, {% endif %}{% endfor %}]
     instrument_type: Literal["{{ ctx.instrument_type }}"] = "{{ ctx.instrument_type }}"
     repeat_duration: NonNegativeInt | None = None
+    {% if ctx.configuration_extra_params %}
     extra_params: {{ ctx.class_name }}ConfigExtraParams = Field(default_factory={{ ctx.class_name }}ConfigExtraParams)
+    {% endif %}
     instrument_configs: list[{{ ctx.class_name }}Config] = []
     acquisition_config: {{ ctx.class_name }}AcquisitionConfig
     guiding_config: {{ ctx.class_name }}GuidingConfig
     target: TARGET_TYPES
     constraints: Constraints
 
-    config_class = {{ ctx.class_name }}Config
-    guiding_config_class = {{ ctx.class_name }}GuidingConfig
-    acquisition_config_class = {{ ctx.class_name }}AcquisitionConfig
-    optical_elements_class = {{ ctx.class_name }}OpticalElements
+    config_class: ClassVar = {{ ctx.class_name }}Config
+    guiding_config_class: ClassVar = {{ ctx.class_name }}GuidingConfig
+    acquisition_config_class: ClassVar = {{ ctx.class_name }}AcquisitionConfig
+    optical_elements_class: ClassVar = {{ ctx.class_name }}OpticalElements
 
 
 {% endfor %}

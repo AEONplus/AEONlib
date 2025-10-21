@@ -1,10 +1,10 @@
 # pyright:  reportUnannotatedClassAttribute=false
 # This file is generated automatically and should not be edited by hand.
 
-from typing import Any, Annotated, Literal
+from typing import Any, Annotated, ClassVar, Literal
 
-from annotated_types import Le
-from pydantic import BaseModel, ConfigDict
+from annotated_types import Le, Ge
+from pydantic import BaseModel, ConfigDict, Field
 from pydantic.types import NonNegativeInt, PositiveInt
 
 from aeonlib.models import TARGET_TYPES
@@ -46,7 +46,6 @@ class SAAO1M0AMookodiImgConfig(BaseModel):
     """ Exposure time in seconds"""
     mode: Literal["1x1HighFastOpen", "1x1HighSlowAuto", "1x1HighFastAuto", "2x2HighFastOpen"]
     rois: list[Roi] | None = None
-    extra_params: dict[Any, Any] = {}
     optical_elements: SAAO1M0AMookodiImgOpticalElements
 
 
@@ -55,17 +54,16 @@ class SAAO1M0AMookodiImg(BaseModel):
     type: Literal["DARK", "BIAS", "REPEAT_EXPOSE", "EXPOSE", "STANDARD"]
     instrument_type: Literal["1M0A_MOOKODI-IMG"] = "1M0A_MOOKODI-IMG"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: dict[Any, Any] = {}
     instrument_configs: list[SAAO1M0AMookodiImgConfig] = []
     acquisition_config: SAAO1M0AMookodiImgAcquisitionConfig
     guiding_config: SAAO1M0AMookodiImgGuidingConfig
     target: TARGET_TYPES
     constraints: Constraints
 
-    config_class = SAAO1M0AMookodiImgConfig
-    guiding_config_class = SAAO1M0AMookodiImgGuidingConfig
-    acquisition_config_class = SAAO1M0AMookodiImgAcquisitionConfig
-    optical_elements_class = SAAO1M0AMookodiImgOpticalElements
+    config_class: ClassVar = SAAO1M0AMookodiImgConfig
+    guiding_config_class: ClassVar = SAAO1M0AMookodiImgGuidingConfig
+    acquisition_config_class: ClassVar = SAAO1M0AMookodiImgAcquisitionConfig
+    optical_elements_class: ClassVar = SAAO1M0AMookodiImgOpticalElements
 
 
 class SAAO1M0AMookodiSpecOpticalElements(BaseModel):
@@ -102,7 +100,6 @@ class SAAO1M0AMookodiSpecConfig(BaseModel):
     """ Exposure time in seconds"""
     mode: Literal["1x1HighSlowAuto", "1x1HighFastAuto", "1x1HighFastOpen"]
     rois: list[Roi] | None = None
-    extra_params: dict[Any, Any] = {}
     optical_elements: SAAO1M0AMookodiSpecOpticalElements
 
 
@@ -111,17 +108,66 @@ class SAAO1M0AMookodiSpec(BaseModel):
     type: Literal["STANDARD", "EXPOSE", "BIAS", "ARC_LAMP", "SKY_FLAT"]
     instrument_type: Literal["1M0A_MOOKODI_SPEC"] = "1M0A_MOOKODI_SPEC"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: dict[Any, Any] = {}
     instrument_configs: list[SAAO1M0AMookodiSpecConfig] = []
     acquisition_config: SAAO1M0AMookodiSpecAcquisitionConfig
     guiding_config: SAAO1M0AMookodiSpecGuidingConfig
     target: TARGET_TYPES
     constraints: Constraints
 
-    config_class = SAAO1M0AMookodiSpecConfig
-    guiding_config_class = SAAO1M0AMookodiSpecGuidingConfig
-    acquisition_config_class = SAAO1M0AMookodiSpecAcquisitionConfig
-    optical_elements_class = SAAO1M0AMookodiSpecOpticalElements
+    config_class: ClassVar = SAAO1M0AMookodiSpecConfig
+    guiding_config_class: ClassVar = SAAO1M0AMookodiSpecGuidingConfig
+    acquisition_config_class: ClassVar = SAAO1M0AMookodiSpecAcquisitionConfig
+    optical_elements_class: ClassVar = SAAO1M0AMookodiSpecOpticalElements
+
+
+class SAAO1M8APrimeImgOpticalElements(BaseModel):
+    model_config = ConfigDict(validate_assignment=True)
+
+
+class SAAO1M8APrimeImgGuidingConfig(BaseModel):
+    model_config = ConfigDict(validate_assignment=True)
+    mode: Literal[""]
+    optional: bool
+    """Whether the guiding is optional or not"""
+    exposure_time: Annotated[int, NonNegativeInt, Le(120)] | None = None
+    """Guiding exposure time"""
+    extra_params: dict[Any, Any] = {}
+
+
+class SAAO1M8APrimeImgAcquisitionConfig(BaseModel):
+    model_config = ConfigDict(validate_assignment=True)
+    mode: Literal[""]
+    exposure_time: Annotated[int, NonNegativeInt, Le(60)] | None = None
+    """Acquisition exposure time"""
+    extra_params: dict[Any, Any] = {}
+
+
+class SAAO1M8APrimeImgConfig(BaseModel):
+    model_config = ConfigDict(validate_assignment=True)
+    exposure_count: PositiveInt
+    """The number of exposures to take. This field must be set to a value greater than 0"""
+    exposure_time: NonNegativeInt
+    """ Exposure time in seconds"""
+    mode: Literal[""]
+    rois: list[Roi] | None = None
+    optical_elements: SAAO1M8APrimeImgOpticalElements
+
+
+class SAAO1M8APrimeImg(BaseModel):
+    model_config = ConfigDict(validate_assignment=True)
+    type: Literal["EXPOSE"]
+    instrument_type: Literal["1M8A_PRIME-IMG"] = "1M8A_PRIME-IMG"
+    repeat_duration: NonNegativeInt | None = None
+    instrument_configs: list[SAAO1M8APrimeImgConfig] = []
+    acquisition_config: SAAO1M8APrimeImgAcquisitionConfig
+    guiding_config: SAAO1M8APrimeImgGuidingConfig
+    target: TARGET_TYPES
+    constraints: Constraints
+
+    config_class: ClassVar = SAAO1M8APrimeImgConfig
+    guiding_config_class: ClassVar = SAAO1M8APrimeImgGuidingConfig
+    acquisition_config_class: ClassVar = SAAO1M8APrimeImgAcquisitionConfig
+    optical_elements_class: ClassVar = SAAO1M8APrimeImgOpticalElements
 
 
 class SAAO1M9AShocnwonderImgOpticalElements(BaseModel):
@@ -160,7 +206,6 @@ class SAAO1M9AShocnwonderImgConfig(BaseModel):
     """ Exposure time in seconds"""
     mode: Literal["0.1MHz", "1MHz"]
     rois: list[Roi] | None = None
-    extra_params: dict[Any, Any] = {}
     optical_elements: SAAO1M9AShocnwonderImgOpticalElements
 
 
@@ -169,17 +214,16 @@ class SAAO1M9AShocnwonderImg(BaseModel):
     type: Literal["EXPOSE"]
     instrument_type: Literal["1M9A_SHOCNWONDER-IMG"] = "1M9A_SHOCNWONDER-IMG"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: dict[Any, Any] = {}
     instrument_configs: list[SAAO1M9AShocnwonderImgConfig] = []
     acquisition_config: SAAO1M9AShocnwonderImgAcquisitionConfig
     guiding_config: SAAO1M9AShocnwonderImgGuidingConfig
     target: TARGET_TYPES
     constraints: Constraints
 
-    config_class = SAAO1M9AShocnwonderImgConfig
-    guiding_config_class = SAAO1M9AShocnwonderImgGuidingConfig
-    acquisition_config_class = SAAO1M9AShocnwonderImgAcquisitionConfig
-    optical_elements_class = SAAO1M9AShocnwonderImgOpticalElements
+    config_class: ClassVar = SAAO1M9AShocnwonderImgConfig
+    guiding_config_class: ClassVar = SAAO1M9AShocnwonderImgGuidingConfig
+    acquisition_config_class: ClassVar = SAAO1M9AShocnwonderImgAcquisitionConfig
+    optical_elements_class: ClassVar = SAAO1M9AShocnwonderImgOpticalElements
 
 
 class SAAO1M9ASpupnicSpecOpticalElements(BaseModel):
@@ -216,7 +260,6 @@ class SAAO1M9ASpupnicSpecConfig(BaseModel):
     """ Exposure time in seconds"""
     mode: Literal["1x1HighFastOpen", "1x1HighSlowAuto", "1x1HighFastAuto"]
     rois: list[Roi] | None = None
-    extra_params: dict[Any, Any] = {}
     optical_elements: SAAO1M9ASpupnicSpecOpticalElements
 
 
@@ -225,17 +268,16 @@ class SAAO1M9ASpupnicSpec(BaseModel):
     type: Literal["EXPOSE", "LAMP_FLAT", "ARC_LAMP", "BIAS", "STANDARD"]
     instrument_type: Literal["1M9A_SPUPNIC-SPEC"] = "1M9A_SPUPNIC-SPEC"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: dict[Any, Any] = {}
     instrument_configs: list[SAAO1M9ASpupnicSpecConfig] = []
     acquisition_config: SAAO1M9ASpupnicSpecAcquisitionConfig
     guiding_config: SAAO1M9ASpupnicSpecGuidingConfig
     target: TARGET_TYPES
     constraints: Constraints
 
-    config_class = SAAO1M9ASpupnicSpecConfig
-    guiding_config_class = SAAO1M9ASpupnicSpecGuidingConfig
-    acquisition_config_class = SAAO1M9ASpupnicSpecAcquisitionConfig
-    optical_elements_class = SAAO1M9ASpupnicSpecOpticalElements
+    config_class: ClassVar = SAAO1M9ASpupnicSpecConfig
+    guiding_config_class: ClassVar = SAAO1M9ASpupnicSpecGuidingConfig
+    acquisition_config_class: ClassVar = SAAO1M9ASpupnicSpecAcquisitionConfig
+    optical_elements_class: ClassVar = SAAO1M9ASpupnicSpecOpticalElements
 
 
 class SAAOSiboniseImgOpticalElements(BaseModel):
@@ -271,7 +313,6 @@ class SAAOSiboniseImgConfig(BaseModel):
     """ Exposure time in seconds"""
     mode: Literal["fast", "slow"]
     rois: list[Roi] | None = None
-    extra_params: dict[Any, Any] = {}
     optical_elements: SAAOSiboniseImgOpticalElements
 
 
@@ -280,18 +321,17 @@ class SAAOSiboniseImg(BaseModel):
     type: Literal["EXPOSE", "REPEAT_EXPOSE"]
     instrument_type: Literal["SIBONISE_IMG"] = "SIBONISE_IMG"
     repeat_duration: NonNegativeInt | None = None
-    extra_params: dict[Any, Any] = {}
     instrument_configs: list[SAAOSiboniseImgConfig] = []
     acquisition_config: SAAOSiboniseImgAcquisitionConfig
     guiding_config: SAAOSiboniseImgGuidingConfig
     target: TARGET_TYPES
     constraints: Constraints
 
-    config_class = SAAOSiboniseImgConfig
-    guiding_config_class = SAAOSiboniseImgGuidingConfig
-    acquisition_config_class = SAAOSiboniseImgAcquisitionConfig
-    optical_elements_class = SAAOSiboniseImgOpticalElements
+    config_class: ClassVar = SAAOSiboniseImgConfig
+    guiding_config_class: ClassVar = SAAOSiboniseImgGuidingConfig
+    acquisition_config_class: ClassVar = SAAOSiboniseImgAcquisitionConfig
+    optical_elements_class: ClassVar = SAAOSiboniseImgOpticalElements
 
 
 # Export a type that encompasses all instruments
-SAAO_INSTRUMENTS = SAAO1M0AMookodiImg | SAAO1M0AMookodiSpec | SAAO1M9AShocnwonderImg | SAAO1M9ASpupnicSpec | SAAOSiboniseImg
+SAAO_INSTRUMENTS = SAAO1M0AMookodiImg | SAAO1M0AMookodiSpec | SAAO1M8APrimeImg | SAAO1M9AShocnwonderImg | SAAO1M9ASpupnicSpec | SAAOSiboniseImg
