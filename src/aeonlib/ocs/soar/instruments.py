@@ -1,3 +1,4 @@
+# ruff: noqa: F401
 # pyright:  reportUnannotatedClassAttribute=false
 # This file is generated automatically and should not be edited by hand.
 
