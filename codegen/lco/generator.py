@@ -11,7 +11,9 @@ from jinja2 import Environment, FileSystemLoader
 VALID_FACILITIES = ["SOAR", "LCO", "SAAO", "BLANCO"]
 
 
-def get_extra_params_fields(extra_params_validation_schema: dict) -> dict:
+def get_extra_params_fields(
+    extra_params_validation_schema: dict[Any, Any],
+) -> dict[Any, Any]:
     """Loops over the "extra_params" section of a validation_schema dict and creates a dictionary of
     field to aeonlib field_class to place into the template
     """
