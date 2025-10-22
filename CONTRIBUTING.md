@@ -63,6 +63,8 @@ assert type(observation.wavelength_range[0]) == Quantity
 assert type(observation.wavelength_range[1]) == Quantity
 ```
 
+As you cannot use the validators of the `annotated_types` library with `Quantity` objects, the `aeonlib.validators` module provides some alternative validators, which you can use instead.
+
 These types eliminate the need for the facility user to need to remember which exact format a facility requires (time in hms? Or ISO UTC?) and simply pass in higher level objects instead.
 
 Aeonlib also defines a few high level models: `aeonlib.models.Window` and several target types. If a facility can translate these models or even use them directly it should. This means a consumer of Aeonlib can define these high level models once, for example from a data alert stream, and use them with every facility for which they want to perform observations.
