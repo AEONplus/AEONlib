@@ -1,4 +1,5 @@
 from .target_models import MagnitudeRange, SaltSiderealTarget
+from .rss_models import Rss
 from .salticam_models import (
     SalticamFilterSequenceStep,
     Salticam,
@@ -18,6 +19,7 @@ __all__ = [
     "MagnitudeRange",
     "ReferenceStar",
     "Request",
+    "Rss",
     "Salticam",
     "SalticamDetector",
     "SaltSiderealTarget",

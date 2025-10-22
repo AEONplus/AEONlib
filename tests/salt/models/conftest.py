@@ -16,6 +16,7 @@ from aeonlib.salt.models import (
     SaltSiderealTarget,
     SalticamFilterSequenceStep,
     SalticamDetector,
+    Rss,
 )
 
 
@@ -110,3 +111,8 @@ def base_salticam_detector():
 @pytest.fixture()
 def base_salticam_dither_pattern():
     return SalticamDitherPattern(num_rows=3, num_columns=4, offset=12.9)
+
+
+@pytest.fixture()
+def base_rss():
+    return Rss(configuration=None, detector=None, dither_pattern=None)
