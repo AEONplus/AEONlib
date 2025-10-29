@@ -17,7 +17,9 @@ from aeonlib.salt.models import (
     SalticamFilterSequenceStep,
     SalticamDetector,
     Rss,
+    RssImaging,
 )
+from aeonlib.salt.models.rss_models import RssPolarimetry
 
 
 @pytest.fixture()
@@ -114,5 +116,15 @@ def base_salticam_dither_pattern():
 
 
 @pytest.fixture()
-def base_rss():
-    return Rss(configuration=None, detector=None, dither_pattern=None)
+def base_rss(base_rss_imaging):
+    return Rss(configuration=base_rss_imaging, detector=None, dither_pattern=None)
+
+
+@pytest.fixture()
+def base_rss_polarimetry():
+    return RssPolarimetry(wave_plate_pattern="linear")
+
+
+@pytest.fixture()
+def base_rss_imaging():
+    return RssImaging(filter="pi04400", polarimetry=None, include_flat=True)

@@ -1,5 +1,5 @@
 from .target_models import MagnitudeRange, SaltSiderealTarget
-from .rss_models import Rss
+from .rss_models import Rss, RssImaging, RssPolarimetry
 from .salticam_models import (
     SalticamFilterSequenceStep,
     Salticam,
@@ -20,6 +20,8 @@ __all__ = [
     "ReferenceStar",
     "Request",
     "Rss",
+    "RssImaging",
+    "RssPolarimetry",
     "Salticam",
     "SalticamDetector",
     "SaltSiderealTarget",

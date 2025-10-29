@@ -1,4 +1,11 @@
-from pydantic import BaseModel, PositiveInt
+from __future__ import annotations
+
+from typing import Literal
+
+from pydantic import BaseModel, PositiveInt, field_validator
+
+from aeonlib.types import Angle
+from aeonlib.salt.models.types.filters import RssImagingFilter, SalticamFilter
 
 
 class Rss(BaseModel):
@@ -46,6 +53,81 @@ class Rss(BaseModel):
     """
 
     num_cycles: PositiveInt = 1
-    configuration: None
+    configuration: RssImaging
     detector: None
     dither_pattern: None
+
+
+class RssImaging(BaseModel):
+    """
+    An RSS imaging configuration.
+
+    Attributes
+    ----------
+    filter
+        The filter to use. This may be one of RSS's own imaging filters or one of the
+        filters used by Salticam.
+    polarimetry
+        The (optional) polarimetry setup to use.
+    include_flat
+        Whether a nighttime flat should be taken for the observation.
+    """
+
+    filter: RssImagingFilter | SalticamFilter
+    polarimetry: RssPolarimetry | None
+    include_flat: bool
+
+
+_WavePlatePattern = (
+    Literal["linear", "linear hi", "circular", "all-Stokes"]
+    | list[tuple[Angle | None, Angle | None]]
+)
+
+
+class RssPolarimetry(BaseModel):
+    """
+    An RSS polarimetry setup.
+
+    The setup is defined by a wave plate pattern, which may be specified by the name of
+    a predefined pattern ("linear", "linear hi", "circular" or "all-Stokes") or by
+    explicitly defining the list of half and quarter wave plate angles. In case of the
+    latter, the list must consist of pairs of angles, with the first angle being that of
+    the half wave plate and the second being that of the quarter wave plate. The angle
+    may be None if the respectjve wave plate is not used.
+
+    For example, the "linear" and "circular" patterns could be given as::
+
+        linear = RssPolarimetry(wave_plate_pattern="linear")
+        circular = RssPolarimetry(wave_plate_pattern="linear")
+
+    or as::
+
+        from astropy import units as u
+
+        linear = RssPolarimetry(
+            wave_plate_pattern=[
+                (0 * u.deg, None),
+                (45 * u.deg, None),
+                (22.5 * u.deg, None),
+                (67.5 * u.deg, None),
+            ]
+        )
+        circular = RssPolarimetry(
+            wave_plate_pattern=[(0 * u.deg, 45 * u.deg), (0 * u.deg, 315 * u.deg)]
+        )
+
+    A wave plate pattern may have up to 8 steps.
+    """
+
+    wave_plate_pattern: _WavePlatePattern
+
+    @field_validator("wave_plate_pattern", mode="after")
+    @classmethod
+    def check_pattern_size(cls, value: _WavePlatePattern) -> _WavePlatePattern:
+        if isinstance(value, str):
+            return value
+
+        if len(value) < 1 or len(value) > 8:
+            raise ValueError("The wave plate pattern must have between 1 and 8 steps.")
+
+        return value
