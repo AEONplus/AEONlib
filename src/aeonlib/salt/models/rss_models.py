@@ -6,7 +6,11 @@ from astropy import units as u
 from pydantic import BaseModel, PositiveInt, field_validator
 
 from aeonlib.types import Angle
-from aeonlib.salt.models.types.filters import RssImagingFilter, SalticamFilter
+from aeonlib.salt.models.types.filters import (
+    RssImagingFilter,
+    RssOrderBlockingFilter,
+    SalticamFilter,
+)
 
 
 class Rss(BaseModel):
@@ -46,7 +50,7 @@ class Rss(BaseModel):
         How often to cycle through the wave plate sequence. This is only relevant if
         you perform polarimetry.
     configuration
-        Imaging or spectroscopy configuration.
+        Imaging, longslit, multiobject spectroscopy or slit mask IFU configuration.
     detector
         Detector setup.
     dither_pattern
@@ -69,13 +73,13 @@ class RssImaging(BaseModel):
         The filter to use. This may be one of RSS's own imaging filters or one of the
         filters used by Salticam.
     polarimetry
-        The (optional) polarimetry setup to use.
+        The (optional) polarimetry setup.
     include_flat
         Whether a nighttime flat should be taken for the observation.
     """
 
     filter: RssImagingFilter | SalticamFilter
-    polarimetry: RssPolarimetry | None
+    polarimetry: RssPolarimetry | None = None
     include_flat: bool
 
 
@@ -83,6 +87,45 @@ _WavePlatePattern = (
     Literal["linear", "linear hi", "circular", "all-Stokes"]
     | list[tuple[Angle | None, Angle | None]]
 )
+
+
+class RssSpectroscopy(BaseModel):
+    """
+    An RSS spectroscopy configuration.
+
+    While the grating, articulation, polarimetry and calibrations are defined by this
+    class, the slit mask (or IFU) to use is specified in a child class.
+
+    Attributes
+    ----------
+    grating
+        The barcode of the grating, such as "pg0900".
+    grating_angle
+        The grating angle. The default is half the articulation angle.
+    articulation_angle
+        The articulation angle of the camera. This must be either 0 deg or one of the
+        values 1.75 deg + (n - 1) * 0.75 deg, where 1 <= n <= 132.
+    order_blocking_filter
+        The order blocking filter.
+    polarimetry
+        The (optional) polarimetry setup.
+    include_flat
+        Whether a nighttime flat should be taken for the observation.
+    include_arc
+        Whether a nighttime arc should be taken for the observation.
+    request_photometric_standard
+        Whether a photometric standard should be taken for the observation.
+
+    """
+
+    grating: Literal["pg0700", "pg0900", "pg1300", "pg1800", "pg2300", "pg3000"]
+    grating_angle: Angle
+    articulation_angle: Angle
+    order_blocking_filter: RssOrderBlockingFilter
+    polarimetry: RssPolarimetry | None = None
+    include_flat: bool
+    include_arc: bool = True
+    request_spectrophotometric_standard: bool = False
 
 
 class RssPolarimetry(BaseModel):
