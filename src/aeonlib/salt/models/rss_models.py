@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Literal
 
+from astropy import units as u
 from pydantic import BaseModel, PositiveInt, field_validator
 
 from aeonlib.types import Angle
@@ -88,12 +89,13 @@ class RssPolarimetry(BaseModel):
     """
     An RSS polarimetry setup.
 
-    The setup is defined by a wave plate pattern, which may be specified by the name of
-    a predefined pattern ("linear", "linear hi", "circular" or "all-Stokes") or by
-    explicitly defining the list of half and quarter wave plate angles. In case of the
-    latter, the list must consist of pairs of angles, with the first angle being that of
-    the half wave plate and the second being that of the quarter wave plate. The angle
-    may be None if the respectjve wave plate is not used.
+    The setup is defined by a wave plate pattern, which may be specified by the name
+    of a predefined pattern ("linear", "linear hi", "circular" or "all-Stokes") or by
+    explicitly defining the list of half and quarter wave plate angles. In case of
+    the latter, the list must consist of pairs of angles, with the first angle being
+    that of the half wave plate and the second being that of the quarter wave plate.
+    Each angle must bee a multiple of 11.25 degrees. It may be None if the respective
+    wave plate is not used.
 
     For example, the "linear" and "circular" patterns could be given as::
 
@@ -129,5 +131,32 @@ class RssPolarimetry(BaseModel):
 
         if len(value) < 1 or len(value) > 8:
             raise ValueError("The wave plate pattern must have between 1 and 8 steps.")
+
+        return value
+
+    @classmethod
+    def _check_pattern_step(cls, step: tuple[Angle, Angle]) -> None:
+        error = (
+            "Each angle in a wave plate pattern must be a multiple of 11.25 degrees "
+            "between 0 degrees (inclusive) and 360 degrees (exclusive)."
+        )
+        for angle in step:
+            if angle < 0 * u.deg or angle >= 360 * u.deg:
+                raise ValueError(error)
+
+            # Check that the ratio of the angle and 11.25 deg is (very close to) an
+            # integer.
+            x = (angle.to(u.deg) / 11.25).value
+            if abs(round(x) - x) > 1e-6:
+                raise ValueError(error)
+
+    @field_validator("wave_plate_pattern", mode="after")
+    @classmethod
+    def check_angle_values(cls, value: _WavePlatePattern) -> _WavePlatePattern:
+        if isinstance(value, str):
+            return value
+
+        for step in value:
+            RssPolarimetry._check_pattern_step(step)
 
         return value
