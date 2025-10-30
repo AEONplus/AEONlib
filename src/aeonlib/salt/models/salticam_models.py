@@ -45,15 +45,15 @@ class Salticam(BaseModel):
         Detector setup.
     dither_pattern
         Dither pattern.
-    include_flats:
-        Whether flats should be taken for the observation.
+    include_flat:
+        Whether a nighttime flat should be taken for the observation.
     """
 
     num_cycles: PositiveInt = 1
     filter_sequence: Annotated[list[SalticamFilterSequenceStep], MinLen(1)]
     detector: SalticamDetector
     dither_pattern: SalticamDitherPattern = None
-    include_flats: bool
+    include_flat: bool
 
 
 class SalticamFilterSequenceStep(BaseModel):

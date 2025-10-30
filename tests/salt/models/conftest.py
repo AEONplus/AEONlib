@@ -90,7 +90,7 @@ def base_salticam(base_salticam_detector, base_salticam_filter_sequence_step):
     return Salticam(
         filter_sequence=[base_salticam_filter_sequence_step],
         detector=base_salticam_detector,
-        include_flats=True,
+        include_flat=True,
     )
 
 
