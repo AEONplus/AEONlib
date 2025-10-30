@@ -25,7 +25,7 @@ SalticamFilter = Literal[
     "SRE 3",
     "SRE 4",
 ]
-"""A filter for the Salticam detector."""
+"""A filter for Salticam."""
 
 
 RssImagingFilter = Literal[
@@ -70,4 +70,8 @@ RssImagingFilter = Literal[
     "pi08535",
     "pi08730",
 ]
-"""An imaging filter for the RSS detector."""
+"""An imaging filter for RSS."""
+
+
+RssOrderBlockingFilter = Literal["pc00000", "pc03200", "pc03400", "pc03850", "pc04600"]
+"""An order blocking filter for RSS."""
