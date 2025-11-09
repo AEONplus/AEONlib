@@ -10,6 +10,7 @@ from aeonlib.salt.models.types import (
     RssGrating,
     RssImagingFilter,
     RssOrderBlockingFilter,
+    RssSlitMaskIFU,
     SalticamFilter,
 )
 from aeonlib.salt.validators import GreaterEqual, LessEqual
@@ -183,6 +184,22 @@ class RssMultiObjectSpectroscopy(RssSpectroscopy):
     """
 
     mask: FilePath
+
+
+class RssSlitMaskIFUSpectroscopy(RssSpectroscopy):
+    """
+    An RSS slit mask integrated field unit (IFU) setup.
+
+    In addition to the properties required by a generic RSS spectroscopy the user must
+    specify the barcode of the slit mask IFU to use.
+
+    Attributes
+    ----------
+    slit_mask_ifu
+        The barcode of the slit mask IFU, such as "PF0200N001".
+    """
+
+    slit_mask_ifu: RssSlitMaskIFU
 
 
 class RssPolarimetry(BaseModel):

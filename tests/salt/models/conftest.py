@@ -22,6 +22,7 @@ from aeonlib.salt.models import (
     RssSpectroscopy,
     RssLongslitSpectroscopy,
     RssMultiObjectSpectroscopy,
+    RssSlitMaskIFUSpectroscopy,
 )
 
 
@@ -159,4 +160,12 @@ def base_rss_multi_object_spectroscopy(base_rss_spectroscopy):
     return RssMultiObjectSpectroscopy(
         **base_rss_spectroscopy.model_dump(),
         mask=pathlib.Path(__file__).parent.parent / "data" / "dummy_rss_mos_mask.rsim",
+    )
+
+
+@pytest.fixture()
+def base_rss_slit_mask_ifu_spectroscopy(base_rss_spectroscopy):
+    return RssSlitMaskIFUSpectroscopy(
+        **base_rss_spectroscopy.model_dump(),
+        slit_mask_ifu="PF0200N001",
     )

@@ -51,3 +51,7 @@ RssOrderBlockingFilter = Literal["pc00000", "pc03200", "pc03400", "pc03850", "pc
 
 RssGrating = Literal["pg0700", "pg0900", "pg1300", "pg1800", "pg2300", "pg3000"]
 """An RSS grating."""
+
+
+RssSlitMaskIFU = Literal["PF0200N001"]
+"""A slit mask integrated field unit (IFU) for RSS."""

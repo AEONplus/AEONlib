@@ -5,6 +5,7 @@ from .rss_models import (
     RssLongslitSpectroscopy,
     RssMultiObjectSpectroscopy,
     RssPolarimetry,
+    RssSlitMaskIFUSpectroscopy,
     RssSpectroscopy,
 )
 from .salticam_models import (
@@ -31,6 +32,7 @@ __all__ = [
     "RssLongslitSpectroscopy",
     "RssMultiObjectSpectroscopy",
     "RssPolarimetry",
+    "RssSlitMaskIFUSpectroscopy",
     "RssSpectroscopy",
     "Salticam",
     "SalticamDetector",
