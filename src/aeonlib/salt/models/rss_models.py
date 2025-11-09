@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Literal
+from typing import Literal, Annotated
 
 from astropy import units as u
 from pydantic import BaseModel, PositiveInt, field_validator
@@ -11,6 +11,7 @@ from aeonlib.salt.models.types.filters import (
     RssOrderBlockingFilter,
     SalticamFilter,
 )
+from aeonlib.salt.validators import GreaterEqual, LessEqual
 
 
 class Rss(BaseModel):
@@ -119,13 +120,35 @@ class RssSpectroscopy(BaseModel):
     """
 
     grating: Literal["pg0700", "pg0900", "pg1300", "pg1800", "pg2300", "pg3000"]
-    grating_angle: Angle
+    grating_angle: Annotated[Angle, GreaterEqual(0 * u.deg), LessEqual(100 * u.deg)]
     articulation_angle: Angle
     order_blocking_filter: RssOrderBlockingFilter
     polarimetry: RssPolarimetry | None = None
     include_flat: bool
     include_arc: bool = True
     request_spectrophotometric_standard: bool = False
+
+    @field_validator("articulation_angle", mode="after")
+    @classmethod
+    def check_articulation_angle(cls, angle: Angle) -> Angle:
+        error = "The articulation angle must either be 0 deg or a value 1.75 deg + (n - 1) * 0.75 deg with 1 <= n <= 132."
+        degrees = angle.to(u.deg).value
+
+        if degrees < 0:
+            raise ValueError(error)
+
+        grace = 1e-6
+        if abs(degrees) < grace:
+            return angle
+
+        n = (degrees - 1.75) / 0.75 + 1
+        if n < 1 - grace or n > 132 + grace:
+            raise ValueError(error)
+
+        if abs(n - round(n)) > grace:
+            raise ValueError
+
+        return angle
 
 
 class RssPolarimetry(BaseModel):

@@ -4,7 +4,7 @@ from contextlib import nullcontext
 import pytest
 from astropy import units as u
 
-from aeonlib.salt.models import RssPolarimetry
+from aeonlib.salt.models import RssPolarimetry, RssSpectroscopy
 
 
 class TestRss:
@@ -17,6 +17,37 @@ class TestRssImaging:
     def test_rss_imaging(self, base_rss_imaging):
         """Test that RSS imaging configurations can be built."""
         assert True
+
+
+class TestRssSpectroscopy:
+    def test_rss_spectroscopy(self, base_rss_spectroscopy):
+        """Test that RSS spectroscopy setups can be built."""
+        assert True
+
+    @pytest.mark.parametrize(
+        "angle, expectation",
+        [
+            (-40, pytest.raises(ValueError)),
+            (0, nullcontext()),
+            (0.01, pytest.raises(ValueError)),
+            (0.125, pytest.raises(ValueError)),
+            (64.73, pytest.raises(ValueError)),
+            (64.75, nullcontext()),
+            (64.75 * u.deg, nullcontext()),
+            ((64.75 * u.deg).to(u.rad), nullcontext()),
+            (64.76 * u.deg, pytest.raises(ValueError)),
+            (100, nullcontext()),
+            (100.75, pytest.raises(ValueError)),
+            (400, pytest.raises(ValueError)),
+        ],
+    )
+    def test_articulation_angle_must_have_allowed_value(
+        self, angle, expectation, base_rss_spectroscopy
+    ):
+        spectroscopy = base_rss_spectroscopy.model_dump()
+        spectroscopy["articulation_angle"] = angle
+        with expectation:
+            RssSpectroscopy(**spectroscopy)
 
 
 class TestRssPolarimetry:
@@ -56,7 +87,7 @@ class TestRssPolarimetry:
         ],
     )
     def test_angles_must_have_allowed_value(self, angle, expectation):
-        # Test that wave plater pattern angles must be a multiple of 11.25 deg between
+        # Test that wave plate pattern angles must be a multiple of 11.25 deg between
         # 0 deg (inclusive) and 360 deg (exclusive).
         with expectation:
             RssPolarimetry(wave_plate_pattern=[(angle, 45 * u.deg)])

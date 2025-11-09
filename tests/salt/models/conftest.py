@@ -18,8 +18,9 @@ from aeonlib.salt.models import (
     SalticamDetector,
     Rss,
     RssImaging,
+    RssPolarimetry,
+    RssSpectroscopy,
 )
-from aeonlib.salt.models.rss_models import RssPolarimetry
 
 
 @pytest.fixture()
@@ -128,3 +129,17 @@ def base_rss_polarimetry():
 @pytest.fixture()
 def base_rss_imaging():
     return RssImaging(filter="pi04400", polarimetry=None, include_flat=True)
+
+
+@pytest.fixture()
+def base_rss_spectroscopy(base_rss_polarimetry):
+    return RssSpectroscopy(
+        grating="pg0900",
+        grating_angle=20 * u.deg,
+        articulation_angle=40 * u.deg,
+        order_blocking_filter="pc04600",
+        polarimetry=base_rss_polarimetry,
+        include_flat=True,
+        include_arc=True,
+        request_spectrophotometric_standard=False,
+    )
