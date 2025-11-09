@@ -2,6 +2,7 @@ from .target_models import MagnitudeRange, SaltSiderealTarget
 from .rss_models import (
     Rss,
     RssDetector,
+    RssDitherPattern,
     RssImaging,
     RssLongslitSpectroscopy,
     RssMultiObjectSpectroscopy,
@@ -30,6 +31,7 @@ __all__ = [
     "Request",
     "Rss",
     "RssDetector",
+    "RssDitherPattern",
     "RssImaging",
     "RssLongslitSpectroscopy",
     "RssMultiObjectSpectroscopy",

@@ -1,9 +1,17 @@
 from __future__ import annotations
 
-from typing import Literal, Annotated
+from typing import Literal, Annotated, Union
 
 from astropy import units as u
-from pydantic import BaseModel, FilePath, PositiveInt, field_validator
+from astropy.units import Quantity
+from pydantic import (
+    BaseModel,
+    Field,
+    FilePath,
+    PositiveInt,
+    field_validator,
+    model_validator,
+)
 
 from aeonlib.types import Angle
 from aeonlib.salt.models.types import (
@@ -16,6 +24,7 @@ from aeonlib.salt.models.types import (
     RssReadoutSpeed,
     RssSlitMaskIFU,
     SalticamFilter,
+    AstropyQuantityTypeAnnotation,
 )
 from aeonlib.salt.validators import GreaterEqual, GreaterThan, LessEqual
 
@@ -72,7 +81,7 @@ class Rss(BaseModel):
         | RssSlitMaskIFUSpectroscopy
     )
     detector: RssDetector
-    dither_pattern: None
+    dither_pattern: RssDitherPattern | None
 
 
 class RssImaging(BaseModel):
@@ -325,3 +334,51 @@ class RssDetector(BaseModel):
     window_height: Annotated[
         Angle | None, GreaterThan(0 * u.arcsec), LessEqual(518 * u.arcsec)
     ] = None
+
+
+_Offset = Annotated[
+    Union[Quantity, float], AstropyQuantityTypeAnnotation(default_unit=u.arcsec)
+]
+
+
+class RssDitherPattern(BaseModel):
+    """
+    A dither pattern for RSS.
+
+    The dither pattern is characterised by the number of rows and columns it covers,
+    the number of steps to take, and the offset between the steps.
+
+    By default, the number of steps is the product of rows and columns, but you may
+    specify a multiple of that number if you want to perform the pattern more than once.
+
+    The offset is in detector coordinates, not in right ascension and declination.
+    Therefore, if a particular object orientation is desired, a suitable position
+    angle must be chosen so that the dithers coincide with the detector axes.
+
+    Attributes
+    ----------
+    num_rows
+        Number of rows in the pattern.
+    num_columns
+        Number of columns in the pattern.
+    number_steps
+        Number of steps to perform.
+    offset
+        Offset between steps, as a `astropy.units.Quantity` or as a float in arcsec.
+    """
+
+    num_rows: PositiveInt
+    num_columns: PositiveInt
+    num_steps: PositiveInt = Field(
+        default_factory=lambda data: data["num_rows"] * data["num_columns"]
+    )
+    offset: Annotated[_Offset, GreaterThan(0)]
+
+    @model_validator(mode="after")
+    def check_number_of_steps(self):
+        if self.num_steps % (self.num_rows * self.num_columns) != 0:
+            raise ValueError(
+                "The number of steps must be the number of rows times the number of "
+                "columns, or a multiple thereof."
+            )
+        return self

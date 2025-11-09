@@ -3,8 +3,9 @@ from contextlib import nullcontext
 
 import pytest
 from astropy import units as u
+from pydantic import ValidationError
 
-from aeonlib.salt.models import RssPolarimetry, RssSpectroscopy
+from aeonlib.salt.models import RssDitherPattern, RssPolarimetry, RssSpectroscopy
 
 
 class TestRss:
@@ -116,3 +117,45 @@ class TestRssDetector:
     def test_rss_detector(self, base_rss_detector):
         # Test that RSS detector setups can be built.
         assert True
+
+
+class TestRssDitherPattern:
+    def test_rss_dither_pattern(self, base_rss_dither_pattern):
+        """Test that RSS dither pattern can be built."""
+        assert True
+
+    def test_default_number_of_steps(self, base_rss_dither_pattern):
+        dither_pattern = base_rss_dither_pattern.model_dump()
+        dither_pattern["num_rows"] = 4
+        dither_pattern["num_columns"] = 3
+        if "num_steps" in dither_pattern:
+            del dither_pattern["num_steps"]
+        assert RssDitherPattern(**dither_pattern).num_steps == 12  # type: ignore
+
+    @pytest.mark.parametrize(
+        "num_rows, num_columns, num_steps, expectation",
+        [
+            (1, 1, 1, nullcontext()),
+            (1, 1, 5, nullcontext()),
+            (1, 2, 2, nullcontext()),
+            (2, 1, 6, nullcontext()),
+            (3, 5, 15, nullcontext()),
+            (5, 3, 45, nullcontext()),
+            (5, 2, 9, pytest.raises(ValidationError)),
+            (3, 7, 43, pytest.raises(ValidationError)),
+        ],
+    )
+    def test_only_complete_patterns_allowed(
+        self,
+        num_rows,
+        num_columns,
+        num_steps,
+        expectation,
+        base_rss_dither_pattern,
+    ):
+        dither_pattern = base_rss_dither_pattern.model_dump()
+        dither_pattern["num_rows"] = num_rows
+        dither_pattern["num_columns"] = num_columns
+        dither_pattern["num_steps"] = num_steps
+        with expectation:
+            RssDitherPattern(**dither_pattern)  # type: ignore

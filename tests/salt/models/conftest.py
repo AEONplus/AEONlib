@@ -18,6 +18,7 @@ from aeonlib.salt.models import (
     SalticamDetector,
     Rss,
     RssDetector,
+    RssDitherPattern,
     RssImaging,
     RssPolarimetry,
     RssSpectroscopy,
@@ -121,9 +122,11 @@ def base_salticam_dither_pattern():
 
 
 @pytest.fixture()
-def base_rss(base_rss_imaging, base_rss_detector):
+def base_rss(base_rss_imaging, base_rss_detector, base_rss_dither_pattern):
     return Rss(
-        configuration=base_rss_imaging, detector=base_rss_detector, dither_pattern=None
+        configuration=base_rss_imaging,
+        detector=base_rss_detector,
+        dither_pattern=base_rss_dither_pattern,
     )
 
 
@@ -184,3 +187,8 @@ def base_rss_detector():
         num_prebinned_columns=2,
         window_height=100 * u.arcsec,
     )
+
+
+@pytest.fixture()
+def base_rss_dither_pattern():
+    return RssDitherPattern(num_rows=3, num_columns=4, offset=12.9)
