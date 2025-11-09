@@ -6,7 +6,8 @@ from astropy import units as u
 from pydantic import BaseModel, FilePath, PositiveInt, field_validator
 
 from aeonlib.types import Angle
-from aeonlib.salt.models.types.filters import (
+from aeonlib.salt.models.types import (
+    RssGrating,
     RssImagingFilter,
     RssOrderBlockingFilter,
     SalticamFilter,
@@ -119,7 +120,7 @@ class RssSpectroscopy(BaseModel):
 
     """
 
-    grating: Literal["pg0700", "pg0900", "pg1300", "pg1800", "pg2300", "pg3000"]
+    grating: RssGrating
     grating_angle: Annotated[Angle, GreaterEqual(0 * u.deg), LessEqual(100 * u.deg)]
     articulation_angle: Angle
     order_blocking_filter: RssOrderBlockingFilter
@@ -161,7 +162,7 @@ class RssLongslitSpectroscopy(RssSpectroscopy):
     Attributes
     ----------
     slit
-        The barcode of the longslit to use, such as "PL0125N001".
+        The barcode of the longslit, such as "PL0125N001".
     """
 
     slit: str
