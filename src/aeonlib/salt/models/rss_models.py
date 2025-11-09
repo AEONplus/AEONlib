@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import Literal, Annotated
 
 from astropy import units as u
-from pydantic import BaseModel, PositiveInt, field_validator
+from pydantic import BaseModel, FilePath, PositiveInt, field_validator
 
 from aeonlib.types import Angle
 from aeonlib.salt.models.types.filters import (
@@ -165,6 +165,23 @@ class RssLongslitSpectroscopy(RssSpectroscopy):
     """
 
     slit: str
+
+
+class RssMultiObjectSpectroscopy(RssSpectroscopy):
+    """
+    An RSS multiobject spectroscopy (MOS) setup.
+
+    In addition to the properties required by a generic RSS spectroscopy the user must
+    specify the path of the file describing the MOS mask. The path must exist and must
+    be a file.
+
+    Attributes
+    ----------
+    mask
+        The file path of the file describing the MOS mask.
+    """
+
+    mask: FilePath
 
 
 class RssPolarimetry(BaseModel):

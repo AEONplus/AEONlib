@@ -98,3 +98,9 @@ class TestRssLongslitSpectroscopy:
     def test_rss_longslit_spectroscopy(self, base_rss_longslit_spectroscopy):
         # Test that RSS longslit spectroscopy setups can be built.
         assert True
+
+
+class TestRssMultiObjectSpectroscopy:
+    def test_rss_multi_object_spectroscopy(self, base_rss_multi_object_spectroscopy):
+        # Test that RSS multiobject spectroscopy setups can be built.
+        assert True

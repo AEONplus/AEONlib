@@ -3,6 +3,7 @@ from .rss_models import (
     Rss,
     RssImaging,
     RssLongslitSpectroscopy,
+    RssMultiObjectSpectroscopy,
     RssPolarimetry,
     RssSpectroscopy,
 )
@@ -28,6 +29,7 @@ __all__ = [
     "Rss",
     "RssImaging",
     "RssLongslitSpectroscopy",
+    "RssMultiObjectSpectroscopy",
     "RssPolarimetry",
     "RssSpectroscopy",
     "Salticam",
