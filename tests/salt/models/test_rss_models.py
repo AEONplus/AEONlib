@@ -110,3 +110,9 @@ class TestRssSlitMaskIFUSpectroscopy:
     def test_slit_mask_ifu_spectroscopy(self, base_rss_slit_mask_ifu_spectroscopy):
         # Test that RSS slit mask IFU spectroscopy setups can be built.
         assert True
+
+
+class TestRssDetector:
+    def test_rss_detector(self, base_rss_detector):
+        # Test that RSS detector setups can be built.
+        assert True

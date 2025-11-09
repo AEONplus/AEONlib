@@ -7,13 +7,17 @@ from pydantic import BaseModel, FilePath, PositiveInt, field_validator
 
 from aeonlib.types import Angle
 from aeonlib.salt.models.types import (
+    PositiveDuration,
+    RssGain,
     RssGrating,
     RssImagingFilter,
     RssOrderBlockingFilter,
+    RssReadoutMode,
+    RssReadoutSpeed,
     RssSlitMaskIFU,
     SalticamFilter,
 )
-from aeonlib.salt.validators import GreaterEqual, LessEqual
+from aeonlib.salt.validators import GreaterEqual, GreaterThan, LessEqual
 
 
 class Rss(BaseModel):
@@ -67,7 +71,7 @@ class Rss(BaseModel):
         | RssMultiObjectSpectroscopy
         | RssSlitMaskIFUSpectroscopy
     )
-    detector: None
+    detector: RssDetector
     dither_pattern: None
 
 
@@ -282,3 +286,42 @@ class RssPolarimetry(BaseModel):
             RssPolarimetry._check_pattern_step(step)
 
         return value
+
+
+class RssDetector(BaseModel):
+    """
+    An Rss detector setup.
+
+    Attributes
+    ----------
+    exposure_time
+        The exposure time. If multiple exposures are requested, this is the time per
+        exposure.
+    num_exposures
+        The number of exposures to take.
+    readout_mode
+        The readout mode.
+    gain
+        The gain.
+    readout_speed
+        The readout speed.
+    num_prebinned_rows
+        The number of prebinned rows, which must be between 1 and 9 (both inclusive).
+    num_prebinned_columns
+        The number of prebinned columns, which must be between 1 and 9 (both inclusive).
+    window_height
+        The height of the detector window, which must be a positive angle less than
+        or equal to 518 arcseconds. In most cases there is no need to define a
+        detector window.
+    """
+
+    exposure_time: PositiveDuration
+    num_exposures: int = 1
+    readout_mode: RssReadoutMode = "normal"
+    gain: RssGain
+    readout_speed: RssReadoutSpeed
+    num_prebinned_rows: Annotated[int, GreaterEqual(1), LessEqual(9)]
+    num_prebinned_columns: Annotated[int, GreaterEqual(1), LessEqual(9)]
+    window_height: Annotated[
+        Angle | None, GreaterThan(0 * u.arcsec), LessEqual(518 * u.arcsec)
+    ] = None

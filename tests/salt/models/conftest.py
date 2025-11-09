@@ -17,6 +17,7 @@ from aeonlib.salt.models import (
     SalticamFilterSequenceStep,
     SalticamDetector,
     Rss,
+    RssDetector,
     RssImaging,
     RssPolarimetry,
     RssSpectroscopy,
@@ -120,8 +121,10 @@ def base_salticam_dither_pattern():
 
 
 @pytest.fixture()
-def base_rss(base_rss_imaging):
-    return Rss(configuration=base_rss_imaging, detector=None, dither_pattern=None)
+def base_rss(base_rss_imaging, base_rss_detector):
+    return Rss(
+        configuration=base_rss_imaging, detector=base_rss_detector, dither_pattern=None
+    )
 
 
 @pytest.fixture()
@@ -168,4 +171,16 @@ def base_rss_slit_mask_ifu_spectroscopy(base_rss_spectroscopy):
     return RssSlitMaskIFUSpectroscopy(
         **base_rss_spectroscopy.model_dump(),
         slit_mask_ifu="PF0200N001",
+    )
+
+
+@pytest.fixture()
+def base_rss_detector():
+    return RssDetector(
+        exposure_time=120 * u.s,
+        gain="bright",
+        readout_speed="fast",
+        num_prebinned_rows=2,
+        num_prebinned_columns=2,
+        window_height=100 * u.arcsec,
     )
