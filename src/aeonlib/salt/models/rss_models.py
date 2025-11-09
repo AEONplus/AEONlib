@@ -336,11 +336,6 @@ class RssDetector(BaseModel):
     ] = None
 
 
-_Offset = Annotated[
-    Union[Quantity, float], AstropyQuantityTypeAnnotation(default_unit=u.arcsec)
-]
-
-
 class RssDitherPattern(BaseModel):
     """
     A dither pattern for RSS.
@@ -372,7 +367,9 @@ class RssDitherPattern(BaseModel):
     num_steps: PositiveInt = Field(
         default_factory=lambda data: data["num_rows"] * data["num_columns"]
     )
-    offset: Annotated[_Offset, GreaterThan(0)]
+    offset: Annotated[
+        Union[Quantity, float], AstropyQuantityTypeAnnotation(default_unit=u.arcsec)
+    ]
 
     @model_validator(mode="after")
     def check_number_of_steps(self):
