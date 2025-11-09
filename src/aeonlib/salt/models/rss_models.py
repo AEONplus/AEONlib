@@ -61,7 +61,12 @@ class Rss(BaseModel):
     """
 
     num_cycles: PositiveInt = 1
-    configuration: RssImaging
+    configuration: (
+        RssImaging
+        | RssLongslitSpectroscopy
+        | RssMultiObjectSpectroscopy
+        | RssSlitMaskIFUSpectroscopy
+    )
     detector: None
     dither_pattern: None
 
