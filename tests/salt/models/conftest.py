@@ -8,6 +8,7 @@ from aeonlib.salt.models import (
     Acquisition,
     Block,
     Constraints,
+    Hrs,
     MagnitudeRange,
     ReferenceStar,
     Request,
@@ -192,3 +193,8 @@ def base_rss_detector():
 @pytest.fixture()
 def base_rss_dither_pattern():
     return RssDitherPattern(num_rows=3, num_columns=4, offset=12.9)
+
+
+@pytest.fixture()
+def base_hrs():
+    return Hrs(mode="medium resolution", blue_arm=None, red_arm=None)

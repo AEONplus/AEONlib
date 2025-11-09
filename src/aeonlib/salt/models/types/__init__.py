@@ -1,6 +1,7 @@
 from .quantity import AstropyQuantityTypeAnnotation
 from .block import SkyTransparency
 from .duration import Duration, PositiveDuration
+from .hrs import HrsMode, HrsPrvCalibration
 from .rss import (
     RssGain,
     RssGrating,
@@ -16,6 +17,8 @@ from .target import MagnitudeBandpass, TargetType
 __all__ = [
     "AstropyQuantityTypeAnnotation",
     "Duration",
+    "HrsMode",
+    "HrsPrvCalibration",
     "MagnitudeBandpass",
     "PositiveDuration",
     "RssGain",
