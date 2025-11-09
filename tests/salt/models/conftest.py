@@ -20,6 +20,7 @@ from aeonlib.salt.models import (
     RssImaging,
     RssPolarimetry,
     RssSpectroscopy,
+    RssLongslitSpectroscopy,
 )
 
 
@@ -142,4 +143,11 @@ def base_rss_spectroscopy(base_rss_polarimetry):
         include_flat=True,
         include_arc=True,
         request_spectrophotometric_standard=False,
+    )
+
+
+@pytest.fixture()
+def base_rss_longslit_spectroscopy(base_rss_spectroscopy):
+    return RssLongslitSpectroscopy(
+        **base_rss_spectroscopy.model_dump(), slit="PL0125N001"
     )

@@ -92,3 +92,9 @@ class TestRssPolarimetry:
         with expectation:
             RssPolarimetry(wave_plate_pattern=[(angle, 45 * u.deg)])
             RssPolarimetry(wave_plate_pattern=[(45 * u.deg, angle)])
+
+
+class TestRssLongslitSpectroscopy:
+    def test_rss_longslit_spectroscopy(self, base_rss_longslit_spectroscopy):
+        # Test that RSS longslit spectroscopy setups can be built.
+        assert True

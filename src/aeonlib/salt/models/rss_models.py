@@ -151,6 +151,22 @@ class RssSpectroscopy(BaseModel):
         return angle
 
 
+class RssLongslitSpectroscopy(RssSpectroscopy):
+    """
+    An RSS longslit spectroscopy setup.
+
+    In addition to the properties required by a generic RSS spectroscopy the user must
+    specify the barcode of the longslit to use.
+
+    Attributes
+    ----------
+    slit
+        The barcode of the longslit to use, such as "PL0125N001".
+    """
+
+    slit: str
+
+
 class RssPolarimetry(BaseModel):
     """
     An RSS polarimetry setup.
