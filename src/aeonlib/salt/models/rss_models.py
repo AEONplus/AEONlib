@@ -134,8 +134,8 @@ class RssSpectroscopy(BaseModel):
         Whether a nighttime flat should be taken for the observation.
     include_arc
         Whether a nighttime arc should be taken for the observation.
-    request_photometric_standard
-        Whether a photometric standard should be taken for the observation.
+    request_spectrophotometric_standard
+        Whether a spectrophotometric standard should be taken for the observation.
 
     """
 
