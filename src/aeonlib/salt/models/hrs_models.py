@@ -48,7 +48,7 @@ class Hrs(BaseModel):
     )
     fibre_separation: Annotated[
         Angle, GreaterEqual(16 * u.arcsec), LessEqual(63 * u.arcsec)
-    ] = (60 * u.arcsec)
+    ] = 60 * u.arcsec
     blue_arm: HrsDetector
     red_arm: HrsDetector
 
