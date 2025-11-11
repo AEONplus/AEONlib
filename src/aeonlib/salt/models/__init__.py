@@ -1,5 +1,5 @@
 from .target_models import MagnitudeRange, SaltSiderealTarget
-from .hrs_models import Hrs
+from .hrs_models import Hrs, HrsDetector
 from .rss_models import (
     Rss,
     RssDetector,
@@ -26,6 +26,7 @@ __all__ = [
     "Block",
     "Constraints",
     "Hrs",
+    "HrsDetector",
     "SalticamDitherPattern",
     "SalticamFilterSequenceStep",
     "MagnitudeRange",

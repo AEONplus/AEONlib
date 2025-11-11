@@ -1,9 +1,11 @@
+from __future__ import annotations
+
 from typing import Annotated, Self
 
 from astropy import units as u
 from pydantic import BaseModel, Field, PositiveInt, model_validator
 
-from aeonlib.salt.models.types import HrsMode, HrsPrvCalibration
+from aeonlib.salt.models.types import HrsMode, HrsPrvCalibration, PositiveDuration
 from aeonlib.salt.validators import GreaterEqual, LessEqual
 from aeonlib.types import Angle
 
@@ -46,9 +48,9 @@ class Hrs(BaseModel):
     )
     fibre_separation: Annotated[
         Angle, GreaterEqual(16 * u.arcsec), LessEqual(63 * u.arcsec)
-    ] = 60 * u.arcsec
-    blue_arm: None
-    red_arm: None
+    ] = (60 * u.arcsec)
+    blue_arm: HrsDetector
+    red_arm: HrsDetector
 
     @model_validator(mode="after")
     def check_prv_calibration(self) -> Self:
@@ -63,3 +65,16 @@ class Hrs(BaseModel):
                     f"prv_calibration must be None for the {self.mode} mode."
                 )
         return self
+
+
+class HrsDetector(BaseModel):
+    """
+    An HRS detector setup.
+
+    A list of exposure times for the detector has to be specified. These exposure times
+    may be different for the blue and the red detector.
+
+    Other detector properties, such as the readout speed or the binning, cannot be set.
+    """
+
+    exposure_times: list[PositiveDuration]

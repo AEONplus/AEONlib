@@ -63,3 +63,9 @@ class TestHrs:
                 Hrs(**hrs_data, mode=mode, prv_calibration="ThAr")
             with pytest.raises(ValueError):
                 Hrs(**hrs_data, mode=mode, prv_calibration=None)
+
+
+class TestHrsDetector:
+    def test_hrs_detector(self, base_hrs_detector):
+        # Test that HRS detector setups can be built.
+        assert True

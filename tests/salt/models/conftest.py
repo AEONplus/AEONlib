@@ -9,6 +9,7 @@ from aeonlib.salt.models import (
     Block,
     Constraints,
     Hrs,
+    HrsDetector,
     MagnitudeRange,
     ReferenceStar,
     Request,
@@ -196,5 +197,12 @@ def base_rss_dither_pattern():
 
 
 @pytest.fixture()
-def base_hrs():
-    return Hrs(mode="medium resolution", blue_arm=None, red_arm=None)
+def base_hrs(base_hrs_detector):
+    return Hrs(
+        mode="medium resolution", blue_arm=base_hrs_detector, red_arm=base_hrs_detector
+    )
+
+
+@pytest.fixture()
+def base_hrs_detector():
+    return HrsDetector(exposure_times=[50 * u.s, 45])
