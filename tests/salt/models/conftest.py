@@ -27,6 +27,7 @@ from aeonlib.salt.models import (
     RssLongslitSpectroscopy,
     RssMultiObjectSpectroscopy,
     RssSlitMaskIFUSpectroscopy,
+    Nirwals,
 )
 
 
@@ -206,3 +207,15 @@ def base_hrs(base_hrs_detector):
 @pytest.fixture()
 def base_hrs_detector():
     return HrsDetector(exposure_times=[50 * u.s, 45])
+
+
+@pytest.fixture()
+def base_nirwals():
+    return Nirwals(
+        grating="NG0950",
+        grating_angle=25 * u.deg,
+        articulation_angle=50 * u.deg,
+        camera_filter="cutoff 1.5um",
+        dither_pattern=None,
+        include_flat=False,
+    )

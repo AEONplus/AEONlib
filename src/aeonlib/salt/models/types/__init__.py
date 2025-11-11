@@ -2,6 +2,15 @@ from .quantity import AstropyQuantityTypeAnnotation
 from .block import SkyTransparency
 from .duration import Duration, PositiveDuration
 from .hrs import HrsMode, HrsPrvCalibration
+from .nirwals import (
+    NirwalsCameraFilter,
+    NirwalsExposureType,
+    NirwalsFilter,
+    NirwalsGain,
+    NirwalsGrating,
+    NirwalsOffsetType,
+    NirwalsSampling,
+)
 from .rss import (
     RssGain,
     RssGrating,
@@ -20,6 +29,13 @@ __all__ = [
     "HrsMode",
     "HrsPrvCalibration",
     "MagnitudeBandpass",
+    "NirwalsCameraFilter",
+    "NirwalsExposureType",
+    "NirwalsFilter",
+    "NirwalsGain",
+    "NirwalsGrating",
+    "NirwalsOffsetType",
+    "NirwalsSampling",
     "PositiveDuration",
     "RssGain",
     "RssGrating",
