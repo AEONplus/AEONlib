@@ -61,7 +61,7 @@ class Block(BaseModel):
     is transferred to Cape Town (before the pipeline runs), you can set the data
     notification accordingly.
 
-    Attributes
+    Parameters
     ----------
     name
         Human-friendly name for the block. This must be unique within a proposal.
@@ -144,7 +144,7 @@ class Constraints(BaseModel):
 
     The seeing must be given for the zenith.
 
-    Attributes
+    Parameters
     ----------
     transparency
         Required sky transparency.
@@ -180,7 +180,7 @@ class Acquisition(BaseModel):
     include additional finder charts, for example if your target is a transient and
     hence will not show on the automatically generate finder charts.
 
-    Attributes
+    Parameters
     ----------
     finder_charts
         Additional finder charts. The specified files must exist.

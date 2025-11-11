@@ -10,7 +10,7 @@ class Request(BaseModel):
     """
     An observation request for SALT.
 
-    Attributes
+    Parameters
     ----------
     proposal_code
         Unique identifier of the proposal for which this request is submitted.

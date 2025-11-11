@@ -35,7 +35,7 @@ class Salticam(BaseModel):
     You may define a dither pattern, in which case the filter sequence (with its cycles
     and exposures) applies to each dither pattern step.
 
-    Attributes
+    Parameters
     ----------
     num_cycles
         How often to cycle through the filter sequence.
@@ -60,7 +60,7 @@ class SalticamFilterSequenceStep(BaseModel):
     """
     A step in a filter sequence.
 
-    Attributes
+    Parameters
     ----------
     filter
         Filter for the step.
@@ -107,7 +107,7 @@ class SalticamDitherPattern(BaseModel):
     Therefore, if a particular object orientation is desired, a suitable position
     angle must be chosen so that the dithers coincide with the detector axes.
 
-    Attributes
+    Parameters
     ----------
     num_rows
         Number of rows in the pattern.

@@ -19,7 +19,7 @@ class SaltSiderealTarget(SiderealTarget):
     This model extends the `SiderealTarget` model by adding a target type and a
     magnitude range.
 
-    Attributes
+    Parameters
     ----------
     target_type
         Target type. This must be the label for SIMBAD object type (see
@@ -45,7 +45,7 @@ class MagnitudeRange(BaseModel):
     The minimum (brightest) and maximum (faintest) magnitude must be give for a
     particular bandpass filter.
 
-    Attributes
+    Parameters
     ----------
     min_magnitude
         Minimum (brightest) magnitude.

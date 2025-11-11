@@ -21,7 +21,7 @@ class Hrs(BaseModel):
     A sequence of exposure times can be defined for the red and blue detector arm. If
     this sequence shall be executed more than once, a number of cycles need to be set.
 
-    Attributes
+    Parameters
     ----------
     num_cycles
         How often the exposure time patterns shall be executed.
@@ -48,7 +48,7 @@ class Hrs(BaseModel):
     )
     fibre_separation: Annotated[
         Angle, GreaterEqual(16 * u.arcsec), LessEqual(63 * u.arcsec)
-    ] = 60 * u.arcsec
+    ] = (60 * u.arcsec)
     blue_arm: HrsDetector
     red_arm: HrsDetector
 

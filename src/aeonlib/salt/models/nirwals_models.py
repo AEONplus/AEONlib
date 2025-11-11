@@ -27,7 +27,7 @@ class Nirwals(BaseModel):
     Every NIRWALS configuration includes a dither pattern. If you want to repeat this
     pattern, you have to specify the number of cycles.
 
-    Attributes
+    Parameters
     ----------
     num_cycles
         The number of times the dither pattern should be done.

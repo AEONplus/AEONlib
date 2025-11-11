@@ -60,7 +60,7 @@ class Rss(BaseModel):
     You may define a dither pattern, in which case the wave plate sequence (with its
     cycles and exposures) applies to each dither pattern step.
 
-    Attributes
+    Parameters
     ----------
     num_cycles
         How often to cycle through the wave plate sequence. This is only relevant if
@@ -88,7 +88,7 @@ class RssImaging(BaseModel):
     """
     An RSS imaging configuration.
 
-    Attributes
+    Parameters
     ----------
     filter
         The filter to use. This may be one of RSS's own imaging filters or one of the
@@ -117,7 +117,7 @@ class RssSpectroscopy(BaseModel):
     While the grating, articulation, polarimetry and calibrations are defined by this
     class, the slit mask (or IFU) to use is specified in a child class.
 
-    Attributes
+    Parameters
     ----------
     grating
         The barcode of the grating, such as "pg0900".
@@ -178,7 +178,7 @@ class RssLongslitSpectroscopy(RssSpectroscopy):
     In addition to the properties required by a generic RSS spectroscopy the user must
     specify the barcode of the longslit to use.
 
-    Attributes
+    Parameters
     ----------
     slit
         The barcode of the longslit, such as "PL0125N001".
@@ -195,7 +195,7 @@ class RssMultiObjectSpectroscopy(RssSpectroscopy):
     specify the path of the file describing the MOS mask. The path must exist and must
     be a file.
 
-    Attributes
+    Parameters
     ----------
     mask
         The file path of the file describing the MOS mask.
@@ -211,7 +211,7 @@ class RssSlitMaskIFUSpectroscopy(RssSpectroscopy):
     In addition to the properties required by a generic RSS spectroscopy the user must
     specify the barcode of the slit mask IFU to use.
 
-    Attributes
+    Parameters
     ----------
     slit_mask_ifu
         The barcode of the slit mask IFU, such as "PF0200N001".
@@ -301,7 +301,7 @@ class RssDetector(BaseModel):
     """
     An Rss detector setup.
 
-    Attributes
+    Parameters
     ----------
     exposure_time
         The exposure time. If multiple exposures are requested, this is the time per
@@ -350,7 +350,7 @@ class RssDitherPattern(BaseModel):
     Therefore, if a particular object orientation is desired, a suitable position
     angle must be chosen so that the dithers coincide with the detector axes.
 
-    Attributes
+    Parameters
     ----------
     num_rows
         Number of rows in the pattern.
