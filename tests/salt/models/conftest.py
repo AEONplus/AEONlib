@@ -28,6 +28,7 @@ from aeonlib.salt.models import (
     RssMultiObjectSpectroscopy,
     RssSlitMaskIFUSpectroscopy,
     Nirwals,
+    NirwalsDitherPatternStep,
 )
 
 
@@ -210,12 +211,28 @@ def base_hrs_detector():
 
 
 @pytest.fixture()
-def base_nirwals():
+def base_nirwals(base_nirwals_dither_pattern_step):
     return Nirwals(
         grating="NG0950",
         grating_angle=25 * u.deg,
         articulation_angle=50 * u.deg,
         camera_filter="cutoff 1.5um",
-        dither_pattern=None,
+        dither_pattern=[
+            base_nirwals_dither_pattern_step,
+            base_nirwals_dither_pattern_step,
+        ],
         include_flat=False,
+    )
+
+
+@pytest.fixture()
+def base_nirwals_dither_pattern_step():
+    return NirwalsDitherPatternStep(
+        offset_type="FIF offset",
+        horizontal_offset=-20 * u.arcsec,
+        vertical_offset=35 * u.arcsec,
+        exposure_type="science",
+        exposure_time=200 * u.s,
+        gain="faint",
+        sampling="up-the-ramp",
     )

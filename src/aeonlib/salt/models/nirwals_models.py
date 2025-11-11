@@ -1,9 +1,21 @@
-from typing import Annotated
+from __future__ import annotations
+
+import math
+from typing import Annotated, Literal
 
 from astropy import units as u
 from pydantic import BaseModel, PositiveInt, field_validator
 
-from aeonlib.salt.models.types import NirwalsCameraFilter, NirwalsFilter, NirwalsGrating
+from aeonlib.salt.models.types import (
+    NirwalsCameraFilter,
+    NirwalsExposureType,
+    NirwalsFilter,
+    NirwalsGain,
+    NirwalsGrating,
+    NirwalsOffsetType,
+    NirwalsSampling,
+    PositiveDuration,
+)
 from aeonlib.salt.validators import GreaterEqual, LessEqual
 from aeonlib.types import Angle
 
@@ -47,7 +59,7 @@ class Nirwals(BaseModel):
     articulation_angle: Angle
     filter: NirwalsFilter = "empty"
     camera_filter: NirwalsCameraFilter
-    dither_pattern: None
+    dither_pattern: list[NirwalsDitherPatternStep]
     include_arc: bool = True
     include_flat: bool
     request_spectrophotometric_standard: bool = False
@@ -66,3 +78,77 @@ class Nirwals(BaseModel):
             raise ValueError(error)
 
         return angle
+
+
+class NirwalsDitherPatternStep(BaseModel):
+    """
+    A step in a NIRWALS dither pattern.
+
+    Each step os characterised by the offset type and the offsets in horizontal and
+    vertical direction, the exposure type and time, and other detector-related
+    properties. The offset directions are the on-telescope directions (i.e. with the
+    field rotated by the position angle)
+
+    If a reference star is provided for the acquisition, for the first step the
+    offset type must be "tracker guided offset" and the offsets must be equal to
+    those from the reference star to the target.
+
+    Parameters
+    ----------
+    offset_type
+        The offset type.
+    horizontal offset
+        The offset in horizontal telescope direction. This must be between -100 and 100
+        arcseconds (both inclusive).
+    vertical_offset
+        The offset in vertical telescope direction. This must be between -100 and 100
+        arcseconds (both inclusive).
+    exposure_type
+        The exposure type.
+    exposure_time
+        The exposure time.
+    gain
+        The gain to use.
+    sampling
+        The sampling method to use.
+    num_reads
+        The number of detector readouts. This must be 1.
+    num_ramps
+        The number of ramps. This must be 1.
+    """
+
+    offset_type: NirwalsOffsetType
+    horizontal_offset: Annotated[
+        Angle, GreaterEqual(-100 * u.arcsec), LessEqual(100 * u.arcsec)
+    ]
+    vertical_offset: Annotated[
+        Angle, GreaterEqual(-100 * u.arcsec), LessEqual(100 * u.arcsec)
+    ]
+    exposure_type: NirwalsExposureType
+    exposure_time: PositiveDuration
+    gain: NirwalsGain
+    sampling: NirwalsSampling
+    num_reads: Literal[1] = 1
+    num_ramps: Literal[1] = 1
+
+    @property
+    def num_groups(self):
+        """
+        The number of groups.
+
+        The number of groups is equal to the ratio of the exposure time and the product
+        of reads and frame rate. A value of 0.728 seconds is assumed for the frame rate.
+
+        Returns
+        -------
+        The number of groups.
+        """
+        frame_rate = 0.728 * u.s
+        # The actual frame rate value is 0.727750 s. However, as a safety measure and to
+        # avoid rounding differences between different pieces of software, a rounded
+        # value is used.
+
+        groups = round(
+            math.floor(float(self.exposure_time / (self.num_reads * frame_rate)))
+        )
+        return max(1, groups)

@@ -1,6 +1,6 @@
 from .target_models import MagnitudeRange, SaltSiderealTarget
 from .hrs_models import Hrs, HrsDetector
-from .nirwals_models import Nirwals
+from .nirwals_models import Nirwals, NirwalsDitherPatternStep
 from .rss_models import (
     Rss,
     RssDetector,
@@ -29,6 +29,7 @@ __all__ = [
     "Hrs",
     "HrsDetector",
     "Nirwals",
+    "NirwalsDitherPatternStep",
     "SalticamDitherPattern",
     "SalticamFilterSequenceStep",
     "MagnitudeRange",

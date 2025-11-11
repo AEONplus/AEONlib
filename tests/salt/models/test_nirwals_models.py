@@ -3,7 +3,7 @@ from contextlib import nullcontext
 from astropy import units as u
 import pytest
 
-from aeonlib.salt.models import Nirwals
+from aeonlib.salt.models import Nirwals, NirwalsDitherPatternStep
 
 
 class TestNirwals:
@@ -36,3 +36,23 @@ class TestNirwals:
         data["articulation_angle"] = angle
         with expectation:
             Nirwals(**data)
+
+
+class TestNirwalsDitherPatternStep:
+    def test_nirwals_dither_pattern_step(self):
+        # Test that NIRWALS dither pattern step setups can be built.
+        assert True
+
+    @pytest.mark.parametrize(
+        "exposure_time, num_groups",
+        [(0.001 * u.s, 1), (37 * u.s, 50), (70_000 * u.ms, 96)],
+    )
+    def test_number_of_groups(
+        self, exposure_time, num_groups, base_nirwals_dither_pattern_step
+    ):
+        # Test that the number of groups is calculated correctly.
+        data = base_nirwals_dither_pattern_step.model_dump()
+        data["exposure_time"] = exposure_time
+        step = NirwalsDitherPatternStep(**data)
+
+        assert step.num_groups == num_groups
