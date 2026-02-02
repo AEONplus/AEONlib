@@ -14,6 +14,8 @@ def validate_xml(xml: str) -> None:
     The method raises a `ValueError` if the XML is not well-formed or does not conform
     to the schema.
 
+    This method is intended only for use in the serialization of SALT model instances.
+
     Parameters
     ----------
     xml
@@ -54,10 +56,14 @@ def render_template(
     in the `templates` folder of  the `aeonlib.salt.models.serialize` package. Any
     additional keyword arguments are passed on to Jinja's render function.
 
+    This method is intended only for use in the serialization of SALT model instances.
+
     Parameters
     ----------
     template_path
         Path of the template to render.
+    loader
+        Jinja template loader.
     kwargs
         Additional keyword arguments passed on to the render function.
 
