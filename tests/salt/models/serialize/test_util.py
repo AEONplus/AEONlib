@@ -42,7 +42,7 @@ def test_validate_valid_xml():
 
 def test_render_template():
     """Test rendering a Jinja template."""
-    loader = FileSystemLoader(pathlib.Path(__file__).parent.parent / "data")
+    loader = FileSystemLoader(pathlib.Path(__file__).parent.parent.parent / "data")
     rendered = render_template("test.xml", loader, a=1, b=2)
     assert "<a>1</a>" in rendered
     assert "<b>2</b>" in rendered
@@ -50,6 +50,6 @@ def test_render_template():
 
 def test_render_template_with_escaping():
     """Test that input is escaped when rendering a Jinja template."""
-    loader = FileSystemLoader(pathlib.Path(__file__).parent.parent / "data")
+    loader = FileSystemLoader(pathlib.Path(__file__).parent.parent.parent / "data")
     rendered = render_template("test.xml", loader, a="a >= 1 & a <= 5", b=2)
     assert "<a>a &gt;= 1 &amp; a &lt;= 5</a>" in rendered
