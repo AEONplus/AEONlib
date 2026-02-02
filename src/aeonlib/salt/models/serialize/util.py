@@ -1,6 +1,7 @@
 import io
 import pathlib
 
+from jinja2 import Environment, PackageLoader, select_autoescape, BaseLoader
 from lxml import etree
 
 _schema: etree.XMLSchema | None = None
@@ -39,3 +40,34 @@ def _load_schema():
         schema_doc = etree.parse(f)
         global _schema
         _schema = etree.XMLSchema(schema_doc)
+
+
+def render_template(
+    template_path: str, loader: BaseLoader | None = None, **kwargs
+) -> str:
+    """
+    Render a Jinja template.
+
+    The first argument for this method is the path of the template to render,
+    as needed by the template loader. You may pass a `jinja2.BaseLoader` as the
+    `loader` argument for specifying how to load the template. The default is to look
+    in the `templates` folder of  the `aeonlib.salt.models.serialize` package. Any
+    additional keyword arguments are passed on to Jinja's render function.
+
+    Parameters
+    ----------
+    template_path
+        Path of the template to render.
+    kwargs
+        Additional keyword arguments passed on to the render function.
+
+    Returns
+    -------
+    The rendered template.
+    """
+    if not loader:
+        loader = PackageLoader("aeonlib.salt.models.serialize")
+
+    env = Environment(loader=loader, autoescape=select_autoescape())
+    template = env.get_template(template_path)
+    return template.render(**kwargs)

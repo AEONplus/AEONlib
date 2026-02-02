@@ -23,6 +23,7 @@ lt = [
     { name = "suds" },
 ]
 salt = [
+    { name = "jinja2" },
     { name = "lxml" },
 ]
 
@@ -39,6 +40,7 @@ dev = [
 requires-dist = [
     { name = "astropy", specifier = ">=7.0.1" },
     { name = "httpx", specifier = ">=0.28.1" },
+    { name = "jinja2", marker = "extra == 'salt'", specifier = ">=3.1.6" },
     { name = "lxml", marker = "extra == 'lt'", specifier = ">=5.4.0" },
     { name = "lxml", marker = "extra == 'salt'", specifier = ">=6.0.1" },
     { name = "lxml-stubs", marker = "extra == 'lt'", specifier = ">=0.5.1" },

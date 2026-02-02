@@ -1,6 +1,9 @@
-import pytest
+import pathlib
 
-from aeonlib.salt.models.serialize.util import validate_xml
+import pytest
+from jinja2 import FileSystemLoader
+
+from aeonlib.salt.models.serialize.util import validate_xml, render_template
 
 
 def test_validate_non_well_formed_xml():
@@ -35,3 +38,18 @@ def test_validate_valid_xml():
     """
     validate_xml(xml)
     assert True
+
+
+def test_render_template():
+    """Test rendering a Jinja template."""
+    loader = FileSystemLoader(pathlib.Path(__file__).parent.parent / "data")
+    rendered = render_template("test.xml", loader, a=1, b=2)
+    assert "<a>1</a>" in rendered
+    assert "<b>2</b>" in rendered
+
+
+def test_render_template_with_escaping():
+    """Test that input is escaped when rendering a Jinja template."""
+    loader = FileSystemLoader(pathlib.Path(__file__).parent.parent / "data")
+    rendered = render_template("test.xml", loader, a="a >= 1 & a <= 5", b=2)
+    assert "<a>a &gt;= 1 &amp; a &lt;= 5</a>" in rendered
