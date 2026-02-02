@@ -31,6 +31,9 @@ lt = [
     "lxml-stubs>=0.5.1",
     "suds>=1.2.0",
 ]
+salt = [
+    "lxml>=6.0.1",
+]
 
 [tool.pytest.ini_options]
 addopts = ["--import-mode=importlib",  "-m not online"]
