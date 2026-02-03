@@ -3,6 +3,7 @@ import pathlib
 
 from jinja2 import Environment, PackageLoader, select_autoescape, BaseLoader
 from lxml import etree
+from pydantic import PlainSerializer
 
 _schema: etree.XMLSchema | None = None
 
@@ -77,3 +78,39 @@ def render_template(
     env = Environment(loader=loader, autoescape=select_autoescape())
     template = env.get_template(template_path)
     return template.render(**kwargs)
+
+
+def _capitalize(s: str) -> str:
+    return s.capitalize()
+
+
+CapitalizingSerializer = PlainSerializer(_capitalize)
+"""
+A serializer for capitalising string values.
+
+This serializer is only intended for use in the serialization of SALT data models.
+"""
+
+
+def _title(s: str) -> str:
+    return s.title()
+
+
+TitleCaseSerializer = PlainSerializer(_title)
+"""
+A serializer for converting string values to title case.
+
+This serializer is only intended for use in the serialization of SALT data models.
+"""
+
+
+def _upper(s: str) -> str:
+    return s.upper()
+
+
+UpperCaseSerializer = PlainSerializer(_upper)
+"""
+A serializer for converting string values to upper case.
+
+This serializer is only intended for use in the serialization of SALT data models.
+"""
