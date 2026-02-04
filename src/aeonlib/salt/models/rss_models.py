@@ -236,7 +236,7 @@ class RssPolarimetry(BaseModel):
     For example, the "linear" and "circular" patterns could be given as::
 
         linear = RssPolarimetry(wave_plate_pattern="linear")
-        circular = RssPolarimetry(wave_plate_pattern="linear")
+        circular = RssPolarimetry(wave_plate_pattern="circular")
 
     or as::
 
