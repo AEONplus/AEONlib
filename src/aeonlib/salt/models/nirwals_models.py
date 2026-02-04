@@ -4,7 +4,7 @@ import math
 from typing import Annotated, Literal
 
 from astropy import units as u
-from pydantic import BaseModel, PositiveInt, field_validator
+from pydantic import BaseModel, PositiveInt, field_validator, PlainSerializer
 
 from aeonlib.salt.models.types import (
     NirwalsCameraFilter,
@@ -15,6 +15,10 @@ from aeonlib.salt.models.types import (
     NirwalsOffsetType,
     NirwalsSampling,
     PositiveDuration,
+)
+from aeonlib.salt.models.serialize.util import (
+    UpperCaseSerializer,
+    CapitalizingSerializer,
 )
 from aeonlib.salt.validators import GreaterEqual, LessEqual
 from aeonlib.types import Angle
@@ -54,11 +58,11 @@ class Nirwals(BaseModel):
     """
 
     num_cycles: PositiveInt = 1
-    grating: NirwalsGrating
+    grating: Annotated[NirwalsGrating, UpperCaseSerializer]
     grating_angle: Annotated[Angle, GreaterEqual(0 * u.deg), LessEqual(100 * u.deg)]
     articulation_angle: Angle
-    filter: NirwalsFilter = "empty"
-    camera_filter: NirwalsCameraFilter
+    filter: NirwalsFilter = Annotated["empty", CapitalizingSerializer]
+    camera_filter: Annotated[NirwalsCameraFilter, CapitalizingSerializer]
     dither_pattern: list[NirwalsDitherPatternStep]
     include_arc: bool = True
     include_flat: bool
@@ -117,17 +121,22 @@ class NirwalsDitherPatternStep(BaseModel):
         The number of ramps. This must be 1.
     """
 
-    offset_type: NirwalsOffsetType
+    offset_type: Annotated[
+        NirwalsOffsetType,
+        PlainSerializer(NirwalsDitherPatternStep.offset_type_serializer),
+    ]
     horizontal_offset: Annotated[
         Angle, GreaterEqual(-100 * u.arcsec), LessEqual(100 * u.arcsec)
     ]
     vertical_offset: Annotated[
         Angle, GreaterEqual(-100 * u.arcsec), LessEqual(100 * u.arcsec)
     ]
-    exposure_type: NirwalsExposureType
+    exposure_type: Annotated[NirwalsExposureType, CapitalizingSerializer]
     exposure_time: PositiveDuration
-    gain: NirwalsGain
-    sampling: NirwalsSampling
+    gain: Annotated[NirwalsGain, CapitalizingSerializer]
+    sampling: Annotated[
+        NirwalsSampling, PlainSerializer(NirwalsDitherPatternStep.sampling_serializer)
+    ]
     num_reads: Literal[1] = 1
     num_ramps: Literal[1] = 1
 
@@ -152,3 +161,17 @@ class NirwalsDitherPatternStep(BaseModel):
             math.floor(float(self.exposure_time / (self.num_reads * frame_rate)))
         )
         return max(1, groups)
+
+    @staticmethod
+    def _offset_type_serializer(value: NirwalsOffsetType) -> str:
+        if value == "FIF offset":
+            return "FIF Offset"
+        else:
+            return value.title()
+
+    @staticmethod
+    def _sampling_serializer(value: NirwalsSampling) -> str:
+        if value == "up-the-ramp":
+            return "Up-the-Ramp Group"
+        else:
+            raise ValueError(f"Sampling cannot be serialized: {value}")

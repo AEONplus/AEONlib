@@ -18,6 +18,7 @@ from pydantic import (
 
 from aeonlib.models import Angle, Window
 from aeonlib.salt.models import SaltSiderealTarget
+from aeonlib.salt.models.serialize.util import CapitalizingSerializer
 from aeonlib.salt.models.types import (
     PositiveDuration,
     SalticamFilter,
@@ -103,7 +104,7 @@ class Block(BaseModel):
     identifier: str | None = None
     comments: str | None = None
     priority: Annotated[int, GreaterEqual(0), LessEqual(4)]
-    ranking: Literal["high", "medium", "low"]
+    ranking: Annotated[Literal["high", "medium", "low"], CapitalizingSerializer]
     num_visits: PositiveInt
     max_num_visits: PositiveInt | None = None
     min_nights_between_visits: NonNegativeInt = 0
@@ -113,7 +114,9 @@ class Block(BaseModel):
     acquisition: Acquisition
     instrument: None
     pool: str | None = None
-    data_notification: Literal["normal", "fast"] = "normal"
+    data_notification: Annotated[Literal["normal", "fast"], CapitalizingSerializer] = (
+        "normal"
+    )
 
     @model_validator(mode="after")
     def check_max_num_visits_is_at_least_num_visits(self) -> Self:
@@ -157,7 +160,7 @@ class Constraints(BaseModel):
         Maximum allowed seeing.
     """
 
-    transparency: SkyTransparency
+    transparency: Annotated[SkyTransparency, CapitalizingSerializer]
     max_lunar_phase_percentage: Annotated[NonNegativeFloat, LessEqual(100)]
     min_lunar_distance: Annotated[
         Angle, GreaterEqual(0 * u.deg), LessEqual(180 * u.deg)

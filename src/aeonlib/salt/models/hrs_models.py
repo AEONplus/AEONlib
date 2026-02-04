@@ -5,6 +5,7 @@ from typing import Annotated, Self
 from astropy import units as u
 from pydantic import BaseModel, Field, PositiveInt, model_validator
 
+from aeonlib.salt.models.serialize.util import UpperCaseSerializer
 from aeonlib.salt.models.types import HrsMode, HrsPrvCalibration, PositiveDuration
 from aeonlib.salt.validators import GreaterEqual, LessEqual
 from aeonlib.types import Angle
@@ -40,7 +41,7 @@ class Hrs(BaseModel):
     """
 
     num_cycles: PositiveInt = 1
-    mode: HrsMode
+    mode: Annotated[HrsMode, UpperCaseSerializer]
     prv_calibration: HrsPrvCalibration | None = Field(
         default_factory=lambda data: (
             "ThAr" if data["mode"] == "high stability" else None
@@ -48,7 +49,7 @@ class Hrs(BaseModel):
     )
     fibre_separation: Annotated[
         Angle, GreaterEqual(16 * u.arcsec), LessEqual(63 * u.arcsec)
-    ] = 60 * u.arcsec
+    ] = (60 * u.arcsec)
     blue_arm: HrsDetector
     red_arm: HrsDetector
 

@@ -14,6 +14,7 @@ from pydantic import (
 )
 
 from aeonlib.types import Angle
+from aeonlib.salt.models.serialize.util import TitleCaseSerializer
 from aeonlib.salt.models.types import (
     PositiveDuration,
     RssGain,
@@ -326,9 +327,9 @@ class RssDetector(BaseModel):
 
     exposure_time: PositiveDuration
     num_exposures: int = 1
-    readout_mode: RssReadoutMode = "normal"
-    gain: RssGain
-    readout_speed: RssReadoutSpeed
+    readout_mode: Annotated[RssReadoutMode, TitleCaseSerializer] = "normal"
+    gain: Annotated[RssGain, TitleCaseSerializer]
+    readout_speed: Annotated[RssReadoutSpeed, TitleCaseSerializer]
     num_prebinned_rows: Annotated[int, GreaterEqual(1), LessEqual(9)]
     num_prebinned_columns: Annotated[int, GreaterEqual(1), LessEqual(9)]
     window_height: Annotated[

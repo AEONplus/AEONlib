@@ -12,6 +12,7 @@ from aeonlib.salt.models.types import (
     SalticamFilter,
     AstropyQuantityTypeAnnotation,
 )
+from aeonlib.salt.models.serialize.util import CapitalizingSerializer
 from aeonlib.salt.validators import GreaterEqual, LessEqual
 
 
@@ -86,9 +87,9 @@ class SalticamDetector(BaseModel):
     """
 
     num_exposures: PositiveInt
-    readout_mode: Literal["normal"] = "normal"
-    gain: Literal["bright", "faint"]
-    readout_speed: Literal["fast", "slow"]
+    readout_mode: Annotated[Literal["normal"], CapitalizingSerializer] = "normal"
+    gain: Annotated[Literal["bright", "faint"], CapitalizingSerializer]
+    readout_speed: Annotated[Literal["fast", "slow"], CapitalizingSerializer]
     num_prebinned_rows: Annotated[int, GreaterEqual(1), LessEqual(9)]
     num_prebinned_columns: Annotated[int, GreaterEqual(1), LessEqual(9)]
 

@@ -1,7 +1,7 @@
 from typing import Literal
 
 
-NirwalsGrating = Literal["NG0950"]
+NirwalsGrating = Literal["ng0950"]
 """A NIRWALS grating."""
 
 
