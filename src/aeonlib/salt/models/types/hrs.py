@@ -6,5 +6,5 @@ HrsMode = Literal[
 """An HRS instrument mode."""
 
 
-HrsPrvCalibration = Literal["ThAr"]
+HrsPrvCalibration = Literal["ThAr", "thar"]
 """An HRS precision radial velocity calibration."""

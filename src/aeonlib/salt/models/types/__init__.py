@@ -20,7 +20,7 @@ from .rss import (
     RssReadoutSpeed,
     RssSlitMaskIFU,
 )
-from .salticam import SalticamFilter
+from .salticam import SalticamFilter, SalticamFilterSerializer
 from .target import MagnitudeBandpass, TargetType
 
 __all__ = [
@@ -45,6 +45,7 @@ __all__ = [
     "RssReadoutSpeed",
     "RssSlitMaskIFU",
     "SalticamFilter",
+    "SalticamFilterSerializer",
     "SkyTransparency",
     "TargetType",
 ]

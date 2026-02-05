@@ -15,7 +15,7 @@ NirwalsCameraFilter = Literal[
 """A NIRWALS camera filter."""
 
 
-NirwalsOffsetType = Literal["FIF offset", "tracker guided offset"]
+NirwalsOffsetType = Literal["FIF offset", "fif offset", "tracker guided offset"]
 """An offset type for NIRWALS."""
 
 
@@ -27,5 +27,5 @@ NirwalsGain = Literal["faint"]
 """A gain option for NIRWALS."""
 
 
-NirwalsSampling = Literal["up-the-ramp"]
+NirwalsSampling = Literal["up-the-ramp", "up-the-ramp group"]
 """A sampling mode for NIRWALS."""

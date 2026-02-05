@@ -17,7 +17,7 @@ class TestHrs:
             ("low resolution", None),
             ("medium resolution", None),
             ("high resolution", None),
-            ("high stability", "ThAr"),
+            ("high stability", "thar"),
         ],
     )
     def test_default_prv_calibration(self, mode: HrsMode, prv_calibration, base_hrs):
@@ -47,7 +47,7 @@ class TestHrs:
     def test_allowed_prv_calibration_depends_on_mode(
         self, mode: HrsMode, prv_calibration_is_none, base_hrs
     ):
-        # Test that the precision radial velocity calibration must be "ThAr" for the
+        # Test that the precision radial velocity calibration must be "thar" for the
         # high stability mode and None for all other modes.
         hrs_data = base_hrs.model_dump()
         del hrs_data["mode"]

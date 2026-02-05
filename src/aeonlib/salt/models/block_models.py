@@ -18,10 +18,11 @@ from pydantic import (
 
 from aeonlib.models import Angle, Window
 from aeonlib.salt.models import SaltSiderealTarget
-from aeonlib.salt.models.serialize.util import CapitalizingSerializer
+from aeonlib.salt.models.util import LowerCaseValidator, CapitalizingSerializer
 from aeonlib.salt.models.types import (
     PositiveDuration,
     SalticamFilter,
+    SalticamFilterSerializer,
     SkyTransparency,
 )
 from aeonlib.salt.validators import GreaterEqual, LessEqual, check_in_visibility_range
@@ -104,7 +105,9 @@ class Block(BaseModel):
     identifier: str | None = None
     comments: str | None = None
     priority: Annotated[int, GreaterEqual(0), LessEqual(4)]
-    ranking: Annotated[Literal["high", "medium", "low"], CapitalizingSerializer]
+    ranking: Annotated[
+        Literal["high", "medium", "low"], LowerCaseValidator, CapitalizingSerializer
+    ]
     num_visits: PositiveInt
     max_num_visits: PositiveInt | None = None
     min_nights_between_visits: NonNegativeInt = 0
@@ -114,9 +117,9 @@ class Block(BaseModel):
     acquisition: Acquisition
     instrument: None
     pool: str | None = None
-    data_notification: Annotated[Literal["normal", "fast"], CapitalizingSerializer] = (
-        "normal"
-    )
+    data_notification: Annotated[
+        Literal["normal", "fast"], LowerCaseValidator, CapitalizingSerializer
+    ] = "normal"
 
     @model_validator(mode="after")
     def check_max_num_visits_is_at_least_num_visits(self) -> Self:
@@ -160,7 +163,7 @@ class Constraints(BaseModel):
         Maximum allowed seeing.
     """
 
-    transparency: Annotated[SkyTransparency, CapitalizingSerializer]
+    transparency: Annotated[SkyTransparency, LowerCaseValidator, CapitalizingSerializer]
     max_lunar_phase_percentage: Annotated[NonNegativeFloat, LessEqual(100)]
     min_lunar_distance: Annotated[
         Angle, GreaterEqual(0 * u.deg), LessEqual(180 * u.deg)
@@ -199,7 +202,9 @@ class Acquisition(BaseModel):
     """
 
     finder_charts: list[FilePath]
-    filter: SalticamFilter = "Johnson V"
+    filter: Annotated[SalticamFilter, LowerCaseValidator, SalticamFilterSerializer] = (
+        "Johnson V"
+    )
     exposure_time: PositiveDuration = 1.0 * u.s
     reference_star: ReferenceStar | None = None
     include_focused_image: bool = False

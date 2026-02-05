@@ -1,10 +1,16 @@
 from __future__ import annotations
 
 import math
-from typing import Annotated, Literal
+from typing import Annotated, Literal, Any
 
 from astropy import units as u
-from pydantic import BaseModel, PositiveInt, field_validator, PlainSerializer
+from pydantic import (
+    BaseModel,
+    PositiveInt,
+    field_validator,
+    PlainSerializer,
+    BeforeValidator,
+)
 
 from aeonlib.salt.models.types import (
     NirwalsCameraFilter,
@@ -16,7 +22,8 @@ from aeonlib.salt.models.types import (
     NirwalsSampling,
     PositiveDuration,
 )
-from aeonlib.salt.models.serialize.util import (
+from aeonlib.salt.models.util import (
+    LowerCaseValidator,
     UpperCaseSerializer,
     CapitalizingSerializer,
 )
@@ -58,11 +65,15 @@ class Nirwals(BaseModel):
     """
 
     num_cycles: PositiveInt = 1
-    grating: Annotated[NirwalsGrating, UpperCaseSerializer]
+    grating: Annotated[NirwalsGrating, LowerCaseValidator, UpperCaseSerializer]
     grating_angle: Annotated[Angle, GreaterEqual(0 * u.deg), LessEqual(100 * u.deg)]
     articulation_angle: Angle
-    filter: NirwalsFilter = Annotated["empty", CapitalizingSerializer]
-    camera_filter: Annotated[NirwalsCameraFilter, CapitalizingSerializer]
+    filter: Annotated[NirwalsFilter, LowerCaseValidator, CapitalizingSerializer] = (
+        "empty"
+    )
+    camera_filter: Annotated[
+        NirwalsCameraFilter, LowerCaseValidator, CapitalizingSerializer
+    ]
     dither_pattern: list[NirwalsDitherPatternStep]
     include_arc: bool = True
     include_flat: bool
@@ -123,7 +134,8 @@ class NirwalsDitherPatternStep(BaseModel):
 
     offset_type: Annotated[
         NirwalsOffsetType,
-        PlainSerializer(NirwalsDitherPatternStep.offset_type_serializer),
+        LowerCaseValidator,
+        PlainSerializer(NirwalsDitherPatternStep.serialize_offset_type),
     ]
     horizontal_offset: Annotated[
         Angle, GreaterEqual(-100 * u.arcsec), LessEqual(100 * u.arcsec)
@@ -131,11 +143,15 @@ class NirwalsDitherPatternStep(BaseModel):
     vertical_offset: Annotated[
         Angle, GreaterEqual(-100 * u.arcsec), LessEqual(100 * u.arcsec)
     ]
-    exposure_type: Annotated[NirwalsExposureType, CapitalizingSerializer]
+    exposure_type: Annotated[
+        NirwalsExposureType, LowerCaseValidator, CapitalizingSerializer
+    ]
     exposure_time: PositiveDuration
-    gain: Annotated[NirwalsGain, CapitalizingSerializer]
+    gain: Annotated[NirwalsGain, LowerCaseValidator, CapitalizingSerializer]
     sampling: Annotated[
-        NirwalsSampling, PlainSerializer(NirwalsDitherPatternStep.sampling_serializer)
+        NirwalsSampling,
+        BeforeValidator(NirwalsDitherPatternStep.validate_sampling),
+        PlainSerializer(NirwalsDitherPatternStep.serialize_sampling),
     ]
     num_reads: Literal[1] = 1
     num_ramps: Literal[1] = 1
@@ -163,15 +179,23 @@ class NirwalsDitherPatternStep(BaseModel):
         return max(1, groups)
 
     @staticmethod
-    def _offset_type_serializer(value: NirwalsOffsetType) -> str:
-        if value == "FIF offset":
+    def serialize_offset_type(value: NirwalsOffsetType) -> str:
+        if value == "fif offset":
             return "FIF Offset"
         else:
             return value.title()
 
     @staticmethod
-    def _sampling_serializer(value: NirwalsSampling) -> str:
+    def serialize_sampling(value: NirwalsSampling) -> str:
         if value == "up-the-ramp":
             return "Up-the-Ramp Group"
         else:
             raise ValueError(f"Sampling cannot be serialized: {value}")
+
+    @staticmethod
+    def validate_sampling(value: Any) -> Any:
+        if isinstance(value, str):
+            value = value.lower()
+        if value == "up-the-ramp group":
+            value = "up-the-ramp"
+        return value

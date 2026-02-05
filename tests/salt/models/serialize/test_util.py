@@ -3,7 +3,7 @@ import pathlib
 import pytest
 from jinja2 import FileSystemLoader
 
-from aeonlib.salt.models.serialize.util import validate_xml, render_template
+from aeonlib.salt.models.util import validate_xml, render_template
 
 
 def test_validate_non_well_formed_xml():

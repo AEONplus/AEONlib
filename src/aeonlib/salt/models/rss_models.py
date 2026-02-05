@@ -11,10 +11,16 @@ from pydantic import (
     PositiveInt,
     field_validator,
     model_validator,
+    PlainSerializer,
 )
 
+from aeonlib.salt.models.types.salticam import serialize_salticam_filter
 from aeonlib.types import Angle
-from aeonlib.salt.models.serialize.util import TitleCaseSerializer
+from aeonlib.salt.models.util import (
+    TitleCaseSerializer,
+    LowerCaseValidator,
+    UpperCaseSerializer,
+)
 from aeonlib.salt.models.types import (
     PositiveDuration,
     RssGain,
@@ -100,9 +106,20 @@ class RssImaging(BaseModel):
         Whether a nighttime flat should be taken for the observation.
     """
 
-    filter: RssImagingFilter | SalticamFilter
+    filter: Annotated[
+        RssImagingFilter | SalticamFilter,
+        LowerCaseValidator,
+        PlainSerializer(RssImaging.serialize_filter),
+    ]
     polarimetry: RssPolarimetry | None = None
     include_flat: bool
+
+    @staticmethod
+    def serialize_filter(value: str) -> str:
+        if value.startswith("pi"):
+            return value.upper()
+        else:
+            return serialize_salticam_filter(value)
 
 
 _WavePlatePattern = (
@@ -218,7 +235,7 @@ class RssSlitMaskIFUSpectroscopy(RssSpectroscopy):
         The barcode of the slit mask IFU, such as "PF0200N001".
     """
 
-    slit_mask_ifu: RssSlitMaskIFU
+    slit_mask_ifu: Annotated[RssSlitMaskIFU, LowerCaseValidator, UpperCaseSerializer]
 
 
 class RssPolarimetry(BaseModel):

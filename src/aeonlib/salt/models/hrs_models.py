@@ -3,9 +3,9 @@ from __future__ import annotations
 from typing import Annotated, Self
 
 from astropy import units as u
-from pydantic import BaseModel, Field, PositiveInt, model_validator
+from pydantic import BaseModel, Field, PositiveInt, model_validator, PlainSerializer
 
-from aeonlib.salt.models.serialize.util import UpperCaseSerializer
+from aeonlib.salt.models.util import LowerCaseValidator, UpperCaseSerializer
 from aeonlib.salt.models.types import HrsMode, HrsPrvCalibration, PositiveDuration
 from aeonlib.salt.validators import GreaterEqual, LessEqual
 from aeonlib.types import Angle
@@ -41,24 +41,28 @@ class Hrs(BaseModel):
     """
 
     num_cycles: PositiveInt = 1
-    mode: Annotated[HrsMode, UpperCaseSerializer]
-    prv_calibration: HrsPrvCalibration | None = Field(
+    mode: Annotated[HrsMode, LowerCaseValidator, UpperCaseSerializer]
+    prv_calibration: Annotated[
+        HrsPrvCalibration | None,
+        LowerCaseValidator,
+        PlainSerializer(Hrs.serialize_prv_calibration),
+    ] = Field(
         default_factory=lambda data: (
-            "ThAr" if data["mode"] == "high stability" else None
+            "thar" if data["mode"] == "high stability" else None
         )
     )
     fibre_separation: Annotated[
         Angle, GreaterEqual(16 * u.arcsec), LessEqual(63 * u.arcsec)
-    ] = (60 * u.arcsec)
+    ] = 60 * u.arcsec
     blue_arm: HrsDetector
     red_arm: HrsDetector
 
     @model_validator(mode="after")
     def check_prv_calibration(self) -> Self:
         if self.mode == "high stability":
-            if self.prv_calibration != "ThAr":
+            if self.prv_calibration != "thar":
                 raise ValueError(
-                    'prv_calibration must be "ThAr" for the high stability mode.'
+                    'prv_calibration must be "ThAr" (or "thar") for the high stability mode.'
                 )
         else:
             if self.prv_calibration is not None:
@@ -66,6 +70,14 @@ class Hrs(BaseModel):
                     f"prv_calibration must be None for the {self.mode} mode."
                 )
         return self
+
+    @staticmethod
+    def serialize_prv_calibration(value: str | None) -> str | None:
+        if value is None:
+            return None
+        if value == "thar":
+            return "ThAr"
+        raise ValueError(f"Precision radial velocity cannot be serialized: {value}")
 
 
 class HrsDetector(BaseModel):

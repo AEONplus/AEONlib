@@ -10,9 +10,10 @@ from pydantic import BaseModel, PositiveInt, Field, model_validator
 from aeonlib.salt.models.types import (
     PositiveDuration,
     SalticamFilter,
+    SalticamFilterSerializer,
     AstropyQuantityTypeAnnotation,
 )
-from aeonlib.salt.models.serialize.util import CapitalizingSerializer
+from aeonlib.salt.models.util import CapitalizingSerializer, LowerCaseValidator
 from aeonlib.salt.validators import GreaterEqual, LessEqual
 
 
@@ -70,7 +71,7 @@ class SalticamFilterSequenceStep(BaseModel):
         seconds.
     """
 
-    filter: SalticamFilter
+    filter: Annotated[SalticamFilter, LowerCaseValidator, SalticamFilterSerializer]
     exposure_time: PositiveDuration
 
 

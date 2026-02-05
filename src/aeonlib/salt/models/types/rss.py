@@ -53,7 +53,7 @@ RssGrating = Literal["pg0700", "pg0900", "pg1300", "pg1800", "pg2300", "pg3000"]
 """An RSS grating."""
 
 
-RssSlitMaskIFU = Literal["PF0200N001"]
+RssSlitMaskIFU = Literal["PF0200N001", "pf0200n001"]
 """A slit mask integrated field unit (IFU) for RSS."""
 
 RssReadoutMode = Literal["normal", "frame transfer", "slot mode"]
