@@ -1,9 +1,10 @@
 import io
 import pathlib
+from typing import Any
 
 from jinja2 import Environment, PackageLoader, select_autoescape, BaseLoader
 from lxml import etree
-from pydantic import PlainSerializer
+from pydantic import PlainSerializer, BeforeValidator
 
 _schema: etree.XMLSchema | None = None
 
@@ -78,6 +79,15 @@ def render_template(
     env = Environment(loader=loader, autoescape=select_autoescape())
     template = env.get_template(template_path)
     return template.render(**kwargs)
+
+
+def _lower(s: Any) -> Any:
+    if isinstance(s, str):
+        return s.lower()
+    return s
+
+
+LowerCaseValidator = BeforeValidator(_lower)
 
 
 def _capitalize(s: str) -> str:
