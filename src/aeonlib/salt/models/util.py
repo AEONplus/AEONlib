@@ -90,7 +90,9 @@ def _lower(s: Any) -> Any:
 LowerCaseValidator = BeforeValidator(_lower)
 
 
-def _capitalize(s: str) -> str:
+def _capitalize(s: str | None) -> str | None:
+    if s is None:
+        return None
     return s.capitalize()
 
 
@@ -102,7 +104,9 @@ This serializer is only intended for use in the serialization of SALT data model
 """
 
 
-def _title(s: str) -> str:
+def _title(s: str | None) -> str | None:
+    if s is None:
+        return None
     return s.title()
 
 
@@ -114,7 +118,9 @@ This serializer is only intended for use in the serialization of SALT data model
 """
 
 
-def _upper(s: str) -> str:
+def _upper(s: str | None) -> str | None:
+    if s is None:
+        return None
     return s.upper()
 
 
