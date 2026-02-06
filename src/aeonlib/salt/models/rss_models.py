@@ -12,6 +12,8 @@ from pydantic import (
     field_validator,
     model_validator,
     PlainSerializer,
+    BeforeValidator,
+    AfterValidator,
 )
 
 from aeonlib.salt.models.types.salticam import serialize_salticam_filter
@@ -20,6 +22,11 @@ from aeonlib.salt.models.util import (
     TitleCaseSerializer,
     LowerCaseValidator,
     UpperCaseSerializer,
+    LINEAR_POLARIMETRY_PATTERN,
+    LINEAR_HI_POLARIMETRY_PATTERN,
+    CIRCULAR_POLARIMETRY_PATTERN,
+    CIRCULAR_HI_POLARIMETRY_PATTRERN,
+    ALL_STOKES_POLARIMETRY_PATTERN,
 )
 from aeonlib.salt.models.types import (
     PositiveDuration,
@@ -123,7 +130,9 @@ class RssImaging(BaseModel):
 
 
 _WavePlatePattern = (
-    Literal["linear", "linear hi", "circular", "all-Stokes"]
+    Literal[
+        "linear", "linear hi", "circular", "circular hi", "all-Stokes", "all-stokes"
+    ]
     | list[tuple[Angle | None, Angle | None]]
 )
 
@@ -274,26 +283,51 @@ class RssPolarimetry(BaseModel):
     A wave plate pattern may have up to 8 steps.
     """
 
-    wave_plate_pattern: _WavePlatePattern
+    wave_plate_pattern: Annotated[
+        _WavePlatePattern,
+        BeforeValidator(RssPolarimetry.validate_pattern_before),
+        AfterValidator(RssPolarimetry.validate_pattern_after),
+    ]
 
-    @field_validator("wave_plate_pattern", mode="after")
-    @classmethod
-    def check_pattern_size(cls, value: _WavePlatePattern) -> _WavePlatePattern:
+    @staticmethod
+    def validate_pattern_before(value: _WavePlatePattern) -> _WavePlatePattern:
         if isinstance(value, str):
-            return value
+            return value.lower()
+        return value
+
+    @staticmethod
+    def validate_pattern_after(value: _WavePlatePattern) -> _WavePlatePattern:
+        if value == "linear":
+            value = LINEAR_POLARIMETRY_PATTERN
+        elif value == "linear hi":
+            value = LINEAR_HI_POLARIMETRY_PATTERN
+        elif value == "circular":
+            value = CIRCULAR_POLARIMETRY_PATTERN
+        elif value == "circular hi":
+            value = CIRCULAR_HI_POLARIMETRY_PATTRERN
+        elif value == "all-stokes":
+            value = ALL_STOKES_POLARIMETRY_PATTERN
+
+        if isinstance(value, str):
+            raise ValueError(f"Unsupported string value: {value}")
 
         if len(value) < 1 or len(value) > 8:
             raise ValueError("The wave plate pattern must have between 1 and 8 steps.")
 
+        RssPolarimetry._check_angle_values(value)
+
         return value
 
-    @classmethod
-    def _check_pattern_step(cls, step: tuple[Angle, Angle]) -> None:
+    @staticmethod
+    def _check_pattern_step(step: tuple[Angle | None, Angle | None]) -> None:
         error = (
             "Each angle in a wave plate pattern must be a multiple of 11.25 degrees "
             "between 0 degrees (inclusive) and 360 degrees (exclusive)."
         )
         for angle in step:
+            if angle is None:
+                continue
+
             if angle < 0 * u.deg or angle >= 360 * u.deg:
                 raise ValueError(error)
 
@@ -303,16 +337,10 @@ class RssPolarimetry(BaseModel):
             if abs(round(x) - x) > 1e-6:
                 raise ValueError(error)
 
-    @field_validator("wave_plate_pattern", mode="after")
-    @classmethod
-    def check_angle_values(cls, value: _WavePlatePattern) -> _WavePlatePattern:
-        if isinstance(value, str):
-            return value
-
+    @staticmethod
+    def _check_angle_values(value: _WavePlatePattern) -> _WavePlatePattern:
         for step in value:
             RssPolarimetry._check_pattern_step(step)
-
-        return value
 
 
 class RssDetector(BaseModel):

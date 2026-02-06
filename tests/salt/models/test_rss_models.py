@@ -6,6 +6,13 @@ from astropy import units as u
 from pydantic import ValidationError
 
 from aeonlib.salt.models import RssDitherPattern, RssPolarimetry, RssSpectroscopy
+from aeonlib.salt.models.util import (
+    LINEAR_POLARIMETRY_PATTERN,
+    LINEAR_HI_POLARIMETRY_PATTERN,
+    CIRCULAR_POLARIMETRY_PATTERN,
+    CIRCULAR_HI_POLARIMETRY_PATTRERN,
+    ALL_STOKES_POLARIMETRY_PATTERN,
+)
 
 
 class TestRss:
@@ -93,6 +100,34 @@ class TestRssPolarimetry:
         with expectation:
             RssPolarimetry(wave_plate_pattern=[(angle, 45 * u.deg)])
             RssPolarimetry(wave_plate_pattern=[(45 * u.deg, angle)])
+
+    def test_linear_pattern(self):
+        # That the string "linear" is internally converted into the linear pattern.
+        polarimetry = RssPolarimetry(wave_plate_pattern="linear")
+        assert polarimetry.wave_plate_pattern == LINEAR_POLARIMETRY_PATTERN
+
+    def test_linear_hi_pattern(self):
+        # That the string "linear hi" is internally converted into the linear hi
+        # pattern.
+        polarimetry = RssPolarimetry(wave_plate_pattern="linear hi")
+        assert polarimetry.wave_plate_pattern == LINEAR_HI_POLARIMETRY_PATTERN
+
+    def test_circular_pattern(self):
+        # That the string "circular" is internally converted into the circular pattern.
+        polarimetry = RssPolarimetry(wave_plate_pattern="circular")
+        assert polarimetry.wave_plate_pattern == CIRCULAR_POLARIMETRY_PATTERN
+
+    def test_circular_hi_pattern(self):
+        # That the string "circular hi" is internally converted into the circular hi
+        # pattern.
+        polarimetry = RssPolarimetry(wave_plate_pattern="circular hi")
+        assert polarimetry.wave_plate_pattern == CIRCULAR_HI_POLARIMETRY_PATTRERN
+
+    def test_all_stokes_pattern(self):
+        # That the string "all-Stokes" is internally converted into the all-Stokes
+        # pattern.
+        polarimetry = RssPolarimetry(wave_plate_pattern="all-Stokes")
+        assert polarimetry.wave_plate_pattern == ALL_STOKES_POLARIMETRY_PATTERN
 
 
 class TestRssLongslitSpectroscopy:

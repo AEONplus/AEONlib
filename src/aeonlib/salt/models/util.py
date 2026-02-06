@@ -2,11 +2,66 @@ import io
 import pathlib
 from typing import Any
 
+import astropy.units as u
+from astropy.coordinates import Angle
 from jinja2 import Environment, PackageLoader, select_autoescape, BaseLoader
 from lxml import etree
 from pydantic import PlainSerializer, BeforeValidator
 
 _schema: etree.XMLSchema | None = None
+
+
+LINEAR_POLARIMETRY_PATTERN = [
+    (Angle(0 * u.deg), None),
+    (Angle(45 * u.deg), None),
+    (Angle(22.5 * u.deg), None),
+    (Angle(67.5 * u.deg), None),
+]
+# The half and quarter wave plate angles for the linear polarimetry pattern.
+
+
+LINEAR_HI_POLARIMETRY_PATTERN = [
+    (Angle(0 * u.deg), None),
+    (Angle(45 * u.deg), None),
+    (Angle(22.5 * u.deg), None),
+    (Angle(67.5 * u.deg), None),
+    (Angle(11.25 * u.deg), None),
+    (Angle(56.25 * u.deg), None),
+    (Angle(33.75 * u.deg), None),
+    (Angle(78.75 * u.deg), None),
+]
+# The half and quarter wave plate angles for the linear-hi polarimetry pattern.
+
+
+CIRCULAR_POLARIMETRY_PATTERN = [
+    (Angle(0 * u.deg), Angle(45 * u.deg)),
+    (Angle(0 * u.deg), Angle(315 * u.deg)),
+]
+# The half and quarter wave plate angles for the circular polarimetry pattern.
+
+
+CIRCULAR_HI_POLARIMETRY_PATTRERN = [
+    (Angle(0 * u.deg), Angle(45 * u.deg)),
+    (Angle(0 * u.deg), Angle(315 * u.deg)),
+    (Angle(22.5 * u.deg), Angle(315 * u.deg)),
+    (Angle(22.5 * u.deg), Angle(45 * u.deg)),
+    (Angle(45 * u.deg), Angle(45 * u.deg)),
+    (Angle(45 * u.deg), Angle(315 * u.deg)),
+    (Angle(67.5 * u.deg), Angle(315 * u.deg)),
+    (Angle(67.5 * u.deg), Angle(45 * u.deg)),
+]
+# The half and quarter wave plate angles for the circular-hi polarimetry pattern.
+
+
+ALL_STOKES_POLARIMETRY_PATTERN = [
+    (Angle(0 * u.deg), Angle(0 * u.deg)),
+    (Angle(45 * u.deg), Angle(0 * u.deg)),
+    (Angle(22.5 * u.deg), Angle(0 * u.deg)),
+    (Angle(67.5 * u.deg), Angle(0 * u.deg)),
+    (Angle(0 * u.deg), Angle(45 * u.deg)),
+    (Angle(0 * u.deg), Angle(315 * u.deg)),
+]
+# The half and quarter wave plate angles for the all-Stokes polarimetry pattern.
 
 
 def validate_xml(xml: str) -> None:
