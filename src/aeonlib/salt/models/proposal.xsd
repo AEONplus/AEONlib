@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cxs="http://www.w3.org/2001/XMLSchema" attributeFormDefault="unqualified" elementFormDefault="qualified">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cxs="http://www.w3.org/2001/XMLSchema"
+           attributeFormDefault="unqualified" elementFormDefault="qualified">
 
     <!-- =========== PROPOSAL PHASE 1 =========== -->
 
@@ -42,7 +44,6 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="Partners" type="Partners"/>
             <xs:element name="Investigators" type="Investigators"/>
             <xs:element minOccurs="0" name="SouthAfricanRole" type="xs:string">
                 <xs:annotation>
@@ -89,7 +90,8 @@
                 <xs:element name="InstrumentConfigurations">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element maxOccurs="unbounded" name="InstrumentConfiguration" type="P1InstrumentConfiguration"/>
+                            <xs:element maxOccurs="unbounded" name="InstrumentConfiguration"
+                                        type="P1InstrumentConfiguration"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
@@ -98,7 +100,7 @@
                 <xs:element name="Outreach" type="Outreach"/>
             </xs:sequence>
         </xs:sequence>
-        <xs:attribute fixed="6.1" name="SchemaVersion" type="SchemaVersion" use="required"/>
+        <xs:attribute fixed="6.2" name="SchemaVersion" type="SchemaVersion" use="required"/>
         <xs:attribute name="code" type="ProposalCode"/>
         <xs:attribute default="true" name="final" type="xs:boolean" use="optional"/>
         <xs:attribute name="PrincipalInvestigator" type="xs:string" use="optional"/>
@@ -107,7 +109,7 @@
 
     <xs:simpleType name="SchemaVersion">
         <xs:restriction base="xs:string">
-            <xs:pattern value="6\.1"/>
+            <xs:pattern value="6\.2"/>
         </xs:restriction>
     </xs:simpleType>
 
@@ -200,6 +202,27 @@
             <xs:element name="TotalRequestedTime" type="ExposureTime"/>
             <xs:element name="MinimumUsefulTime" type="ExposureTime"/>
             <xs:element minOccurs="0" name="Comments" type="xs:string"/>
+            <xs:element maxOccurs="unbounded" minOccurs="1" name="RequestedContribution"
+                        type="P1RequestedContribution"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- +++++++++++ -:P1RequestedContribution:- +++++++++++ -->
+    <xs:complexType name="P1RequestedContribution">
+        <xs:annotation>
+            <xs:documentation>The percentage of time requested from a partner.</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Partner" type="Partner"/>
+            <xs:element name="Value">
+                <xs:simpleType>
+                    <xs:restriction base="xs:unsignedInt">
+                        <xs:minInclusive value="0"/>
+                        <xs:maxInclusive value="100"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element fixed="%" minOccurs="0" name="Units" type="xs:string"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -224,7 +247,6 @@
                     </xs:documentation>
                 </xs:annotation>
             </xs:element>
-            <xs:element name="Partners" type="Partners"/>
             <xs:element name="Investigators" type="Investigators"/>
         </xs:sequence>
     </xs:complexType>
@@ -263,7 +285,6 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element minOccurs="0" name="Partners" type="Partners"/>
             <xs:element minOccurs="0" name="Investigators" type="Investigators"/>
             <xs:element minOccurs="0" name="HasAfricanPI" type="HasAfricanPI"/>
             <xs:element name="Targets" type="Targets"/>
@@ -294,7 +315,7 @@
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
-        <xs:attribute fixed="6.1" name="SchemaVersion" type="xs:string" use="required"/>
+        <xs:attribute fixed="6.2" name="SchemaVersion" type="xs:string" use="required"/>
         <xs:attribute name="code" type="ProposalCode"/>
         <xs:attribute default="true" name="final" type="xs:boolean" use="optional"/>
         <xs:attribute name="PrincipalInvestigator" type="xs:string" use="optional"/>
@@ -739,7 +760,7 @@
             <xs:element maxOccurs="unbounded" name="SubBlock" type="SubBlock"/>
         </xs:sequence>
         <xs:attribute name="notForObserving" type="xs:boolean" use="optional"/>
-        <xs:attribute fixed="6.1" name="SchemaVersion" type="SchemaVersion" use="required"/>
+        <xs:attribute fixed="6.2" name="SchemaVersion" type="SchemaVersion" use="required"/>
     </xs:complexType>
 
     <!-- +++++++++++ -:BlockType:- +++++++++++ -->
@@ -1083,6 +1104,7 @@
             <xs:enumeration value="Gravitational Wave Event"/>
             <xs:enumeration value="Key Science Project"/>
             <xs:enumeration value="Large Science"/>
+            <xs:enumeration value="NOIRLab"/>
             <xs:enumeration value="OPTICON-Radionet Pilot"/>
             <xs:enumeration value="Phase 1 Test"/>
             <xs:enumeration value="Phase 2 Test"/>
@@ -1108,7 +1130,7 @@
         <xs:all>
             <xs:element name="Name" type="xs:string"/>
             <xs:element name="Surname" type="xs:string"/>
-            <xs:element name="PartnerRef" type="xs:string"/>
+            <xs:element name="Partner" type="Partner"/>
             <xs:element name="Institute" type="Institute"/>
             <xs:element name="Email" type="xs:anyURI"/>
             <xs:element minOccurs="0" name="Phone" type="xs:string"/>
@@ -1116,67 +1138,10 @@
         </xs:all>
     </xs:complexType>
 
-    <!-- +++++++++++ -:Partners:- +++++++++++ -->
-    <xs:complexType name="Partners">
-        <xs:sequence>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="Partner" type="Partner">
-                <xs:annotation>
-                    <xs:documentation>The SALT partners associated with this proposal.
-                    </xs:documentation>
-                </xs:annotation>
-            </xs:element>
-        </xs:sequence>
-    </xs:complexType>
-
     <!-- +++++++++++ -:Partner:- +++++++++++ -->
-    <xs:complexType name="Partner">
-        <xs:sequence>
-            <xs:element default="South Africa" name="Name" type="PartnerName"/>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="TimeDistribution">
-                <xs:annotation>
-                    <xs:documentation>The percentage of the total required time to be charged to this SALT
-                        partner.
-                    </xs:documentation>
-                </xs:annotation>
-                <xs:complexType>
-                    <xs:all>
-                        <xs:element name="Year" type="xs:unsignedInt"/>
-                        <xs:element name="Semester">
-                            <xs:simpleType>
-                                <xs:annotation>
-                                    <xs:documentation>
-                                        The semester.
-
-                                        1: 1 May to 31 October
-                                        2: 1 November to 30 April
-                                    </xs:documentation>
-                                </xs:annotation>
-                                <xs:restriction base="xs:unsignedInt">
-                                    <xs:enumeration value="1"/>
-                                    <xs:enumeration value="2"/>
-                                </xs:restriction>
-                            </xs:simpleType>
-                        </xs:element>
-                        <xs:element name="Value">
-                            <xs:simpleType>
-                                <xs:restriction base="xs:unsignedInt">
-                                    <xs:minInclusive value="0"/>
-                                    <xs:maxInclusive value="100"/>
-                                </xs:restriction>
-                            </xs:simpleType>
-                        </xs:element>
-                        <xs:element fixed="%" name="Units" type="xs:string"/>
-                    </xs:all>
-                </xs:complexType>
-            </xs:element>
-        </xs:sequence>
-        <xs:attribute name="id" type="xs:string" use="required"/>
-    </xs:complexType>
-
-    <!-- +++++++++++ -:PartnerName:- +++++++++++ -->
-    <xs:simpleType name="PartnerName">
+    <xs:simpleType name="Partner">
         <xs:annotation>
-            <xs:documentation>The name of the SALT partner.</xs:documentation>
+            <xs:documentation>Enumeration of all thw SALT partner names.</xs:documentation>
         </xs:annotation>
         <xs:restriction base="xs:string">
             <xs:enumeration value="South Africa"/>
@@ -1696,7 +1661,8 @@
             <xs:element minOccurs="0" name="Dithering" type="Dithering"/>
             <xs:element name="InCalibration" type="xs:boolean"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="SalticamCalibration" type="SalticamCalibration"/>
-            <xs:element maxOccurs="unbounded" minOccurs="0" name="SalticamNonChargedCalibration" type="SalticamCalibration"/>
+            <xs:element maxOccurs="unbounded" minOccurs="0" name="SalticamNonChargedCalibration"
+                        type="SalticamCalibration"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -1894,6 +1860,13 @@
                         </xs:element>
                     </xs:sequence>
                 </xs:complexType>
+            </xs:element>
+            <xs:element name="SalticamDefaultCalibrationFlat">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value=""/>
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:element>
             <xs:element name="SalticamImagingFlat">
                 <xs:complexType>
@@ -2605,6 +2578,13 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="RssDefaultArc">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value=""/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
             <xs:element name="Ring">
                 <xs:complexType>
                     <xs:sequence>
@@ -2648,6 +2628,13 @@
                         </xs:element>
                     </xs:sequence>
                 </xs:complexType>
+            </xs:element>
+            <xs:element name="RssDefaultCalibrationFlat">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value=""/>
+                    </xs:restriction>
+                </xs:simpleType>
             </xs:element>
             <xs:element name="RssSpectroscopicFlat">
                 <xs:complexType>
@@ -3396,7 +3383,8 @@
             <xs:element maxOccurs="unbounded" minOccurs="0" name="NirNonChargedCalibration" type="NirCalibration"/>
             <xs:element name="InCalibration" type="xs:boolean">
                 <xs:annotation>
-                    <xs:documentation>This states whether the NIRWALS setup is a (nighttime) calibration.</xs:documentation>
+                    <xs:documentation>This states whether the NIRWALS setup is a (nighttime) calibration.
+                    </xs:documentation>
                 </xs:annotation>
             </xs:element>
         </xs:sequence>
@@ -3442,7 +3430,10 @@
             <xs:element name="Sampling" type="NirSampling"/>
             <xs:element name="Reads">
                 <xs:annotation>
-                    <xs:documentation>How many reads are done for each sample. For Fowler this is how many reads are done at the beginning and at the end. For Up-the-Ramp Group this is how many reads you do at each sample (group) up the ramp.</xs:documentation>
+                    <xs:documentation>How many reads are done for each sample. For Fowler this is how many reads are
+                        done at the beginning and at the end. For Up-the-Ramp Group this is how many reads you do at
+                        each sample (group) up the ramp.
+                    </xs:documentation>
                 </xs:annotation>
                 <xs:simpleType>
                     <xs:restriction base="xs:unsignedInt">
@@ -4803,242 +4794,241 @@
     <xs:element name="Proposal" type="Proposal"/>
 
 
-<xs:element name="P1TargetOfOpportunity" type="P1TargetOfOpportunity"/>
+    <xs:element name="P1TargetOfOpportunity" type="P1TargetOfOpportunity"/>
 
-<xs:element name="P1ObservingConditions" type="P1ObservingConditions"/>
+    <xs:element name="P1ObservingConditions" type="P1ObservingConditions"/>
 
-<xs:element name="P1Observation" type="P1Observation"/>
+    <xs:element name="P1Observation" type="P1Observation"/>
 
-<xs:element name="P1InstrumentConfiguration" type="P1InstrumentConfiguration"/>
+    <xs:element name="P1InstrumentConfiguration" type="P1InstrumentConfiguration"/>
 
-<xs:element name="P1TimeRequest" type="P1TimeRequest"/>
+    <xs:element name="P1TimeRequest" type="P1TimeRequest"/>
 
-<xs:element name="P1BasicDetails" type="P1BasicDetails"/>
+    <xs:element name="P1RequestedContribution" type="P1RequestedContribution"/>
 
-<xs:element name="ProposalSemester" type="ProposalSemester"/>
+    <xs:element name="P1BasicDetails" type="P1BasicDetails"/>
 
-<xs:element name="TargetOfOpportunity" type="TargetOfOpportunity"/>
+    <xs:element name="ProposalSemester" type="ProposalSemester"/>
 
-<xs:element name="PayloadConfig" type="PayloadConfig"/>
+    <xs:element name="TargetOfOpportunity" type="TargetOfOpportunity"/>
 
-<xs:element name="TelescopeConfig" type="TelescopeConfig"/>
+    <xs:element name="PayloadConfig" type="PayloadConfig"/>
 
-<xs:element name="TimeRestriction" type="TimeRestriction"/>
+    <xs:element name="TelescopeConfig" type="TelescopeConfig"/>
 
-<xs:element name="PhaseConstraint" type="PhaseConstraint"/>
+    <xs:element name="TimeRestriction" type="TimeRestriction"/>
 
-<xs:element name="SeeingConstraint" type="SeeingConstraint"/>
+    <xs:element name="PhaseConstraint" type="PhaseConstraint"/>
 
-<xs:element name="Acquisition" type="Acquisition"/>
+    <xs:element name="SeeingConstraint" type="SeeingConstraint"/>
 
-<xs:element name="ReferenceStar" type="ReferenceStar"/>
+    <xs:element name="Acquisition" type="Acquisition"/>
 
-<xs:element name="Observation" type="Observation"/>
+    <xs:element name="ReferenceStar" type="ReferenceStar"/>
 
-<xs:element name="Pointing" type="Pointing"/>
+    <xs:element name="Observation" type="Observation"/>
 
-<xs:element name="Block" type="Block"/>
+    <xs:element name="Pointing" type="Pointing"/>
 
-<xs:element name="Wait" type="Wait"/>
+    <xs:element name="Block" type="Block"/>
 
-<xs:element name="SubBlock" type="SubBlock"/>
+    <xs:element name="Wait" type="Wait"/>
 
-<xs:element name="SubSubBlock" type="SubSubBlock"/>
+    <xs:element name="SubBlock" type="SubBlock"/>
 
-<xs:element name="PipelineConfig" type="PipelineConfig"/>
+    <xs:element name="SubSubBlock" type="SubSubBlock"/>
 
-<xs:element name="Pool" type="Pool"/>
+    <xs:element name="PipelineConfig" type="PipelineConfig"/>
 
-<xs:element name="PoolRule" type="PoolRule"/>
+    <xs:element name="Pool" type="Pool"/>
 
-<xs:element name="Phase1Info" type="Phase1Info"/>
+    <xs:element name="PoolRule" type="PoolRule"/>
 
-<xs:element name="TimeAllocation" type="TimeAllocation"/>
+    <xs:element name="Phase1Info" type="Phase1Info"/>
 
-<xs:element name="TimeTransfer" type="TimeTransfer"/>
+    <xs:element name="TimeAllocation" type="TimeAllocation"/>
 
-<xs:element name="BlockVisit" type="BlockVisit"/>
+    <xs:element name="TimeTransfer" type="TimeTransfer"/>
 
-<xs:element name="BlockCode" type="BlockCode"/>
+    <xs:element name="BlockVisit" type="BlockVisit"/>
 
-<xs:element name="DetailInformation" type="DetailInformation"/>
+    <xs:element name="BlockCode" type="BlockCode"/>
 
-<xs:element name="Investigators" type="Investigators"/>
+    <xs:element name="DetailInformation" type="DetailInformation"/>
 
-<xs:element name="Investigator" type="Investigator"/>
+    <xs:element name="Investigators" type="Investigators"/>
 
-<xs:element name="Partners" type="Partners"/>
+    <xs:element name="Investigator" type="Investigator"/>
 
-<xs:element name="Partner" type="Partner"/>
+    <xs:element name="Institute" type="Institute"/>
 
-<xs:element name="Institute" type="Institute"/>
+    <xs:element name="ScientificJustification" type="ScientificJustification"/>
 
-<xs:element name="ScientificJustification" type="ScientificJustification"/>
+    <xs:element name="RelatedThesis" type="RelatedThesis"/>
 
-<xs:element name="RelatedThesis" type="RelatedThesis"/>
+    <xs:element name="ExternalFunding" type="ExternalFunding"/>
 
-<xs:element name="ExternalFunding" type="ExternalFunding"/>
+    <xs:element name="PreviousProposal" type="PreviousProposal"/>
 
-<xs:element name="PreviousProposal" type="PreviousProposal"/>
+    <xs:element name="Targets" type="Targets"/>
 
-<xs:element name="Targets" type="Targets"/>
+    <xs:element name="Target" type="Target"/>
 
-<xs:element name="Target" type="Target"/>
+    <xs:element name="MagnitudeRange" type="MagnitudeRange"/>
 
-<xs:element name="MagnitudeRange" type="MagnitudeRange"/>
+    <xs:element name="PeriodicTargetEphemeris" type="PeriodicTargetEphemeris"/>
 
-<xs:element name="PeriodicTargetEphemeris" type="PeriodicTargetEphemeris"/>
+    <xs:element name="FindingChart" type="FindingChart"/>
 
-<xs:element name="FindingChart" type="FindingChart"/>
+    <xs:element name="MaximumLunarPhase" type="MaximumLunarPhase"/>
 
-<xs:element name="MaximumLunarPhase" type="MaximumLunarPhase"/>
+    <xs:element name="SeeingValue" type="SeeingValue"/>
 
-<xs:element name="SeeingValue" type="SeeingValue"/>
+    <xs:element name="InstrumentSimulation" type="InstrumentSimulation"/>
 
-<xs:element name="InstrumentSimulation" type="InstrumentSimulation"/>
+    <xs:element name="Outreach" type="Outreach"/>
 
-<xs:element name="Outreach" type="Outreach"/>
+    <xs:element name="P1Salticam" type="P1Salticam"/>
 
-<xs:element name="P1Salticam" type="P1Salticam"/>
+    <xs:element name="Salticam" type="Salticam"/>
 
-<xs:element name="Salticam" type="Salticam"/>
+    <xs:element name="SalticamDetector" type="SalticamDetector"/>
 
-<xs:element name="SalticamDetector" type="SalticamDetector"/>
+    <xs:element name="SalticamProcedure" type="SalticamProcedure"/>
 
-<xs:element name="SalticamProcedure" type="SalticamProcedure"/>
+    <xs:element name="SalticamFilterArray" type="SalticamFilterArray"/>
 
-<xs:element name="SalticamFilterArray" type="SalticamFilterArray"/>
+    <xs:element name="SalticamCalibration" type="SalticamCalibration"/>
 
-<xs:element name="SalticamCalibration" type="SalticamCalibration"/>
+    <xs:element name="SalticamCalibrationSetup" type="SalticamCalibrationSetup"/>
 
-<xs:element name="SalticamCalibrationSetup" type="SalticamCalibrationSetup"/>
+    <xs:element name="P1Rss" type="P1Rss"/>
 
-<xs:element name="P1Rss" type="P1Rss"/>
+    <xs:element name="P1RssMode" type="P1RssMode"/>
 
-<xs:element name="P1RssMode" type="P1RssMode"/>
+    <xs:element name="P1RssImaging" type="P1RssImaging"/>
 
-<xs:element name="P1RssImaging" type="P1RssImaging"/>
+    <xs:element name="P1RssSpectroscopy" type="P1RssSpectroscopy"/>
 
-<xs:element name="P1RssSpectroscopy" type="P1RssSpectroscopy"/>
+    <xs:element name="P1RssSlitMask" type="P1RssSlitMask"/>
 
-<xs:element name="P1RssSlitMask" type="P1RssSlitMask"/>
+    <xs:element name="P1RssPredefinedMask" type="P1RssPredefinedMask"/>
 
-<xs:element name="P1RssPredefinedMask" type="P1RssPredefinedMask"/>
+    <xs:element name="P1RssFabryPerot" type="P1RssFabryPerot"/>
 
-<xs:element name="P1RssFabryPerot" type="P1RssFabryPerot"/>
+    <xs:element name="Rss" type="Rss"/>
 
-<xs:element name="Rss" type="Rss"/>
+    <xs:element name="RssProcedure" type="RssProcedure"/>
 
-<xs:element name="RssProcedure" type="RssProcedure"/>
+    <xs:element name="RssConfig" type="RssConfig"/>
 
-<xs:element name="RssConfig" type="RssConfig"/>
+    <xs:element name="RssMode" type="RssMode"/>
 
-<xs:element name="RssMode" type="RssMode"/>
+    <xs:element name="RssImaging" type="RssImaging"/>
 
-<xs:element name="RssImaging" type="RssImaging"/>
+    <xs:element name="RssSpectroscopy" type="RssSpectroscopy"/>
 
-<xs:element name="RssSpectroscopy" type="RssSpectroscopy"/>
+    <xs:element name="RssFabryPerot" type="RssFabryPerot"/>
 
-<xs:element name="RssFabryPerot" type="RssFabryPerot"/>
+    <xs:element name="RssPolarimetry" type="RssPolarimetry"/>
 
-<xs:element name="RssPolarimetry" type="RssPolarimetry"/>
+    <xs:element name="RssSlitMask" type="RssSlitMask"/>
 
-<xs:element name="RssSlitMask" type="RssSlitMask"/>
+    <xs:element name="RssPredefinedMask" type="RssPredefinedMask"/>
 
-<xs:element name="RssPredefinedMask" type="RssPredefinedMask"/>
+    <xs:element name="RssSMI" type="RssSMI"/>
 
-<xs:element name="RssSMI" type="RssSMI"/>
+    <xs:element name="RssWaveplatePattern" type="RssWaveplatePattern"/>
 
-<xs:element name="RssWaveplatePattern" type="RssWaveplatePattern"/>
+    <xs:element name="RssFabryPerotCalibrationRegion" type="RssFabryPerotCalibrationRegion"/>
 
-<xs:element name="RssFabryPerotCalibrationRegion" type="RssFabryPerotCalibrationRegion"/>
+    <xs:element name="RssDetector" type="RssDetector"/>
 
-<xs:element name="RssDetector" type="RssDetector"/>
+    <xs:element name="RssCalibration" type="RssCalibration"/>
 
-<xs:element name="RssCalibration" type="RssCalibration"/>
+    <xs:element name="RssCalibrationSetup" type="RssCalibrationSetup"/>
 
-<xs:element name="RssCalibrationSetup" type="RssCalibrationSetup"/>
+    <xs:element name="RssGratingAngle" type="RssGratingAngle"/>
 
-<xs:element name="RssGratingAngle" type="RssGratingAngle"/>
+    <xs:element name="RssEtalonPattern" type="RssEtalonPattern"/>
 
-<xs:element name="RssEtalonPattern" type="RssEtalonPattern"/>
+    <xs:element name="RssEtalonWavelength" type="RssEtalonWavelength"/>
 
-<xs:element name="RssEtalonWavelength" type="RssEtalonWavelength"/>
+    <xs:element name="P1Hrs" type="P1Hrs"/>
 
-<xs:element name="P1Hrs" type="P1Hrs"/>
+    <xs:element name="Hrs" type="Hrs"/>
 
-<xs:element name="Hrs" type="Hrs"/>
+    <xs:element name="HrsDetector" type="HrsDetector"/>
 
-<xs:element name="HrsDetector" type="HrsDetector"/>
+    <xs:element name="HrsConfig" type="HrsConfig"/>
 
-<xs:element name="HrsConfig" type="HrsConfig"/>
+    <xs:element name="HrsNodAndShuffle" type="HrsNodAndShuffle"/>
 
-<xs:element name="HrsNodAndShuffle" type="HrsNodAndShuffle"/>
+    <xs:element name="HrsFibreSeparation" type="HrsFibreSeparation"/>
 
-<xs:element name="HrsFibreSeparation" type="HrsFibreSeparation"/>
+    <xs:element name="HrsProcedure" type="HrsProcedure"/>
 
-<xs:element name="HrsProcedure" type="HrsProcedure"/>
+    <xs:element name="HrsExposurePattern" type="HrsExposurePattern"/>
 
-<xs:element name="HrsExposurePattern" type="HrsExposurePattern"/>
+    <xs:element name="HrsCalibration" type="HrsCalibration"/>
 
-<xs:element name="HrsCalibration" type="HrsCalibration"/>
+    <xs:element name="HrsCalibrationSetup" type="HrsCalibrationSetup"/>
 
-<xs:element name="HrsCalibrationSetup" type="HrsCalibrationSetup"/>
+    <xs:element name="P1Nir" type="P1Nir"/>
 
-<xs:element name="P1Nir" type="P1Nir"/>
+    <xs:element name="Nir" type="Nir"/>
 
-<xs:element name="Nir" type="Nir"/>
+    <xs:element name="NirDetector" type="NirDetector"/>
 
-<xs:element name="NirDetector" type="NirDetector"/>
+    <xs:element name="NirGratingAngle" type="NirGratingAngle"/>
 
-<xs:element name="NirGratingAngle" type="NirGratingAngle"/>
+    <xs:element name="NirConfig" type="NirConfig"/>
 
-<xs:element name="NirConfig" type="NirConfig"/>
+    <xs:element name="NirDitherOffset" type="NirDitherOffset"/>
 
-<xs:element name="NirDitherOffset" type="NirDitherOffset"/>
+    <xs:element name="NirDitherStep" type="NirDitherStep"/>
 
-<xs:element name="NirDitherStep" type="NirDitherStep"/>
+    <xs:element name="NirDitherPattern" type="NirDitherPattern"/>
 
-<xs:element name="NirDitherPattern" type="NirDitherPattern"/>
+    <xs:element name="NirProcedure" type="NirProcedure"/>
 
-<xs:element name="NirProcedure" type="NirProcedure"/>
+    <xs:element name="NirArc" type="NirArc"/>
 
-<xs:element name="NirArc" type="NirArc"/>
+    <xs:element name="NirCalibrationFlat" type="NirCalibrationFlat"/>
 
-<xs:element name="NirCalibrationFlat" type="NirCalibrationFlat"/>
+    <xs:element name="NirCalibration" type="NirCalibration"/>
 
-<xs:element name="NirCalibration" type="NirCalibration"/>
+    <xs:element name="NirCalibrationSetup" type="NirCalibrationSetup"/>
 
-<xs:element name="NirCalibrationSetup" type="NirCalibrationSetup"/>
+    <xs:element name="P1Bvit" type="P1Bvit"/>
 
-<xs:element name="P1Bvit" type="P1Bvit"/>
+    <xs:element name="Bvit" type="Bvit"/>
 
-<xs:element name="Bvit" type="Bvit"/>
+    <xs:element name="BvitIrisSize" type="BvitIrisSize"/>
 
-<xs:element name="BvitIrisSize" type="BvitIrisSize"/>
+    <xs:element name="BvitCalibration" type="BvitCalibration"/>
 
-<xs:element name="BvitCalibration" type="BvitCalibration"/>
+    <xs:element name="BvitCalibrationSetup" type="BvitCalibrationSetup"/>
 
-<xs:element name="BvitCalibrationSetup" type="BvitCalibrationSetup"/>
+    <xs:element name="Coordinates" type="Coordinates"/>
 
-<xs:element name="Coordinates" type="Coordinates"/>
+    <xs:element name="ProperMotionAndEpoch" type="ProperMotionAndEpoch"/>
 
-<xs:element name="ProperMotionAndEpoch" type="ProperMotionAndEpoch"/>
+    <xs:element name="CoordinatesTable" type="CoordinatesTable"/>
 
-<xs:element name="CoordinatesTable" type="CoordinatesTable"/>
+    <xs:element name="HorizonsEphemerides" type="HorizonsEphemerides"/>
 
-<xs:element name="HorizonsEphemerides" type="HorizonsEphemerides"/>
+    <xs:element name="RightAscension" type="RightAscension"/>
 
-<xs:element name="RightAscension" type="RightAscension"/>
+    <xs:element name="Declination" type="Declination"/>
 
-<xs:element name="Declination" type="Declination"/>
+    <xs:element name="AngularSpeed" type="AngularSpeed"/>
 
-<xs:element name="AngularSpeed" type="AngularSpeed"/>
+    <xs:element name="ExposureTime" type="ExposureTime"/>
 
-<xs:element name="ExposureTime" type="ExposureTime"/>
+    <xs:element name="SemesterExposureTime" type="SemesterExposureTime"/>
 
-<xs:element name="SemesterExposureTime" type="SemesterExposureTime"/>
+    <xs:element name="Dithering" type="Dithering"/>
 
-<xs:element name="Dithering" type="Dithering"/>
-
-<xs:element name="IntendedFor" type="IntendedFor"/></xs:schema>
+    <xs:element name="IntendedFor" type="IntendedFor"/>
+</xs:schema>
