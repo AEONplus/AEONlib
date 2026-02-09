@@ -44,10 +44,10 @@ class TestSalticamTemplates:
 
         if full:
             assert "Dither" in xml
-            assert "Flat" in xml
+            assert "SalticamDefaultCalibrationFlat" in xml
         else:
             assert "Dither" not in xml
-            assert "Flat" not in xml
+            assert "SalticamDefaultCalibrationFlat" not in xml
 
         validate_xml(xml)
         assert True

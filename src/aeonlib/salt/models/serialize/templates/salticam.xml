@@ -24,15 +24,7 @@
     <InCalibration>false</InCalibration>
     {% if salticam.include_flat %}
         <SalticamCalibration>
-            <SalticamCalibrationFlat>
-                <CalibrationFlatLamp>QTH2</CalibrationFlatLamp>
-                <CalibrationFlatExposureTime>
-                    <Value>1.0</Value>
-                    <Units>seconds</Units>
-                </CalibrationFlatExposureTime>
-                <Iterations>5</Iterations>
-                <CalibrationFlatRequirement>After science</CalibrationFlatRequirement>
-            </SalticamCalibrationFlat>
+            <SalticamDefaultCalibrationFlat/>
         </SalticamCalibration>
     {% endif %}
 </Salticam>
