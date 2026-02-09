@@ -29,6 +29,7 @@ class TestSalticamTemplates:
     def test_salticam_template(
         self, full: bool, base_salticam, base_salticam_dither_pattern
     ):
+        """Test that the Salticam template generates valid XML."""
         salticam = base_salticam
         salticam.filter_sequence.append(
             SalticamFilterSequenceStep(filter="Cousins R", exposure_time=42)
@@ -118,6 +119,7 @@ class TestRssTemplates:
     def test_rss_longslit_spectroscopy(
         self, full: bool, base_rss_longslit_spectroscopy, base_rss_polarimetry
     ):
+        """Test that the template for RSS longslit spectroscopy generates valid XML."""
         configuration = base_rss_longslit_spectroscopy
 
         if full:
@@ -143,6 +145,9 @@ class TestRssTemplates:
     def test_rss_mos_spectroscopy(
         self, full: bool, base_rss_multi_object_spectroscopy, base_rss_polarimetry
     ):
+        """
+        Test that the template for RSS multi-object spectroscopy generates valid XML.
+        """
         configuration = base_rss_multi_object_spectroscopy
 
         if full:
@@ -169,6 +174,9 @@ class TestRssTemplates:
     def test_rss_slit_mask_ifu_spectroscopy(
         self, full: bool, base_rss_slit_mask_ifu_spectroscopy, base_rss_polarimetry
     ):
+        """
+        Test that the template for RSS slit mask IFY spectroscopy generates valid XML.
+        """
         configuration = base_rss_slit_mask_ifu_spectroscopy
 
         if full:
