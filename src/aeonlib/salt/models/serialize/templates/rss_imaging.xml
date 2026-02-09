@@ -3,7 +3,11 @@
     <Mode>
         <Imaging/>
     </Mode>
-    <FilterId>{{ configuration.filter }}</FilterId>
+    {% if configuration.filter.startswith("pi") %}
+        <FilterId>{{ configuration.filter }}</FilterId>
+    {% else %}
+        <SalticamFilter>{{ configuration.filter }}</SalticamFilter>
+    {% endif %}
     {% if configuration.polarimetry %}
         <Polarimetry>
             <BeamsplitterOrientation>normal</BeamsplitterOrientation>
