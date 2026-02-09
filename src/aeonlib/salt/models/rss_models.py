@@ -140,7 +140,7 @@ _WavePlatePattern = (
 )
 
 
-class RssSpectroscopy(BaseModel):
+class RssSpectroscopy(BaseModel, validate_assignment=True):
     """
     An RSS spectroscopy configuration.
 
