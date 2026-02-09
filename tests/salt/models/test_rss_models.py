@@ -57,6 +57,16 @@ class TestRssSpectroscopy:
         with expectation:
             RssSpectroscopy(**spectroscopy)
 
+    @pytest.mark.parametrize(
+        "angle, station", [(0, 0), (1.75, 1), (12.25, 15), (49, 64), (100, 132)]
+    )
+    def test_articulation_station(
+        self, angle: float, station: int, base_rss_spectroscopy
+    ):
+        spectroscopy = base_rss_spectroscopy
+        spectroscopy.articulation_angle = angle
+        assert spectroscopy.articulation_station == station
+
 
 class TestRssPolarimetry:
     def test_rss_polarimetry(self, base_rss_polarimetry):

@@ -14,6 +14,7 @@ from pydantic import (
     PlainSerializer,
     BeforeValidator,
     AfterValidator,
+    computed_field,
 )
 
 from aeonlib.salt.models.types.salticam import serialize_salticam_filter
@@ -180,6 +181,15 @@ class RssSpectroscopy(BaseModel, validate_assignment=True):
     include_flat: bool
     include_arc: bool = True
     request_spectrophotometric_standard: bool = False
+
+    @computed_field
+    @property
+    def articulation_station(self) -> int:
+        """Return the articulation station."""
+        degrees = self.articulation_angle.to(u.deg).value
+        if degrees < 1:
+            return 0
+        return round((degrees - 1) / 0.75)
 
     @field_validator("articulation_angle", mode="after")
     @classmethod
