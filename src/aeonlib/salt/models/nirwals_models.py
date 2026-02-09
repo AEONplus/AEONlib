@@ -31,7 +31,7 @@ from aeonlib.salt.validators import GreaterEqual, LessEqual
 from aeonlib.types import Angle
 
 
-class Nirwals(BaseModel):
+class Nirwals(BaseModel, validate_assignment=True):
     """
     A NIRWALS configuration.
 
@@ -95,7 +95,7 @@ class Nirwals(BaseModel):
         return angle
 
 
-class NirwalsDitherPatternStep(BaseModel):
+class NirwalsDitherPatternStep(BaseModel, validate_assignment=True):
     """
     A step in a NIRWALS dither pattern.
 

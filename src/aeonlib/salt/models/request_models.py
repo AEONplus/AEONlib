@@ -6,7 +6,7 @@ from annotated_types import MinLen
 from pydantic import BaseModel
 
 
-class Request(BaseModel):
+class Request(BaseModel, validate_assignment=True):
     """
     An observation request for SALT.
 

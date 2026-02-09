@@ -34,7 +34,7 @@ class AstropyQuantityTypeAnnotation:
     ```
     from pydantic import BaseModel
 
-    class MovingObject(BaseModel):
+    class MovingObject(BaseModel, validate_assignment=True):
         proper_motion: ProperMotion
 
     # Create the same object in three different ways.

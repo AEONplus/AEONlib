@@ -11,7 +11,7 @@ from aeonlib.salt.validators import GreaterEqual, LessEqual
 from aeonlib.types import Angle
 
 
-class Hrs(BaseModel):
+class Hrs(BaseModel, validate_assignment=True):
     """
     An HRS setup.
 
@@ -80,7 +80,7 @@ class Hrs(BaseModel):
         raise ValueError(f"Precision radial velocity cannot be serialized: {value}")
 
 
-class HrsDetector(BaseModel):
+class HrsDetector(BaseModel, validate_assignment=True):
     """
     An HRS detector setup.
 

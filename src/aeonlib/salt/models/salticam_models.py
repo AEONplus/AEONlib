@@ -17,7 +17,7 @@ from aeonlib.salt.models.util import CapitalizingSerializer, LowerCaseValidator
 from aeonlib.salt.validators import GreaterEqual, LessEqual
 
 
-class Salticam(BaseModel):
+class Salticam(BaseModel, validate_assignment=True):
     """
     A Salticam instrument configuration.
 
@@ -58,7 +58,7 @@ class Salticam(BaseModel):
     include_flat: bool
 
 
-class SalticamFilterSequenceStep(BaseModel):
+class SalticamFilterSequenceStep(BaseModel, validate_assignment=True):
     """
     A step in a filter sequence.
 
@@ -75,7 +75,7 @@ class SalticamFilterSequenceStep(BaseModel):
     exposure_time: PositiveDuration
 
 
-class SalticamDetector(BaseModel):
+class SalticamDetector(BaseModel, validate_assignment=True):
     """
     A Salticam detector setup.
 
@@ -95,7 +95,7 @@ class SalticamDetector(BaseModel):
     num_prebinned_columns: Annotated[int, GreaterEqual(1), LessEqual(9)]
 
 
-class SalticamDitherPattern(BaseModel):
+class SalticamDitherPattern(BaseModel, validate_assignment=True):
     """
     A dither pattern for Salticam.
 

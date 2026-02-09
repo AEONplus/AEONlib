@@ -28,7 +28,7 @@ from aeonlib.salt.models.types import (
 from aeonlib.salt.validators import GreaterEqual, LessEqual, check_in_visibility_range
 
 
-class Block(BaseModel):
+class Block(BaseModel, validate_assignment=True):
     """
     A block for SALT.
 
@@ -132,7 +132,7 @@ class Block(BaseModel):
         return self
 
 
-class Constraints(BaseModel):
+class Constraints(BaseModel, validate_assignment=True):
     """
     Observing constraints.
 
@@ -171,7 +171,7 @@ class Constraints(BaseModel):
     max_seeing: PositiveFloat
 
 
-class Acquisition(BaseModel):
+class Acquisition(BaseModel, validate_assignment=True):
     """
     An acquisition.
 
@@ -210,7 +210,7 @@ class Acquisition(BaseModel):
     include_focused_image: bool = False
 
 
-class ReferenceStar(BaseModel):
+class ReferenceStar(BaseModel, validate_assignment=True):
     """
     A reference star on which to acquire.
 

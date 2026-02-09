@@ -44,7 +44,7 @@ from aeonlib.salt.models.types import (
 from aeonlib.salt.validators import GreaterEqual, GreaterThan, LessEqual
 
 
-class Rss(BaseModel):
+class Rss(BaseModel, validate_assignment=True):
     """
     An RSS configuration.
 
@@ -99,7 +99,7 @@ class Rss(BaseModel):
     dither_pattern: RssDitherPattern | None
 
 
-class RssImaging(BaseModel):
+class RssImaging(BaseModel, validate_assignment=True):
     """
     An RSS imaging configuration.
 
@@ -263,7 +263,7 @@ class RssSlitMaskIFUSpectroscopy(RssSpectroscopy):
     slit_mask_ifu: Annotated[RssSlitMaskIFU, LowerCaseValidator, UpperCaseSerializer]
 
 
-class RssPolarimetry(BaseModel):
+class RssPolarimetry(BaseModel, validate_assignment=True):
     """
     An RSS polarimetry setup.
 
@@ -359,7 +359,7 @@ class RssPolarimetry(BaseModel):
             RssPolarimetry._check_pattern_step(step)
 
 
-class RssDetector(BaseModel):
+class RssDetector(BaseModel, validate_assignment=True):
     """
     An Rss detector setup.
 
@@ -398,7 +398,7 @@ class RssDetector(BaseModel):
     ] = None
 
 
-class RssDitherPattern(BaseModel):
+class RssDitherPattern(BaseModel, validate_assignment=True):
     """
     A dither pattern for RSS.
 

@@ -38,7 +38,7 @@ class SaltSiderealTarget(SiderealTarget):
         return check_in_visibility_range(value)
 
 
-class MagnitudeRange(BaseModel):
+class MagnitudeRange(BaseModel, validate_assignment=True):
     """
     A magnitude range.
 
