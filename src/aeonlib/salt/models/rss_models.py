@@ -104,6 +104,8 @@ class RssImaging(BaseModel):
 
     Parameters
     ----------
+    mode
+        The configuration mode. This must be "imaging".
     filter
         The filter to use. This may be one of RSS's own imaging filters or one of the
         filters used by Salticam.
@@ -113,6 +115,7 @@ class RssImaging(BaseModel):
         Whether a nighttime flat should be taken for the observation.
     """
 
+    mode: Annotated[Literal["imaging"], LowerCaseValidator] = "imaging"
     filter: Annotated[
         RssImagingFilter | SalticamFilter,
         LowerCaseValidator,
@@ -146,6 +149,8 @@ class RssSpectroscopy(BaseModel):
 
     Parameters
     ----------
+    mode
+        The configuration mode. This must be "spectroscopy".
     grating
         The barcode of the grating, such as "pg0900".
     grating_angle
@@ -166,6 +171,7 @@ class RssSpectroscopy(BaseModel):
 
     """
 
+    mode: Annotated[Literal["spectroscopy"], LowerCaseValidator] = "spectroscopy"
     grating: RssGrating
     grating_angle: Annotated[Angle, GreaterEqual(0 * u.deg), LessEqual(100 * u.deg)]
     articulation_angle: Angle
