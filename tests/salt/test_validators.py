@@ -8,19 +8,19 @@ from aeonlib.salt.validators import GreaterEqual, GreaterThan, LessEqual, LessTh
 
 
 class GreaterThanModel(BaseModel):
-    a: Annotated[int, GreaterThan(4)]
+    a: Annotated[int | None, GreaterThan(4)]
 
 
 class GreaterEqualModel(BaseModel):
-    a: Annotated[int, GreaterEqual(4)]
+    a: Annotated[int | None, GreaterEqual(4)]
 
 
 class LessThanModel(BaseModel):
-    a: Annotated[int, LessThan(4)]
+    a: Annotated[int | None, LessThan(4)]
 
 
 class LessEqualModel(BaseModel):
-    a: Annotated[int, LessEqual(4)]
+    a: Annotated[int | None, LessEqual(4)]
 
 
 class TestValidators:
@@ -30,6 +30,7 @@ class TestValidators:
             (3, pytest.raises(ValidationError)),
             (4, pytest.raises(ValidationError)),
             (5, nullcontext()),
+            (None, nullcontext()),
         ],
     )
     def test_greater_than(self, a, expectation):
@@ -43,7 +44,12 @@ class TestValidators:
 
     @pytest.mark.parametrize(
         "a, expectation",
-        [(3, pytest.raises(ValidationError)), (4, nullcontext()), (5, nullcontext())],
+        [
+            (3, pytest.raises(ValidationError)),
+            (4, nullcontext()),
+            (5, nullcontext()),
+            (None, nullcontext()),
+        ],
     )
     def test_greater_equal(self, a, expectation):
         """Test that the GreaterEqual validator validates correctly."""
@@ -53,6 +59,7 @@ class TestValidators:
     def test_greater_equal_does_not_change_field_value(self):
         """Test that the field value is not changed by the GreaterEqual validator."""
         assert GreaterEqualModel(a=7).a == 7
+        assert GreaterEqualModel(a=None).a is None
 
     @pytest.mark.parametrize(
         "a, expectation",
@@ -60,6 +67,7 @@ class TestValidators:
             (3, nullcontext()),
             (4, pytest.raises(ValidationError)),
             (5, pytest.raises(ValidationError)),
+            (None, nullcontext()),
         ],
     )
     def test_less_than(self, a, expectation):
@@ -70,10 +78,16 @@ class TestValidators:
     def test_less_than_does_not_change_field_value(self):
         """Test that the field value is not changed by the LessThan validator."""
         assert LessThanModel(a=2).a == 2
+        assert LessThanModel(a=None).a is None
 
     @pytest.mark.parametrize(
         "a, expectation",
-        [(3, nullcontext()), (4, nullcontext()), (5, pytest.raises(ValidationError))],
+        [
+            (3, nullcontext()),
+            (4, nullcontext()),
+            (5, pytest.raises(ValidationError)),
+            (None, nullcontext()),
+        ],
     )
     def test_less_equal(self, a, expectation):
         """Test that the LessEqual validator validates correctly."""
@@ -83,3 +97,4 @@ class TestValidators:
     def test_less_equal_does_not_change_field_value(self):
         """Test that the field value is not changed by the LessEqual validator."""
         assert LessEqualModel(a=2).a == 2
+        assert LessEqualModel(a=None).a is None

@@ -8,25 +8,25 @@ from pydantic import AfterValidator
 
 
 def _check_gt(a: Any, b: Any) -> Any:
-    if a <= b:
+    if a is not None and b is not None and a <= b:
         raise ValueError(f"{a} is not greater than to {b}.")
     return a
 
 
 def _check_ge(a: Any, b: Any) -> Any:
-    if a < b:
+    if a is not None and b is not None and a < b:
         raise ValueError(f"{a} is not greater than or equal to {b}.")
     return a
 
 
 def _check_lt(a: Any, b: Any) -> None:
-    if a >= b:
+    if a is not None and b is not None and a >= b:
         raise ValueError(f"{a} is not less than to {b}.")
     return a
 
 
 def _check_le(a: Any, b: Any) -> None:
-    if a > b:
+    if a is not None and b is not None and a > b:
         raise ValueError(f"{a} is not less than or equal to {b}.")
     return a
 
