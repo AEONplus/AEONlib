@@ -1,0 +1,25 @@
+<RssDetector>
+    <DetMode>{{ detector.readout_mode }}</DetMode>
+    <Iterations>{{ detector.num_exposures }}</Iterations>
+    {% if detector.window_height is not none %}
+        <RssDetectorWindow>
+            <Height>
+                <Value>{{ detector.window_height }}</Value>
+                <Units>arcseconds</Units>
+            </Height>
+        </RssDetectorWindow>
+    {% endif %}
+    <PreShuffle>0</PreShuffle>
+    <PostShuffle>0</PostShuffle>
+    <PreBinRows>{{ detector.num_prebinned_rows }}</PreBinRows>
+    <PreBinCols>{{ detector.num_prebinned_columns }}</PreBinCols>
+    <Prepare>true</Prepare>
+    <ExposureType>Science</ExposureType>
+    <ExposureTime>
+        <Value>{{ detector.exposure_time }}</Value>
+        <Units>seconds</Units>
+    </ExposureTime>
+    <Gain>{{ detector.gain }}</Gain>
+    <ReadoutSpeed>{{ detector.readout_speed }}</ReadoutSpeed>
+    <DetectorCalculation>None</DetectorCalculation>
+</RssDetector>

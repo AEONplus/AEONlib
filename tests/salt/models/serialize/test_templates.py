@@ -33,3 +33,24 @@ def test_salticam_template(full: bool, base_salticam, base_salticam_dither_patte
 
     validate_xml(xml)
     assert True
+
+
+@pytest.mark.parametrize("full", [False, True])
+def test_salticam_detector_template(full: bool, base_rss_detector):
+    """Test that the RSS detector template generates valid XML."""
+    detector = base_rss_detector.model_dump()
+
+    if full:
+        detector["window_height"] = 45
+    else:
+        detector["window_height"] = None
+
+    xml = render_template("rss_detector.xml", detector=detector)
+
+    if full:
+        assert "Height" in xml
+    else:
+        assert "Height" not in xml
+
+    validate_xml(xml)
+    assert True
