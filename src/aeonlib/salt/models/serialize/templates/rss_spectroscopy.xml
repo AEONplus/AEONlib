@@ -1,0 +1,41 @@
+<RssConfig>
+    <SlitMask>
+        {% if configuration.slit %}
+            <PredefinedMask>
+                <Barcode>{{ configuration.slit }}</Barcode>
+            </PredefinedMask>
+        {% endif %}
+        {% if configuration.mask %}
+            <MOS>
+                <SlitMaskFile>
+                    <Path>A{{ configuration.mask.absolute() }}</Path>
+                </SlitMaskFile>
+            </MOS>
+        {% endif %}
+        {% if configuration.slit_mask_ifu %}
+            <SMI>
+                <Barcode>{{ configuration.slit_mask_ifu }}</Barcode>
+            </SMI>
+        {% endif %}
+    </SlitMask>
+    <Mode>
+        <Spectroscopy>
+            <Grating>{{ configuration.grating }}</Grating>
+            <GratingAngle>
+                <Value>{{ configuration.grating_angle }}</Value>
+                <Units>degrees</Units>
+            </GratingAngle>
+            <ArtStation>{{ configuration.articulation_station }}_{{ "{:.2f}".format(configuration.articulation_angle) }}</ArtStation>
+        </Spectroscopy>
+    </Mode>
+    <FilterId>{{ configuration.order_blocking_filter }}</FilterId>
+    {% if configuration.polarimetry %}
+        <Polarimetry>
+            <BeamsplitterOrientation>normal</BeamsplitterOrientation>
+        </Polarimetry>
+    {% endif %}
+    <FocusPosition>
+        <Value>1000</Value>
+        <Units>microns</Units>
+    </FocusPosition>
+</RssConfig>

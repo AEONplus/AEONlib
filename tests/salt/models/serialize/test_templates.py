@@ -4,7 +4,6 @@ import astropy.units as u
 
 from aeonlib.salt.models import SalticamFilterSequenceStep
 from aeonlib.salt.models.util import render_template, validate_xml
-from tests.salt.models.conftest import base_rss_longslit_spectroscopy
 
 
 def test_salticam_detector_template(base_salticam_detector):
