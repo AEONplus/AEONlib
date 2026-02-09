@@ -4,7 +4,7 @@
     {% if detector.window_height is not none %}
         <RssDetectorWindow>
             <Height>
-                <Value>{{ detector.window_height }}</Value>
+                <Value>{{ detector.window_height|round|int }}</Value>
                 <Units>arcseconds</Units>
             </Height>
         </RssDetectorWindow>
