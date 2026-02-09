@@ -54,7 +54,7 @@ class Salticam(BaseModel, validate_assignment=True):
     num_cycles: PositiveInt = 1
     filter_sequence: Annotated[list[SalticamFilterSequenceStep], MinLen(1)]
     detector: SalticamDetector
-    dither_pattern: SalticamDitherPattern = None
+    dither_pattern: SalticamDitherPattern | None = None
     include_flat: bool
 
 
