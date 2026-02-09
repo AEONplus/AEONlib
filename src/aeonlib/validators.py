@@ -1,8 +1,4 @@
-"""
-This module defines some Pydantic validators.
-
-The validators are
-"""
+"""This module defines some Pydantic validators."""
 
 from typing import Any
 
@@ -12,30 +8,30 @@ from pydantic import AfterValidator
 
 
 def _check_gt(a: Any, b: Any) -> Any:
-    if a <= b:
+    if a is not None and b is not None and a <= b:
         raise ValueError(f"{a} is not greater than to {b}.")
     return a
 
 
 def _check_ge(a: Any, b: Any) -> Any:
-    if a < b:
+    if a is not None and b is not None and a < b:
         raise ValueError(f"{a} is not greater than or equal to {b}.")
     return a
 
 
 def _check_lt(a: Any, b: Any) -> None:
-    if a >= b:
+    if a is not None and b is not None and a >= b:
         raise ValueError(f"{a} is not less than to {b}.")
     return a
 
 
 def _check_le(a: Any, b: Any) -> None:
-    if a > b:
+    if a is not None and b is not None and a > b:
         raise ValueError(f"{a} is not less than or equal to {b}.")
     return a
 
 
-def Gt(value: Any):
+def GreaterThan(value: Any):
     """
     Return a Pydantic validator for checking a greater than relation.
 
@@ -44,14 +40,14 @@ def Gt(value: Any):
         import pydantic
 
         class DummyModel(pydantic.BaseModel):
-            duration: Annotated[float, Gt(4)]
+            duration: Annotated[float, GreaterThan(4)]
 
     Pydantic will first perform its own internal validation and then check whether
-    the field value is greater than the argument passed to `Gt` (4 in the example
-    above).
+    the field value is greater than the argument passed to `GreaterThan` (4 in the
+    example above).
 
-    It is up to the user to ensure that the field value and the argument of `Gt` can
-    be compared.
+    It is up to the user to ensure that the field value and the argument of
+    `GreaterThan` can be compared.
 
     Parameters
     ----------
@@ -65,7 +61,7 @@ def Gt(value: Any):
     return AfterValidator(lambda v: _check_gt(v, value))
 
 
-def Ge(value: Any):
+def GreaterEqual(value: Any):
     """
     Return a Pydantic validator for checking a greater than or equal to relation.
 
@@ -74,14 +70,14 @@ def Ge(value: Any):
         import pydantic
 
         class DummyModel(pydantic.BaseModel):
-            duration: Annotated[float, Ge(4)]
+            duration: Annotated[float, GreaterEqual(4)]
 
     Pydantic will first perform its own internal validation and then check whether
-    the field value is greater than or equal to the argument passed to `Ge` (4 in the
-    example above).
+    the field value is greater than or equal to the argument passed to `GreaterEqual`
+    (4 in the example above).
 
-    It is up to the user to ensure that the field value and the argument of `Ge` can
-    be compared.
+    It is up to the user to ensure that the field value and the argument of
+    `GreaterEqual` can be compared.
 
     Parameters
     ----------
@@ -95,7 +91,7 @@ def Ge(value: Any):
     return AfterValidator(lambda v: _check_ge(v, value))
 
 
-def Lt(value: Any):
+def LessThan(value: Any):
     """
     Return a Pydantic validator for checking a less than relation.
 
@@ -104,14 +100,14 @@ def Lt(value: Any):
         import pydantic
 
         class DummyModel(pydantic.BaseModel):
-            height: Annotated[float, Lt(4)]
+            height: Annotated[float, LessThan(4)]
 
     Pydantic will first perform its own internal validation and then check whether
-    the field value is less than or equal to the argument passed to `Lt` (4 in the
-    example above).
+    the field value is less than or equal to the argument passed to `LessEqual` (4 in
+    the example above).
 
-    It is up to the user to ensure that the field value and the argument of `Lt` can
-    be compared.
+    It is up to the user to ensure that the field value and the argument of
+    `LessThan` can be compared.
 
     Parameters
     ----------
@@ -125,7 +121,7 @@ def Lt(value: Any):
     return AfterValidator(lambda v: _check_lt(v, value))
 
 
-def Le(value: Any):
+def LessEqual(value: Any):
     """
     Return a Pydantic validator for checking a less than or equal to relation.
 
@@ -134,14 +130,14 @@ def Le(value: Any):
         import pydantic
 
         class DummyModel(pydantic.BaseModel):
-            height: Annotated[float, Le(4)]
+            height: Annotated[float, LessEqual(4)]
 
     Pydantic will first perform its own internal validation and then check whether
-    the field value is less than or equal to the argument passed to `Le` (4 in the
-    example above).
+    the field value is less than or equal to the argument passed to `LessEqual` (4 in
+    the example above).
 
-    It is up to the user to ensure that the field value and the argument of `Le` can
-    be compared.
+    It is up to the user to ensure that the field value and the argument of
+    `LessEqual` can be compared.
 
     Parameters
     ----------
