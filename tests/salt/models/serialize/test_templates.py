@@ -122,3 +122,56 @@ def test_rss_longslit_spectroscopy(
 
     validate_xml(xml)
     assert True
+
+
+@pytest.mark.parametrize("full", [False, True])
+def test_rss_mos_spectroscopy(
+    full: bool, base_rss_multi_object_spectroscopy, base_rss_polarimetry
+):
+    configuration = base_rss_multi_object_spectroscopy
+
+    if full:
+        configuration.polarimetry = base_rss_polarimetry
+    else:
+        configuration.polarimetry = None
+
+    xml = render_template(
+        "rss_spectroscopy.xml", configuration=configuration.model_dump()
+    )
+
+    assert "MOS" in xml
+    assert "Path" in xml
+
+    if full:
+        assert "BeamsplitterOrientation" in xml
+    else:
+        assert "BeamsplitterOrientation" not in xml
+
+    validate_xml(xml)
+    assert True
+
+
+@pytest.mark.parametrize("full", [False, True])
+def test_rss_slit_mask_ifu_spectroscopy(
+    full: bool, base_rss_slit_mask_ifu_spectroscopy, base_rss_polarimetry
+):
+    configuration = base_rss_slit_mask_ifu_spectroscopy
+
+    if full:
+        configuration.polarimetry = base_rss_polarimetry
+    else:
+        configuration.polarimetry = None
+
+    xml = render_template(
+        "rss_spectroscopy.xml", configuration=configuration.model_dump()
+    )
+
+    assert "SMI" in xml
+
+    if full:
+        assert "BeamsplitterOrientation" in xml
+    else:
+        assert "BeamsplitterOrientation" not in xml
+
+    validate_xml(xml)
+    assert True
