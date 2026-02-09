@@ -15,6 +15,16 @@ class TestSalticamTemplates:
         validate_xml(xml)
         assert True
 
+    def test_salticam_dithering_pattern(self, base_salticam_dither_pattern):
+        """Test that the Salticam dither pattern template generates valid XML."""
+        dither_pattern = base_salticam_dither_pattern
+
+        xml = render_template(
+            "salticam_dither_pattern.xml", dither_pattern=dither_pattern.model_dump()
+        )
+
+        validate_xml(xml)
+
     @pytest.mark.parametrize("full", [False, True])
     def test_salticam_template(
         self, full: bool, base_salticam, base_salticam_dither_pattern
