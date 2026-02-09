@@ -189,3 +189,13 @@ class TestRssTemplates:
 
         validate_xml(xml)
         assert True
+
+    def test_rss_dithering_pattern(self, base_rss_dither_pattern):
+        dither_pattern = base_rss_dither_pattern
+        """Test that the template for RSS dither patterns generates valid XML."""
+
+        xml = render_template(
+            "rss_dither_pattern.xml", dither_pattern=dither_pattern.model_dump()
+        )
+
+        validate_xml(xml)
