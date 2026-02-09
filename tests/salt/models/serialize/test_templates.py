@@ -59,3 +59,20 @@ def test_salticam_detector_template(full: bool, base_rss_detector):
 
     validate_xml(xml)
     assert True
+
+
+@pytest.mark.parametrize("full", [False, True])
+def test_rss_imaging(full: bool, base_rss_imaging, base_rss_polarimetry):
+    configuration = base_rss_imaging
+
+    if full:
+        configuration.polarimetry = base_rss_polarimetry
+    else:
+        configuration.polarimetry = None
+
+    xml = render_template("rss_imaging.xml", configuration=configuration.model_dump())
+
+    if full:
+        assert "BeamsplitterOrientation" in xml
+    else:
+        assert "BeamsplitterOrientation" not in xml

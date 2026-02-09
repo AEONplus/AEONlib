@@ -1,0 +1,16 @@
+<RssConfig>
+    <SlitMask/>
+    <Mode>
+        <Imaging/>
+    </Mode>
+    <FilterId>{{ configuration.filter }}</FilterId>
+    {% if configuration.polarimetry %}
+        <Polarimetry>
+            <BeamsplitterOrientation>normal</BeamsplitterOrientation>
+        </Polarimetry>
+    {% endif %}
+    <FocusPosition>
+        <Value>1000</Value>
+        <Units>microns</Units>
+    </FocusPosition>
+</RssConfig>
