@@ -127,7 +127,7 @@ class RssImaging(BaseModel):
     @staticmethod
     def serialize_filter(value: str) -> str:
         if value.startswith("pi"):
-            return value.upper()
+            return value
         else:
             return serialize_salticam_filter(value)
 
