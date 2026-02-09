@@ -91,7 +91,7 @@ def test_rss_imaging_filter(filter_name: str, expected_element: str, base_rss_im
     configuration = base_rss_imaging
     configuration.filter = filter_name
 
-    xml = render_template("rss_imaging.xml", configuration=configuration)
+    xml = render_template("rss_imaging.xml", configuration=configuration.model_dump())
     assert expected_element in xml
 
     validate_xml(xml)
