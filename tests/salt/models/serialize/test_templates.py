@@ -1,6 +1,5 @@
-import pytest
-
 import astropy.units as u
+import pytest
 from astropy.coordinates import Angle
 from astropy.units import Quantity
 
@@ -425,6 +424,28 @@ class TestTarget:
         else:
             assert "RightAscensionDot" not in xml
             assert "DeclinationDot" not in xml
+
+        validate_xml(xml)
+        assert True
+
+
+class TestHrs:
+    @pytest.mark.parametrize(
+        "mode, iodine_cell_position",
+        [
+            ("low resolution", "OUT"),
+            ("medium resolution", "OUT"),
+            ("high resolution", "OUT"),
+            ("high stability", "ThAr"),
+        ],
+    )
+    def test_hrs(self, mode: str, iodine_cell_position: str, base_hrs):
+        hrs = base_hrs
+        hrs.mode = mode
+
+        xml = render_template("hrs.xml", hrs=hrs.model_dump())
+
+        assert f"<IodineCellPosition>{iodine_cell_position}</IodineCellPosition>" in xml
 
         validate_xml(xml)
         assert True

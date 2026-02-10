@@ -1,0 +1,53 @@
+<Hrs>
+    <Name>HRS</Name>
+    <HrsConfig>
+        <Mode>{{ hrs.mode }}</Mode>
+        <ExposureType>Science</ExposureType>
+        {% with v=hrs.prv_calibration %}
+            <IodineCellPosition>{{ v | iodine_cell_position }}</IodineCellPosition>
+        {% endwith %}
+        <TargetLocation>Star</TargetLocation>
+        <FibreSeparation>
+            <Value>{{ to_angle(hrs.fibre_separation).arcsec }}</Value>
+            <Units>seconds</Units>
+        </FibreSeparation>
+        <UseThArWithIodineCell>true</UseThArWithIodineCell>
+    </HrsConfig>
+    <HrsProcedure>
+        <Cycles>{{ hrs.num_cycles }}</Cycles>
+        <BlueExposurePattern>
+            {% for exposure_time in hrs.blue_arm.exposure_times %}
+                <ExposureTime>
+                    <Value>{{ exposure_time }}</Value>
+                    <Units>seconds</Units>
+                </ExposureTime>
+            {% endfor %}
+        </BlueExposurePattern>
+        <RedExposurePattern>
+            {% for exposure_time in hrs.red_arm.exposure_times %}
+                <ExposureTime>
+                    <Value>{{ exposure_time }}</Value>
+                    <Units>seconds</Units>
+                </ExposureTime>
+            {% endfor %}
+        </RedExposurePattern>
+    </HrsProcedure>
+    <HrsBlueDetector>
+        <Iterations>1</Iterations>
+        <ReadoutSpeed>Slow</ReadoutSpeed>
+        <NumberOfAmplifiers>1</NumberOfAmplifiers>
+        <PreBinRows>1</PreBinRows>
+        <PreBinCols>1</PreBinCols>
+        <PreShuffle>0</PreShuffle>
+        <PostShuffle>0</PostShuffle>
+    </HrsBlueDetector>
+    <HrsRedDetector>
+        <Iterations>1</Iterations>
+        <ReadoutSpeed>Slow</ReadoutSpeed>
+        <NumberOfAmplifiers>1</NumberOfAmplifiers>
+        <PreBinRows>1</PreBinRows>
+        <PreBinCols>1</PreBinCols>
+        <PreShuffle>0</PreShuffle>
+        <PostShuffle>0</PostShuffle>
+    </HrsRedDetector>
+</Hrs>
