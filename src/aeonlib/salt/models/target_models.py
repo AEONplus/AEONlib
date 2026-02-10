@@ -12,7 +12,7 @@ from aeonlib.salt.models.types import MagnitudeBandpass, TargetType
 from aeonlib.salt.validators import check_in_visibility_range
 
 
-class SaltSiderealTarget(SiderealTarget):
+class SaltSiderealTarget(SiderealTarget, validate_assignment=True):
     """
     A sidereal target to observe with SALT.
 
@@ -31,6 +31,26 @@ class SaltSiderealTarget(SiderealTarget):
 
     target_type: TargetType
     magnitude_range: MagnitudeRange
+
+    @field_validator("type", mode="after")
+    @classmethod
+    def check_type(cls, value: str):
+        if value != "ICRS":
+            raise ValueError("SALT only supports targets of type ICRS.")
+        return value
+
+    @model_validator(mode="after")
+    def check_coordinates(self):
+        if self.hour_angle is not None:
+            raise ValueError("SALT does not support hour angle values.")
+
+        if self.altitude is not None:
+            raise ValueError("SALT does not support altitude values.")
+
+        if self.azimuth is not None:
+            raise ValueError("SALT does not support azimuth values.")
+
+        return self
 
     @field_validator("dec", mode="after")
     @classmethod

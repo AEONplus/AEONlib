@@ -1,6 +1,7 @@
 from contextlib import nullcontext
 
 import astropy.coordinates
+import astropy.units as u
 import pytest
 from pydantic import ValidationError
 
@@ -11,6 +12,31 @@ class TestSaltSiderealTarget:
     def test_salt_sidereal_target(self, base_target):
         """Test that a simple target can be built."""
         assert True
+
+    @pytest.mark.parametrize("target_type", ["ALTAZ", "HOUR_ANGLE"])
+    def test_type(self, target_type: str, base_target):
+        """Test that the target type must be ICRS."""
+        target = base_target
+        with pytest.raises(ValueError, match="SALT"):
+            target.type = target_type
+
+    def test_hour_angle_must_not_exist(self, base_target):
+        """Test that no hour angle must be defined."""
+        target = base_target
+        with pytest.raises(ValueError, match="hour angle"):
+            target.hour_angle = 45 * u.deg
+
+    def test_altitude_must_not_exist(self, base_target):
+        """Test that no altitude must be defined."""
+        target = base_target
+        with pytest.raises(ValueError, match="altitude"):
+            target.altitude = 45 * u.deg
+
+    def test_azimuth_must_not_exist(self, base_target):
+        """Test that no azimuth must be defined."""
+        target = base_target
+        with pytest.raises(ValueError, match="azimuth"):
+            target.azimuth = 45 * u.deg
 
     @pytest.mark.parametrize(
         "dec, expectation",
