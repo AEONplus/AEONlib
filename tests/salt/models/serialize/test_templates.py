@@ -277,6 +277,7 @@ class TestNirwalsTemplates:
 
     @pytest.mark.parametrize("full", [False, True])
     def test_nirwals(self, full: bool, base_nirwals):
+        """Test that the NIRWALS template generates valid XML."""
         nirwals = base_nirwals
 
         if full:
@@ -315,6 +316,7 @@ class TestNirwalsTemplates:
     def test_nirwals_articulation_station(
         self, angle: Quantity, station: str, base_nirwals
     ):
+        """Test that the NIRWALS articulation station is output correctly."""
         nirwals = base_nirwals
         nirwals.articulation_angle = angle
 
@@ -326,6 +328,7 @@ class TestNirwalsTemplates:
 class TestTarget:
     @pytest.mark.parametrize("full", [False, True])
     def test_target(self, full: bool, base_target):
+        """Test that the target template generates valid XML."""
         target = base_target
 
         if full:
@@ -358,6 +361,7 @@ class TestTarget:
     def test_right_ascension(
         self, ra: str, hours: str, minutes: str, seconds: str, base_target
     ):
+        """Test that the right ascension is mapped correctly to XML."""
         target = base_target
         target.ra = Angle(ra)
 
@@ -385,6 +389,7 @@ class TestTarget:
         arcseconds: str,
         base_target,
     ):
+        """Test that the declination is mapped correctly to XML."""
         target = base_target
         target.dec = dec
 
@@ -406,6 +411,7 @@ class TestTarget:
         required: bool,
         base_target,
     ):
+        """Test that the proper motion is mapped correctly to XML."""
         target = base_target
 
         target.proper_motion_ra = proper_motion_ra
