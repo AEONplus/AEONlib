@@ -261,3 +261,14 @@ class TestRssTemplates:
         assert "<HWStation>0_0</HWStation>" in xml
         assert "<QWStation>4_45.00</QWStation>" in xml
         assert "<QWStation>28_315.00</QWStation>" in xml
+
+
+class TestNirwalsTemplates:
+    def test_nirwals_dither_pattern_step(self, base_nirwals_dither_pattern_step):
+        """Test that the NIRWALS dither pattern step templates generates valid XML."""
+        step = base_nirwals_dither_pattern_step
+
+        xml = render_template("nirwals_dither_pattern_step.xml", step=step.model_dump())
+
+        validate_xml(xml)
+        assert True
