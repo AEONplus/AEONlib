@@ -139,6 +139,8 @@ def render_template(
         loader = PackageLoader("aeonlib.salt.models.serialize")
 
     env = Environment(loader=loader, autoescape=select_autoescape())
+    env.trim_blocks = True
+    env.lstrip_blocks = True
     env.filters["wave_plate_station"] = _wave_plate_station
     template = env.get_template(template_path)
     return template.render(**kwargs)
