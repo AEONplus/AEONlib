@@ -1,18 +1,18 @@
 <Target id="{{ uuid() }}">
     <Name>{{ target.name }}</Name>
     <TargetCode>{{ uuid() }}</TargetCode>
-    <TargetType>SuperSoft</TargetType>
+    <TargetType>{{ target.target_type }}</TargetType>
     <Coordinates>
         <RightAscension>
-            <Hours>0</Hours>
-            <Minutes>0</Minutes>
-            <Seconds>0.0</Seconds>
+            <Hours>{{ to_angle(target.ra).hms[0] | round(0) | int }}</Hours>
+            <Minutes>{{ to_angle(target.ra).hms[1] | round(0) | int }}</Minutes>
+            <Seconds>{{ to_angle(target.ra).hms[2] | round(5) }}</Seconds>
         </RightAscension>
         <Declination>
-            <Sign>-</Sign>
-            <Degrees>0</Degrees>
-            <Arcminutes>0</Arcminutes>
-            <Arcseconds>0.0</Arcseconds>
+            <Sign>{{ target.dec | sign }}</Sign>
+            <Degrees>{{ to_angle(target.dec).dms[0] | abs | round(0) | int }}</Degrees>
+            <Arcminutes>{{ to_angle(target.dec).dms[1] | abs | round(0) | int }}</Arcminutes>
+            <Arcseconds>{{ to_angle(target.dec).dms[2] | abs | round(5) }}</Arcseconds>
         </Declination>
         {% if target.proper_motion_ra or target.proper_motion_dec %}
             <ProperMotionAndEpoch>

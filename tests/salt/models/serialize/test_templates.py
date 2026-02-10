@@ -1,6 +1,7 @@
 import pytest
 
 import astropy.units as u
+from astropy.coordinates import Angle
 from astropy.units import Quantity
 
 from aeonlib.salt.models import SalticamFilterSequenceStep
@@ -345,6 +346,54 @@ class TestTarget:
 
         validate_xml(xml)
         assert True
+
+    @pytest.mark.parametrize(
+        "ra, hours, minutes, seconds",
+        [
+            ("0d", "0", "0", "0.0"),
+            ("13h 24m 34.67s", "13", "24", "34.67"),
+            ("22.5d", "1", "30", "0.0"),
+        ],
+    )
+    def test_right_ascension(
+        self, ra: str, hours: str, minutes: str, seconds: str, base_target
+    ):
+        target = base_target
+        target.ra = Angle(ra)
+
+        xml = render_template("target.xml", target=target.model_dump())
+
+        assert f"<Hours>{hours}</Hours>" in xml
+        assert f"<Minutes>{minutes}</Minutes>" in xml
+        assert f"<Seconds>{seconds}</Seconds>" in xml
+
+    @pytest.mark.parametrize(
+        "dec, sign, degrees, arcminutes, arcseconds",
+        [
+            ("0d", "+", "0", "0", "0.0"),
+            ("-53d 13m 47.44s", "-", "53", "13", "47.44"),
+            ("+6d 30m 17.6s", "+", "6", "30", "17.6"),
+            ("10d", "+", "10", "0", "0.0"),
+        ],
+    )
+    def test_declination(
+        self,
+        sign: str,
+        dec: str,
+        degrees: str,
+        arcminutes: str,
+        arcseconds: str,
+        base_target,
+    ):
+        target = base_target
+        target.dec = dec
+
+        xml = render_template("target.xml", target=target.model_dump())
+
+        assert f"<Sign>{sign}</Sign>" in xml
+        assert f"<Degrees>{degrees}</Degrees>" in xml
+        assert f"<Arcminutes>{arcminutes}</Arcminutes>" in xml
+        assert f"<Arcseconds>{arcseconds}</Arcseconds>" in xml
 
     @pytest.mark.parametrize(
         "proper_motion_ra, proper_motion_dec, required",
