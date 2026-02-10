@@ -56,9 +56,9 @@ class MagnitudeRange(BaseModel, validate_assignment=True):
         Bandpass filter for which the magnitude range is given.
     """
 
-    min_magnitude: NonNegativeFloat
+    min_magnitude: float
 
-    max_magnitude: NonNegativeFloat
+    max_magnitude: float
 
     bandpass: MagnitudeBandpass
 
