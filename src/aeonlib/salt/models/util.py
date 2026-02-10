@@ -101,6 +101,13 @@ def _load_schema():
         _schema = etree.XMLSchema(schema_doc)
 
 
+def _wave_plate_station(angle):
+    if angle < 1e-5:
+        return "0_0"
+    else:
+        return f"{(angle / 11.25):.0f}_{angle:.2f}"
+
+
 def render_template(
     template_path: str, loader: BaseLoader | None = None, **kwargs
 ) -> str:
@@ -132,6 +139,7 @@ def render_template(
         loader = PackageLoader("aeonlib.salt.models.serialize")
 
     env = Environment(loader=loader, autoescape=select_autoescape())
+    env.filters["wave_plate_station"] = _wave_plate_station
     template = env.get_template(template_path)
     return template.render(**kwargs)
 
