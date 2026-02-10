@@ -10,6 +10,7 @@ from pydantic import (
     field_validator,
     PlainSerializer,
     BeforeValidator,
+    computed_field,
 )
 
 from aeonlib.salt.models.types import (
@@ -156,8 +157,9 @@ class NirwalsDitherPatternStep(BaseModel, validate_assignment=True):
     num_reads: Literal[1] = 1
     num_ramps: Literal[1] = 1
 
+    @computed_field
     @property
-    def num_groups(self):
+    def num_groups(self) -> int:
         """
         The number of groups.
 
