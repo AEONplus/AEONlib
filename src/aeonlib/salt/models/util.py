@@ -108,6 +108,13 @@ def _wave_plate_station(angle):
         return f"{(angle / 11.25):.0f}_{angle:.2f}"
 
 
+def _nirwals_articulation_station(angle):
+    if angle < 1e-5:
+        return "0_0"
+    else:
+        return f"{(2 * angle):.0f}_{angle:.1f}"
+
+
 def render_template(
     template_path: str, loader: BaseLoader | None = None, **kwargs
 ) -> str:
@@ -142,6 +149,7 @@ def render_template(
     env.trim_blocks = True
     env.lstrip_blocks = True
     env.filters["wave_plate_station"] = _wave_plate_station
+    env.filters["nirwals_articulation_station"] = _nirwals_articulation_station
     template = env.get_template(template_path)
     return template.render(**kwargs)
 
