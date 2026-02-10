@@ -66,12 +66,10 @@ class Nirwals(BaseModel, validate_assignment=True):
     """
 
     num_cycles: PositiveInt = 1
-    grating: Annotated[NirwalsGrating, LowerCaseValidator, UpperCaseSerializer]
+    grating: Annotated[NirwalsGrating, LowerCaseValidator]
     grating_angle: Annotated[Angle, GreaterEqual(0 * u.deg), LessEqual(100 * u.deg)]
     articulation_angle: Angle
-    filter: Annotated[NirwalsFilter, LowerCaseValidator, CapitalizingSerializer] = (
-        "empty"
-    )
+    filter: Annotated[NirwalsFilter, LowerCaseValidator, UpperCaseSerializer] = "empty"
     camera_filter: Annotated[
         NirwalsCameraFilter, LowerCaseValidator, CapitalizingSerializer
     ]

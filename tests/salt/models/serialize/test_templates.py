@@ -1,6 +1,7 @@
 import pytest
 
 import astropy.units as u
+from astropy.units import Quantity
 
 from aeonlib.salt.models import SalticamFilterSequenceStep
 from aeonlib.salt.models.util import render_template, validate_xml
@@ -272,3 +273,50 @@ class TestNirwalsTemplates:
 
         validate_xml(xml)
         assert True
+
+    @pytest.mark.parametrize("full", [False, True])
+    def test_nirwals(self, full: bool, base_nirwals):
+        nirwals = base_nirwals
+
+        if full:
+            nirwals.include_flat = True
+            nirwals.include_arc = True
+            nirwals.request_spectrophotometric_standard = True
+        else:
+            nirwals.include_flat = False
+            nirwals.include_arc = False
+            nirwals.request_spectrophotometric_standard = False
+
+        xml = render_template("nirwals.xml", nirwals=nirwals.model_dump())
+
+        if full:
+            assert "NirDefaultCalibrationFlat" in xml
+            assert "NirDefaultArc" in xml
+            assert "NirStandard" in xml
+        else:
+            assert "NirDefaultCalibrationFlat" not in xml
+            assert "NirDefaultArc" not in xml
+            assert "NirStandard" not in xml
+
+        validate_xml(xml)
+        assert True
+
+    @pytest.mark.parametrize(
+        "angle, station",
+        [
+            (0 * u.deg, "0_0"),
+            (0.5 * u.deg, "1_0.5"),
+            (14 * u.deg, "28_14.0"),
+            (37.5 * u.deg, "75_37.5"),
+            (100 * u.deg, "200_100.0"),
+        ],
+    )
+    def test_nirwals_articulation_station(
+        self, angle: Quantity, station: str, base_nirwals
+    ):
+        nirwals = base_nirwals
+        nirwals.articulation_angle = angle
+
+        xml = render_template("nirwals.xml", nirwals=nirwals.model_dump())
+
+        assert f"<ArtStation>{station}</ArtStation>" in xml
