@@ -127,6 +127,10 @@ def _uuid() -> str:
     return str(uuid.uuid4())
 
 
+def _to_angle(degrees: float) -> Angle:
+    return Angle(degrees * u.deg)
+
+
 def render_template(
     template_path: str, loader: BaseLoader | None = None, **kwargs
 ) -> str:
@@ -163,7 +167,7 @@ def render_template(
     env.filters["wave_plate_station"] = _wave_plate_station
     env.filters["nirwals_articulation_station"] = _nirwals_articulation_station
     env.filters["year_as_iso_timestamp"] = _year_as_iso_timestamp
-    env.globals.update({"uuid": _uuid})
+    env.globals.update({"uuid": _uuid, "to_angle": _to_angle})
     template = env.get_template(template_path)
     return template.render(**kwargs)
 
@@ -172,10 +176,6 @@ def _lower(s: Any) -> Any:
     if isinstance(s, str):
         return s.lower()
     return s
-
-
-def _uuid() -> str:
-    return str(uuid.uuid4())
 
 
 LowerCaseValidator = BeforeValidator(_lower)
