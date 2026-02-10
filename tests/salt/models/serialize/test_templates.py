@@ -207,3 +207,57 @@ class TestRssTemplates:
         )
 
         validate_xml(xml)
+
+    @pytest.mark.parametrize("full", [False, True])
+    def test_rss(
+        self, full: bool, base_rss, base_rss_polarimetry, base_rss_longslit_spectroscopy
+    ):
+        """Test that the RSS template generates valid XML."""
+        rss = base_rss
+        rss.configuration = base_rss_longslit_spectroscopy
+
+        if full:
+            rss.configuration.polarimetry.wave_plate_pattern = (
+                "circular"  # base_rss_polarimetry
+            )
+            rss.configuration.include_flat = True
+            rss.configuration.include_arc = True
+            rss.configuration.request_spectrophotometric_standard = True
+        else:
+            rss.configuration.polarimetry = None
+            rss.configuration.include_flat = False
+            rss.configuration.include_arc = False
+            rss.configuration.request_spectrophotometric_standard = False
+
+        xml = render_template("rss.xml", rss=rss.model_dump())
+
+        if full:
+            assert "RssProcedure" in xml
+            assert "WaveplatePattern" in xml
+            assert "RssDefaultCalibrationFlat" in xml
+            assert "RssDefaultArc" in xml
+            assert "RssStandard" in xml
+        else:
+            assert "RssProcedure" not in xml
+            assert "WaveplatePattern" not in xml
+            assert "RssDefaultCalibrationFlat" not in xml
+            assert "RssDefaultArc" not in xml
+            assert "RssStandard" not in xml
+
+        validate_xml(xml)
+        assert True
+
+    def test_rss_wave_plate_pattern_step_values(
+        self, base_rss, base_rss_longslit_spectroscopy, base_rss_polarimetry
+    ):
+        """Test that the wave plate pattern step values are correct."""
+        rss = base_rss
+        rss.configuration = base_rss_longslit_spectroscopy
+        rss.configuration.polarimetry = base_rss_polarimetry
+        rss.configuration.polarimetry.wave_plate_pattern = "circular"
+
+        xml = render_template("rss.xml", rss=rss.model_dump())
+
+        assert "<HWStation>0_0</HWStation>" in xml
+        assert "<QWStation>4_45.00</QWStation>" in xml
+        assert "<QWStation>28_315.00</QWStation>" in xml
