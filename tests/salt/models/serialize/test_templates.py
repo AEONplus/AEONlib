@@ -320,3 +320,56 @@ class TestNirwalsTemplates:
         xml = render_template("nirwals.xml", nirwals=nirwals.model_dump())
 
         assert f"<ArtStation>{station}</ArtStation>" in xml
+
+
+class TestTarget:
+    @pytest.mark.parametrize("full", [False, True])
+    def test_target(self, full: bool, base_target):
+        target = base_target
+
+        if full:
+            target.proper_motion_ra = 17
+            target.proper_motion_dec = -3
+        else:
+            target.proper_motion_ra = 0
+            target.proper_motion_dec = 0
+
+        xml = render_template("target.xml", target=target.model_dump())
+
+        if full:
+            assert "RightAscensionDot" in xml
+            assert "DeclinationDot" in xml
+        else:
+            assert "RightAscensionDot" not in xml
+            assert "DeclinationDot" not in xml
+
+        validate_xml(xml)
+        assert True
+
+    @pytest.mark.parametrize(
+        "proper_motion_ra, proper_motion_dec, required",
+        [(0, 0, False), (0, 34, True), (45, 0, True), (-5, -7, True)],
+    )
+    def test_proper_motion(
+        self,
+        proper_motion_ra: float,
+        proper_motion_dec: float,
+        required: bool,
+        base_target,
+    ):
+        target = base_target
+
+        target.proper_motion_ra = proper_motion_ra
+        target.proper_motion_dec = proper_motion_dec
+
+        xml = render_template("target.xml", target=target.model_dump())
+
+        if required:
+            assert "RightAscensionDot" in xml
+            assert "DeclinationDot" in xml
+        else:
+            assert "RightAscensionDot" not in xml
+            assert "DeclinationDot" not in xml
+
+        validate_xml(xml)
+        assert True

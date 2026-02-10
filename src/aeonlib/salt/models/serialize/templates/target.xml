@@ -1,0 +1,38 @@
+<Target id="">
+    <Name>{{ target.name }}</Name>
+    <TargetCode>b0081d59-bd08-46f8-aa11-0c2be0544a41</TargetCode>
+    <TargetType>SuperSoft</TargetType>
+    <Coordinates>
+        <RightAscension>
+            <Hours>0</Hours>
+            <Minutes>0</Minutes>
+            <Seconds>0.0</Seconds>
+        </RightAscension>
+        <Declination>
+            <Sign>-</Sign>
+            <Degrees>0</Degrees>
+            <Arcminutes>0</Arcminutes>
+            <Arcseconds>0.0</Arcseconds>
+        </Declination>
+        {% if target.proper_motion_ra or target.proper_motion_dec %}
+            <ProperMotionAndEpoch>
+                <RightAscensionDot>
+                    <Value>{{ target.proper_motion_ra }}</Value>
+                    <Units>arcseconds/year</Units>
+                </RightAscensionDot>
+                <DeclinationDot>
+                    <Value>{{ target.proper_motion_dec }}</Value>
+                    <Units>arcseconds/year</Units>
+                </DeclinationDot>
+                <Epoch>{{ target.epoch | year_as_iso_timestamp }}</Epoch>
+            </ProperMotionAndEpoch>
+        {% endif %}
+        <Equinox>2000.0</Equinox>
+    </Coordinates>
+    <MagnitudeRange>
+        <Bandpass>{{ target.magnitude_range.bandpass }}</Bandpass>
+        <Minimum>{{ target.magnitude_range.min_magnitude }}</Minimum>
+        <Maximum>{{ target.magnitude_range.max_magnitude }}</Maximum>
+    </MagnitudeRange>
+    <Mandatory>true</Mandatory>
+</Target>
