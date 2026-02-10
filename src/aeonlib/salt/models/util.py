@@ -111,6 +111,10 @@ def _wave_plate_station(angle):
         return f"{(angle / 11.25):.0f}_{angle:.2f}"
 
 
+def _iodine_cell_position(value):
+    return value if value else "OUT"
+
+
 def _nirwals_articulation_station(angle):
     if angle < 1e-5:
         return "0_0"
@@ -169,6 +173,7 @@ def render_template(
     env.trim_blocks = True
     env.lstrip_blocks = True
     env.filters["wave_plate_station"] = _wave_plate_station
+    env.filters["iodine_cell_position"] = _iodine_cell_position
     env.filters["nirwals_articulation_station"] = _nirwals_articulation_station
     env.filters["year_as_iso_timestamp"] = _year_as_iso_timestamp
     env.filters["sign"] = _sign
