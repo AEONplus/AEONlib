@@ -172,7 +172,8 @@ def render_template(
     env.filters["nirwals_articulation_station"] = _nirwals_articulation_station
     env.filters["year_as_iso_timestamp"] = _year_as_iso_timestamp
     env.filters["sign"] = _sign
-    env.globals.update({"uuid": _uuid, "to_angle": _to_angle})
+    env.globals["uuid"] = _uuid
+    env.globals["to_angle"] = _to_angle
     template = env.get_template(template_path)
     return template.render(**kwargs)
 
