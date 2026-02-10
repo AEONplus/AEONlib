@@ -4015,7 +4015,21 @@
         </xs:annotation>
         <xs:choice>
             <xs:element name="NirArc" type="NirArc"/>
+            <xs:element name="NirDefaultArc">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value=""/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
             <xs:element name="NirCalibrationFlat" type="NirCalibrationFlat"/>
+            <xs:element name="NirDefaultCalibrationFlat">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value=""/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
             <xs:element name="NirSpectroscopicArc">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
@@ -4986,7 +5000,7 @@
 
     <xs:element name="NirDitherOffset" type="NirDitherOffset"/>
 
-    <xs:element name="NirDitherStep" type="NirDitherStep"/>
+    <xs:element name="DitherStep" type="NirDitherStep"/>
 
     <xs:element name="NirDitherPattern" type="NirDitherPattern"/>
 
