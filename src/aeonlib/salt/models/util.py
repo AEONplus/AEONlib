@@ -1,5 +1,7 @@
+import datetime
 import io
 import pathlib
+import zoneinfo
 from typing import Any
 
 import astropy.units as u
@@ -115,6 +117,11 @@ def _nirwals_articulation_station(angle):
         return f"{(2 * angle):.0f}_{angle:.1f}"
 
 
+def _year_as_iso_timestamp(year):
+    t = datetime.datetime(year, 1, 1, 0, 0, 0, 0, tzinfo=zoneinfo.ZoneInfo("UTC"))
+    return t.isoformat()
+
+
 def render_template(
     template_path: str, loader: BaseLoader | None = None, **kwargs
 ) -> str:
@@ -150,6 +157,7 @@ def render_template(
     env.lstrip_blocks = True
     env.filters["wave_plate_station"] = _wave_plate_station
     env.filters["nirwals_articulation_station"] = _nirwals_articulation_station
+    env.filters["year_as_iso_timestamp"] = _year_as_iso_timestamp
     template = env.get_template(template_path)
     return template.render(**kwargs)
 
