@@ -123,6 +123,10 @@ def _year_as_iso_timestamp(year):
     return t.isoformat()
 
 
+def _uuid() -> str:
+    return str(uuid.uuid4())
+
+
 def render_template(
     template_path: str, loader: BaseLoader | None = None, **kwargs
 ) -> str:

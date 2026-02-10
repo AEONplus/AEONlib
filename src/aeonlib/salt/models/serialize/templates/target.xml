@@ -1,6 +1,6 @@
-<Target id="">
+<Target id="{{ uuid() }}">
     <Name>{{ target.name }}</Name>
-    <TargetCode>b0081d59-bd08-46f8-aa11-0c2be0544a41</TargetCode>
+    <TargetCode>{{ uuid() }}</TargetCode>
     <TargetType>SuperSoft</TargetType>
     <Coordinates>
         <RightAscension>
