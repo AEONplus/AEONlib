@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Self
 
 import astropy.coordinates
-from pydantic import BaseModel, NonNegativeFloat, field_validator, model_validator
+from pydantic import BaseModel, field_validator, model_validator
 
 from aeonlib.models import SiderealTarget
 from aeonlib.salt.models.types import MagnitudeBandpass, TargetType
