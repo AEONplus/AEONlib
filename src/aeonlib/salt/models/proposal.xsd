@@ -637,7 +637,7 @@
             <xs:element name="TelescopeConfig" type="TelescopeConfig"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="FindingChart" type="FindingChart"/>
             <xs:element minOccurs="0" name="ReferenceStar" type="ReferenceStar"/>
-            <xs:element minOccurs="0" name="IncludeInFocusImage">
+            <xs:element minOccurs="0" name="IncludeFocusedImage">
                 <xs:simpleType>
                     <xs:restriction base="xs:string">
                         <xs:enumeration value=""/>
@@ -3295,7 +3295,7 @@
                     </xs:restriction>
                 </xs:simpleType>
             </xs:element>
-            <xs:element fixed="seconds" name="Units" type="xs:string"/>
+            <xs:element fixed="arcseconds" name="Units" type="xs:string"/>
         </xs:all>
 
     </xs:complexType>

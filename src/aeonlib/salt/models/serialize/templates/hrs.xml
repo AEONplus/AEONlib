@@ -9,7 +9,7 @@
         <TargetLocation>Star</TargetLocation>
         <FibreSeparation>
             <Value>{{ to_angle(hrs.fibre_separation).arcsec }}</Value>
-            <Units>seconds</Units>
+            <Units>arcseconds</Units>
         </FibreSeparation>
         <UseThArWithIodineCell>true</UseThArWithIodineCell>
     </HrsConfig>
