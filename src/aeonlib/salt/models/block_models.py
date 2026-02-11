@@ -14,6 +14,7 @@ from pydantic import (
     PositiveFloat,
     model_validator,
     AfterValidator,
+    Field,
 )
 
 from aeonlib.models import Angle, Window
@@ -197,8 +198,16 @@ class Acquisition(BaseModel, validate_assignment=True):
     reference_star
         Reference star on which to acquire. This is only needed if acquiring on the
         target itself is unfeasible.
-    include_in_focus_image
-        Whether an in-focus acquisition image is required.
+    position_angle
+        Position angle for the observation. This can be an angle or the string
+        "parallactic".
+    do_not_flip_position_angle
+        Whether the position angle may be flipped by 180 degrees. This must not be None
+        if the position angle value is angle (rather than "parallactic" or None). If the
+        position angle value is not an angle, the value of do_not_flip_position_angle is
+        ignored.
+    include_focused_image
+        Whether an in-focus focused acquisition image is required.
     """
 
     finder_charts: list[FilePath]
@@ -206,8 +215,25 @@ class Acquisition(BaseModel, validate_assignment=True):
         "Johnson V"
     )
     exposure_time: PositiveDuration = 1.0 * u.s
+    position_angle: Annotated[Angle | Literal["parallactic"] | None, LowerCaseValidator]
     reference_star: ReferenceStar | None = None
+    do_not_flip_position_angle: bool | None = Field(
+        default_factory=lambda data: None
+        if isinstance(data["position_angle"], str) or data["position_angle"] is None
+        else False
+    )
     include_focused_image: bool = False
+
+    @model_validator(mode="after")
+    def check_do_not_flip_position_angle(self):
+        if not isinstance(self.position_angle, str) and self.position_angle is not None:
+            if self.do_not_flip_position_angle is None:
+                raise ValueError(
+                    "The do_not_flip_position_angle property must not be None if the "
+                    "position_angle property is an angle."
+                )
+
+        return self
 
 
 class ReferenceStar(BaseModel, validate_assignment=True):

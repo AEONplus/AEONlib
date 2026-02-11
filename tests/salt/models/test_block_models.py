@@ -1,10 +1,11 @@
 from contextlib import nullcontext
+from typing import Any
 
 import astropy.coordinates
 import pytest
 from pydantic import ValidationError
 
-from aeonlib.salt.models import Block
+from aeonlib.salt.models import Block, Acquisition
 from aeonlib.salt.models.block_models import ReferenceStar
 
 
@@ -49,6 +50,64 @@ class TestAcquisition:
     def test_acquisition(self, base_acquisition):
         """Test that acquisitions can be built."""
         assert True
+
+    @pytest.mark.parametrize(
+        "position_angle, do_not_flip, expected",
+        [
+            (45, True, nullcontext()),
+            (-34, False, nullcontext()),
+            (124, None, pytest.raises(ValueError)),
+            ("parallactic", True, nullcontext()),
+            ("parallactic", False, nullcontext()),
+            ("parallactic", None, nullcontext()),
+            (None, True, nullcontext()),
+            (None, False, nullcontext()),
+            (None, None, nullcontext()),
+        ],
+    )
+    def test_do_not_flip_position_angle(
+        self, position_angle: Any, do_not_flip: bool | None, expected, base_acquisition
+    ):
+        """
+        Test that the do_not_flip_position_angle field must be True or False if the
+        position angle value is an actual angle (rather than "parallactic" or None) and
+        must be None otherwise.
+        """
+        a = base_acquisition
+        with expected:
+            Acquisition(
+                finder_charts=a.finder_charts,
+                filter=a.filter,
+                exposure_time=a.exposure_time,
+                reference_star=a.reference_star,
+                position_angle=position_angle,
+                do_not_flip_position_angle=do_not_flip,
+                include_focused_image=a.include_focused_image,
+            )
+
+    @pytest.mark.parametrize(
+        "position_angle, do_not_flip",
+        [(63, False), ("parallactic", None), (None, None)],
+    )
+    def test_default_do_not_flip_position_angle(
+        self, position_angle: Any, do_not_flip: bool | None, base_acquisition
+    ):
+        """
+        Test that the default value for the do_not_flip_position_angle field is correct.
+        """
+        a = base_acquisition
+        acquisition = Acquisition(
+            finder_charts=a.finder_charts,
+            filter=a.filter,
+            exposure_time=a.exposure_time,
+            reference_star=a.reference_star,
+            position_angle=position_angle,
+            include_focused_image=a.include_focused_image,
+        )
+        if do_not_flip is not None:
+            assert acquisition.do_not_flip_position_angle == do_not_flip
+        else:
+            assert acquisition.do_not_flip_position_angle is None
 
 
 class TestReferenceStar:
