@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import uuid
 from typing import Annotated, Literal, Self
 
 import astropy.units as u
@@ -103,7 +104,7 @@ class Block(BaseModel, validate_assignment=True):
     """
 
     name: str
-    identifier: str | None = None
+    identifier: str = Field(default_factory=lambda: str(uuid.uuid4()))
     comments: str | None = None
     priority: Annotated[int, GreaterEqual(0), LessEqual(4)]
     ranking: Annotated[
