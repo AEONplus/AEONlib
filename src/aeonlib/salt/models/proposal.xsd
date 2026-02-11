@@ -708,9 +708,10 @@
             <xs:element name="Ranking" type="Ranking"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="InPool">
                 <xs:complexType>
-                    <xs:sequence>
+                    <xs:choice>
                         <xs:element name="PoolCode" type="xs:string"/>
-                    </xs:sequence>
+                        <xs:element name="PoolName" type="xs:string"/>
+                    </xs:choice>
                 </xs:complexType>
             </xs:element>
             <xs:element name="BlockType" type="BlockType"/>
