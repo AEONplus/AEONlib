@@ -1,4 +1,4 @@
-<DitherStep>
+<NirDitherStep>
     <Offset>
         <X>{{ step.horizontal_offset }}</X>
         <Y>{{ step.vertical_offset }}</Y>
@@ -17,4 +17,4 @@
         <Groups>{{ step.num_groups }}</Groups>
     </Detector>
     <ExposureType>{{ step.exposure_type }}</ExposureType>
-</DitherStep>
+</NirDitherStep>

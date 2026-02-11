@@ -3,11 +3,11 @@
     <Cycles>{{ nirwals.num_cycles }}</Cycles>
     <NirProcedure>
         <ProcedureType>Normal</ProcedureType>
-        <DitherPattern>
+        <NirDitherPattern>
             {% for step in nirwals.dither_pattern %}
                 {% include "nirwals_dither_pattern_step.xml" %}
             {% endfor %}
-        </DitherPattern>
+        </NirDitherPattern>
     </NirProcedure>
     <NirConfig>
         <FilterId>{{ nirwals.filter }}</FilterId>
