@@ -17,11 +17,11 @@
         {% if target.proper_motion_ra or target.proper_motion_dec %}
             <ProperMotionAndEpoch>
                 <RightAscensionDot>
-                    <Value>{{ target.proper_motion_ra }}</Value>
+                    <Value>{{ target.proper_motion_ra / 1000 }}</Value>
                     <Units>arcseconds/year</Units>
                 </RightAscensionDot>
                 <DeclinationDot>
-                    <Value>{{ target.proper_motion_dec }}</Value>
+                    <Value>{{ target.proper_motion_dec / 1000 }}</Value>
                     <Units>arcseconds/year</Units>
                 </DeclinationDot>
                 <Epoch>{{ target.epoch | year_as_iso_timestamp }}</Epoch>
