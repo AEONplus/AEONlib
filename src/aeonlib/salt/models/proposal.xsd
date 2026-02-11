@@ -637,6 +637,13 @@
             <xs:element name="TelescopeConfig" type="TelescopeConfig"/>
             <xs:element maxOccurs="unbounded" minOccurs="0" name="FindingChart" type="FindingChart"/>
             <xs:element minOccurs="0" name="ReferenceStar" type="ReferenceStar"/>
+            <xs:element minOccurs="0" name="IncludeInFocusImage">
+                <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value=""/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
         </xs:sequence>
     </xs:complexType>
 
@@ -3849,7 +3856,7 @@
             </xs:documentation>
         </xs:annotation>
         <xs:sequence>
-            <xs:element maxOccurs="unbounded" name="DitherStep" type="NirDitherStep"/>
+            <xs:element maxOccurs="unbounded" name="NirDitherStep" type="NirDitherStep"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -3875,7 +3882,7 @@
         </xs:annotation>
         <xs:sequence>
             <xs:element default="Normal" name="ProcedureType" type="NirProcedureType"/>
-            <xs:element name="DitherPattern" type="NirDitherPattern"/>
+            <xs:element name="NirDitherPattern" type="NirDitherPattern"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -5000,7 +5007,7 @@
 
     <xs:element name="NirDitherOffset" type="NirDitherOffset"/>
 
-    <xs:element name="DitherStep" type="NirDitherStep"/>
+    <xs:element name="NirDitherStep" type="NirDitherStep"/>
 
     <xs:element name="NirDitherPattern" type="NirDitherPattern"/>
 
