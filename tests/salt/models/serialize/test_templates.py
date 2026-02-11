@@ -264,6 +264,28 @@ class TestRssTemplates:
         assert "<QWStation>28_315.00</QWStation>" in xml
 
 
+class TestHrs:
+    @pytest.mark.parametrize(
+        "mode, iodine_cell_position",
+        [
+            ("low resolution", "OUT"),
+            ("medium resolution", "OUT"),
+            ("high resolution", "OUT"),
+            ("high stability", "ThAr"),
+        ],
+    )
+    def test_hrs(self, mode: str, iodine_cell_position: str, base_hrs):
+        hrs = base_hrs
+        hrs.mode = mode
+
+        xml = render_template("hrs.xml", hrs=hrs.model_dump())
+
+        assert f"<IodineCellPosition>{iodine_cell_position}</IodineCellPosition>" in xml
+
+        validate_xml(xml)
+        assert True
+
+
 class TestNirwalsTemplates:
     def test_nirwals_dither_pattern_step(self, base_nirwals_dither_pattern_step):
         """Test that the NIRWALS dither pattern step templates generates valid XML."""
@@ -429,23 +451,34 @@ class TestTarget:
         assert True
 
 
-class TestHrs:
-    @pytest.mark.parametrize(
-        "mode, iodine_cell_position",
-        [
-            ("low resolution", "OUT"),
-            ("medium resolution", "OUT"),
-            ("high resolution", "OUT"),
-            ("high stability", "ThAr"),
-        ],
-    )
-    def test_hrs(self, mode: str, iodine_cell_position: str, base_hrs):
-        hrs = base_hrs
-        hrs.mode = mode
+class TestAcquisition:
+    @pytest.mark.parametrize("full", [False, True])
+    def test_acquisition(
+        self, full: bool, base_acquisition, base_reference_star, base_target
+    ):
+        """Test that the acquisition template generates valid XML."""
+        acquisition = base_acquisition
+        target = base_target
 
-        xml = render_template("hrs.xml", hrs=hrs.model_dump())
+        if full:
+            acquisition.reference_star = base_reference_star
+            acquisition.include_focused_image = True
+        else:
+            acquisition.reference_star = None
+            acquisition.include_focused_image = False
 
-        assert f"<IodineCellPosition>{iodine_cell_position}</IodineCellPosition>" in xml
+        xml = render_template(
+            "acquisition.xml",
+            acquisition=acquisition.model_dump(),
+            target=target.model_dump(),
+        )
+
+        if full:
+            assert "<ReferenceStar>" in xml
+            assert "<IncludeFocusedImage/>" in xml
+        else:
+            assert "<ReferenceStar>" not in xml
+            assert "<IncludeFocusedImage/>" not in xml
 
         validate_xml(xml)
         assert True

@@ -1,0 +1,54 @@
+<Acquisition>
+    <Name>Acquisition</Name>
+    {% include "target.xml" %}
+    <TelescopeConfig>
+        <Name>Telescope Configuration</Name>
+        <Iterations>1</Iterations>
+        <PayloadConfig>
+            <Name>Payload Configuration</Name>
+            <Type>Acquisition</Type>
+            <GuideMethod>None</GuideMethod>
+            <PellicleConfig>false</PellicleConfig>
+            <WaitOnOtherInstrument>true</WaitOnOtherInstrument>
+            <Salticam>
+                <Name>Salticam Configuration</Name>
+                <Cycles>1</Cycles>
+                <SalticamProcedure>
+                    <SalticamFilterArray>
+                        <Filter>{{ acquisition.filter }}</Filter>
+                        <ExposureTime>
+                            <Value>{{ acquisition.exposure_time }}</Value>
+                            <Units>seconds</Units>
+                        </ExposureTime>
+                    </SalticamFilterArray>
+                </SalticamProcedure>
+                <SalticamDetector>
+                    <DetMode>Normal</DetMode>
+                    <PreBinRows>2</PreBinRows>
+                    <PreBinCols>2</PreBinCols>
+                    <ExposureType>Science</ExposureType>
+                    <Gain>Bright</Gain>
+                    <ReadoutSpeed>Fast</ReadoutSpeed>
+                    <Iterations>1</Iterations>
+                </SalticamDetector>
+                <MinimumSN>0</MinimumSN>
+                <InCalibration>false</InCalibration>
+            </Salticam>
+        </PayloadConfig>
+    </TelescopeConfig>
+    {% for finder_chart in finder_charts %}
+        <FindingChart>
+            <Path>{{ finder_chart }}</Path>
+        </FindingChart>
+    {% endfor %}
+    {% if acquisition.reference_star %}
+        <ReferenceStar>
+            <RightAscension>{{ acquisition.reference_star.ra }}</RightAscension>
+            <Declination>{{ acquisition.reference_star.dec }}</Declination>
+            <Equinox>{{ acquisition.reference_star.equinox }}</Equinox>
+        </ReferenceStar>
+    {% endif %}
+    {% if acquisition.include_focused_image %}
+        <IncludeFocusedImage/>
+    {% endif %}
+</Acquisition>
