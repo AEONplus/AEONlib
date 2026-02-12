@@ -19,7 +19,7 @@ from pydantic import (
 )
 
 from aeonlib.models import Angle, Window
-from aeonlib.salt.models import SaltSiderealTarget
+from aeonlib.salt.models import SaltSiderealTarget, Salticam, Rss, Hrs, Nirwals
 from aeonlib.salt.models.util import LowerCaseValidator, CapitalizingSerializer
 from aeonlib.salt.models.types import (
     PositiveDuration,
@@ -28,6 +28,9 @@ from aeonlib.salt.models.types import (
     SkyTransparency,
 )
 from aeonlib.salt.validators import GreaterEqual, LessEqual, check_in_visibility_range
+
+
+Instrument = Salticam | Rss | Hrs | Nirwals
 
 
 class Block(BaseModel, validate_assignment=True):
@@ -117,7 +120,7 @@ class Block(BaseModel, validate_assignment=True):
     windows: list[Window] | None = None
     target: SaltSiderealTarget
     acquisition: Acquisition
-    instrument: None
+    instrument: Instrument
     pool: str | None = None
     data_notification: Annotated[
         Literal["normal", "fast"], LowerCaseValidator, CapitalizingSerializer
