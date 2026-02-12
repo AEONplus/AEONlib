@@ -1,0 +1,106 @@
+<Block notForObserving="false" SchemaVersion="6.2">
+    <Name>{{ block.name }}</Name>
+    <BlockCode>{{ block.identifier }}</BlockCode>
+    <Visits>{{ block.num_visits }}</Visits>
+    <Wait>
+        <Value>{{ block.min_nights_between_visits }}</Value>
+        <Units>days</Units>
+    </Wait>
+    {% if block.comments %}
+        <Comments>{{ block.comments }}</Comments>
+    {% endif %}
+    <Priority>{{ block.priority }}</Priority>
+    <Ranking>{{ block.ranking }}</Ranking>
+    <BlockType>Science</BlockType>
+    <Charged>true</Charged>
+    <Transparency>{{ block.constraints.transparency }}</Transparency>
+    <MaximumLunarPhase>
+        <Value>{{ block.constraints.max_lunar_phase_percentage }}</Value>
+        <Units>%</Units>
+    </MaximumLunarPhase>
+    <MinimumLunarAngularDistance>
+        <Value>{{ block.constraints.min_lunar_distance }}</Value>
+        <Units>degrees</Units>
+    </MinimumLunarAngularDistance>
+    <SeeingConstraint>
+        <Maximum>
+            <Value>{{ block.constraints.max_seeing }}</Value>
+            <Units>arcseconds</Units>
+        </Maximum>
+        <Minimum>
+            <Value>0.1</Value>
+            <Units>arcseconds</Units>
+        </Minimum>
+    </SeeingConstraint>
+    <SubBlock>
+        <Name>[SubBlock]</Name>
+        <Iterations>1</Iterations>
+        <SubSubBlock>
+            <Name>[SubSubBlock]</Name>
+            <Iterations>1</Iterations>
+            <Pointing>
+                <Name>[Pointing]</Name>
+                <Observation>
+                    <Name>[Observation]</Name>
+                    {% with acquisition=block.acquisition, target=block.target %}
+                        {% include "acquisition.xml" %}
+                    {% endwith %}
+                    <TelescopeConfig>
+                        <Name>[Telescope Configuration]</Name>
+                        <Iterations>1</Iterations>
+                        {% if block.acquisition.position_angle is not none %}
+                            <OnSkyPositionAngle>
+                                {% if block.acquisition.position_angle != "parallactic" %}
+                                    <Value>{{ block.acquisition.position_angle }}</Value>
+                                    <Units>degrees</Units>
+                                    <Fixed>
+                                        {% if block.acquisition.do_not_flip_position_angle %}
+                                            true
+                                        {% else %}
+                                            false
+                                        {% endif %}
+                                    </Fixed>
+                                {% else %}
+                                    <UseParallacticAngle/>
+                                {% endif %}
+                            </OnSkyPositionAngle>
+                        {% endif %}
+                        <PayloadConfig>
+                            <Name>[Payload Configuration]</Name>
+                            <Type>Science</Type>
+                            <GuideMethod>Default</GuideMethod>
+                            <PellicleConfig>false</PellicleConfig>
+                            <WaitOnOtherInstrument>true</WaitOnOtherInstrument>
+                            {% with instrument=block.instrument %}
+                                {% if instrument.instrument_name == "Salticam" %}
+                                    {% with salticam=instrument %}
+                                        {% include "salticam.xml" %}
+                                    {% endwith %}
+                                {% endif %}
+                                {% if instrument.instrument_name == "RSS" %}
+                                    {% with rss=instrument %}
+                                        {% include "rss.xml" %}
+                                    {% endwith %}
+                                {% endif %}
+                                {% if instrument.instrument_name == "HRS" %}
+                                    {% with hrs=instrument %}
+                                        {% include "hrs.xml" %}
+                                    {% endwith %}
+                                {% endif %}
+                                {% if instrument.instrument_name == "NIRWALS" %}
+                                    {% with nirwals=instrument %}
+                                        {% include "nirwals.xml" %}
+                                    {% endwith %}
+                                {% endif %}
+                            {% endwith %}
+                        </PayloadConfig>
+                    </TelescopeConfig>
+                    <PipelineConfig>
+                        <Notification>Normal</Notification>
+                        <ReductionDocumentationFormat>HTML</ReductionDocumentationFormat>
+                    </PipelineConfig>
+                </Observation>
+            </Pointing>
+        </SubSubBlock>
+    </SubBlock>
+</Block>

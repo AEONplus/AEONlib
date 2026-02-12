@@ -1,3 +1,5 @@
+from typing import Any
+
 import astropy.units as u
 import pytest
 from astropy.coordinates import Angle
@@ -479,6 +481,75 @@ class TestAcquisition:
         else:
             assert "<ReferenceStar>" not in xml
             assert "<IncludeFocusedImage/>" not in xml
+
+        validate_xml(xml)
+        assert True
+
+
+class TestBlock:
+    @pytest.mark.parametrize("full", [False, True])
+    def test_block(self, full: bool, base_block):
+        """Test that the block template generates valid XML."""
+        block = base_block
+
+        if full:
+            block.comments = "some comment"
+            block.acquisition.position_angle = 67 * u.deg
+        else:
+            block.comments = None
+            block.acquisition.position_angle = None
+
+        xml = render_template("block.xml", block=block.model_dump())
+
+        if full:
+            assert "<Comments>" in xml
+            assert "<OnSkyPositionAngle>" in xml
+
+        validate_xml(xml)
+        assert True
+
+    @pytest.mark.parametrize(
+        "position_angle, do_not_flip, expected, not_expected",
+        [
+            (
+                17 * u.deg,
+                True,
+                ["OnSkyPositionAngle", "Fixed"],
+                ["UseParallacticAngle"],
+            ),
+            (
+                "parallactic",
+                False,
+                ["OnSkyPositionAngle", "UseParallacticAngle"],
+                ["Fixed"],
+            ),
+            (
+                None,
+                True,
+                [],
+                ["OnSkyPositionAngle", "Fixed", "UseParallacticAngle"],
+            ),
+        ],
+    )
+    def test_position_angle(
+        self,
+        position_angle: Any,
+        do_not_flip: bool,
+        expected: list[str],
+        not_expected: list[str],
+        base_block,
+    ):
+        """Test that the position angle is handled correctly in the generated XML."""
+        block = base_block
+        block.acquisition.position_angle = position_angle
+        block.acquisition.do_not_flip_position_angle = do_not_flip
+
+        xml = render_template("block.xml", block=block.model_dump())
+
+        for e in expected:
+            assert e in xml
+        for ne in not_expected:
+            assert ne not in xml
 
         validate_xml(xml)
         assert True
