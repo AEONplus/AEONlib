@@ -7,6 +7,7 @@ from pydantic import ValidationError
 
 from aeonlib.salt.models import Block, Acquisition
 from aeonlib.salt.models.block_models import ReferenceStar
+from aeonlib.salt.models.util import render_template, validate_xml
 
 
 class TestBlock:
@@ -30,13 +31,60 @@ class TestBlock:
         Test that the maximum number of visits must not be less than the number of
         visits.
         """
-        block = base_block.model_dump()
-        block["num_visits"] = num_visits
-        block["max_num_visits"] = max_num_visits
+        block = base_block
 
         with expectation:
-            Block(**block)  # type: ignore
+            block.num_visits = num_visits
+            block.max_num_visits = max_num_visits
 
+        assert True
+
+    def test_salticam(self, base_block, base_salticam):
+        """Test that Salticam as a block instrument is handled correctly."""
+        block = base_block
+        block.instrument = base_salticam
+
+        xml = render_template("block.xml", block=block.model_dump())
+
+        assert "<Salticam>" in xml
+
+        validate_xml(xml)
+        assert True
+
+    def test_rss(self, base_block, base_rss):
+        """Test that RSS as a block instrument is handled correctly."""
+        block = base_block
+        block.instrument = base_rss
+
+        xml = render_template("block.xml", block=block.model_dump())
+
+        assert "<Rss>" in xml
+
+        validate_xml(xml)
+        assert True
+
+    def test_hrs(self, base_block, base_hrs):
+        """Test that HRS as a block instrument is handled correctly."""
+        block = base_block
+        block.instrument = base_hrs
+
+        xml = render_template("block.xml", block=block.model_dump())
+
+        assert "<Hrs>" in xml
+
+        validate_xml(xml)
+        assert True
+
+    def test_nirwals(self, base_block, base_nirwals):
+        """Test that RSS as a block instrument is handled correctly."""
+        block = base_block
+        block.instrument = base_nirwals
+
+        xml = render_template("block.xml", block=block.model_dump())
+
+        assert "<Nir>" in xml
+
+        validate_xml(xml)
         assert True
 
 

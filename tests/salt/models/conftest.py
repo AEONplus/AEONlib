@@ -46,6 +46,7 @@ def base_block(base_acquisition, base_constraints, base_target, base_salticam):
         priority=1,
         ranking="high",
         num_visits=1,
+        min_nights_between_visits=0,
         constraints=base_constraints,
         target=base_target,
         acquisition=base_acquisition,
