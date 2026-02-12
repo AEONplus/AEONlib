@@ -39,6 +39,8 @@ class Salticam(BaseModel, validate_assignment=True):
 
     Parameters
     ----------
+    instrument_name:
+        The instrument name, which is "Salticam".
     num_cycles
         How often to cycle through the filter sequence.
     filter_sequence
@@ -51,6 +53,7 @@ class Salticam(BaseModel, validate_assignment=True):
         Whether a nighttime flat should be taken for the observation.
     """
 
+    instrument_name: Literal["Salticam"] = "Salticam"
     num_cycles: PositiveInt = 1
     filter_sequence: Annotated[list[SalticamFilterSequenceStep], MinLen(1)]
     detector: SalticamDetector

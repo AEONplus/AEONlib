@@ -77,6 +77,8 @@ class Rss(BaseModel, validate_assignment=True):
 
     Parameters
     ----------
+    instrument_name:
+        The instrument name, which is "RSS".
     num_cycles
         How often to cycle through the wave plate sequence. This is only relevant if
         you perform polarimetry.
@@ -88,6 +90,7 @@ class Rss(BaseModel, validate_assignment=True):
         Dither pattern.
     """
 
+    instrument_name: Literal["RSS"] = "RSS"
     num_cycles: PositiveInt = 1
     configuration: (
         RssImaging

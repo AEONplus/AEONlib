@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Annotated
+from typing import Annotated, Literal
 
 from astropy import units as u
 from pydantic import (
@@ -28,6 +28,8 @@ class Hrs(BaseModel, validate_assignment=True):
 
     Parameters
     ----------
+    instrument_name:
+        The instrument name, which is "HRS". This property is not serialized.
     num_cycles
         How often the exposure time patterns shall be executed.
     mode
@@ -44,6 +46,7 @@ class Hrs(BaseModel, validate_assignment=True):
         The detector setup for the blue arm.
     """
 
+    instrument_name: Literal["HRS"] = "HRS"
     num_cycles: PositiveInt = 1
     mode: Annotated[HrsMode, LowerCaseValidator, UpperCaseSerializer]
     fibre_separation: Annotated[

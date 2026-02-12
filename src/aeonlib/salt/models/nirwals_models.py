@@ -41,6 +41,8 @@ class Nirwals(BaseModel, validate_assignment=True):
 
     Parameters
     ----------
+    instrument_name:
+        The instrument name, which is "NIRWALS".
     num_cycles
         The number of times the dither pattern should be done.
     grating
@@ -65,6 +67,7 @@ class Nirwals(BaseModel, validate_assignment=True):
 
     """
 
+    instrument_name: Literal["NIRWALS"] = "NIRWALS"
     num_cycles: PositiveInt = 1
     grating: Annotated[NirwalsGrating, LowerCaseValidator]
     grating_angle: Annotated[Angle, GreaterEqual(0 * u.deg), LessEqual(100 * u.deg)]
