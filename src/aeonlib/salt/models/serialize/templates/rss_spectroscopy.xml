@@ -8,7 +8,7 @@
         {% if configuration.mask %}
             <MOS>
                 <SlitMaskFile>
-                    <Path>A{{ configuration.mask.absolute() }}</Path>
+                    <Path>{{ configuration.mask.absolute() }}</Path>
                 </SlitMaskFile>
             </MOS>
         {% endif %}
