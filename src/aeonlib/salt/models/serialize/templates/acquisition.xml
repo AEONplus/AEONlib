@@ -36,7 +36,7 @@
             </Salticam>
         </PayloadConfig>
     </TelescopeConfig>
-    {% for finder_chart in finder_charts %}
+    {% for finder_chart in acquisition.finder_charts %}
         <FindingChart>
             <Path>{{ finder_chart }}</Path>
         </FindingChart>
