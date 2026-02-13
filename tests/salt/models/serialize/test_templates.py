@@ -1,3 +1,5 @@
+import re
+from copy import deepcopy
 from typing import Any
 
 import astropy.units as u
@@ -553,3 +555,16 @@ class TestBlock:
 
         validate_xml(xml)
         assert True
+
+
+class TestBlocks:
+    def test_blocks(self, base_request):
+        request = base_request
+        block = base_request.blocks[0]
+        block_copy = deepcopy(block)
+        request.blocks.append(block_copy)
+
+        xml = render_template("blocks.xml", blocks=request.model_dump()["blocks"])
+
+        assert "<Blocks>" in xml
+        assert len(re.findall(r"<Block ", xml)) == 2

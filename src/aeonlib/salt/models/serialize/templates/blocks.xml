@@ -1,0 +1,5 @@
+<Blocks>
+    {% for block in blocks %}
+        {% include "block.xml" %}
+    {% endfor %}
+</Blocks>
