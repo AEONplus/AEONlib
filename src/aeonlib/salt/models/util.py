@@ -7,6 +7,7 @@ from typing import Any
 
 import astropy.units as u
 from astropy.coordinates import Angle
+from bs4 import BeautifulSoup
 from jinja2 import Environment, PackageLoader, select_autoescape, BaseLoader
 from lxml import etree
 from pydantic import PlainSerializer, BeforeValidator
@@ -232,3 +233,49 @@ A serializer for converting string values to upper case.
 
 This serializer is only intended for use in the serialization of SALT data models.
 """
+
+
+def replace_attachment_paths(xml: str, replacements: dict[pathlib.Path, str]) -> str:
+    """
+    Replace the attachment paths in the given XML.
+
+    Parameters
+    ----------
+    xml
+        XML.
+    replacements
+        Dictionary of attachment paths and their replacements.
+
+    Returns
+    -------
+    The XML with the attachment paths updated.
+
+    Raises
+    ------
+    ValueError
+        If an attachment is missing in the dictionary of replacements.
+    """
+
+    # Resolve all attachment paths
+    replacements_resolved = {k.resolve(): v for k, v in replacements.items()}
+
+    # Check whether there are duplicate keys or values
+    if len(set(replacements_resolved.keys())) != len(replacements):
+        raise ValueError(
+            "Two or more keys of the replacements dictionary resolve to the same path."
+        )
+    if len(set(replacements_resolved.values())) != len(replacements_resolved.values()):
+        raise ValueError("There duplicate values in the replacements dictionary.")
+
+    # Replace the attachment paths
+    soup = BeautifulSoup(xml, "xml")
+    for path_element in soup.find_all("Path"):
+        path_text = path_element.text.strip()
+        path = pathlib.Path(path_text).resolve()
+        if path not in replacements_resolved:
+            raise ValueError(
+                f"Path missing in replacements dictionary: {path_text} (resolved: {str(path)}"
+            )
+        path_element.string = replacements_resolved[path]
+
+    return soup.prettify()
