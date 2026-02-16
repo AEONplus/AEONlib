@@ -92,7 +92,7 @@ def validate_xml(xml: str) -> None:
         _load_schema()
 
     try:
-        xml_doc = etree.parse(io.StringIO(xml))
+        xml_doc = etree.parse(io.BytesIO(xml.encode("utf-8")))
         _schema.assertValid(xml_doc)
     except (etree.DocumentInvalid, etree.XMLSyntaxError) as e:
         raise ValueError(str(e))
