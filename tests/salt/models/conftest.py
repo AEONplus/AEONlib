@@ -1,4 +1,5 @@
 import pathlib
+import uuid
 
 import astropy.coordinates
 import pytest
@@ -86,7 +87,7 @@ def base_constraints():
 @pytest.fixture()
 def base_acquisition():
     finder_chart = (
-            pathlib.Path(__file__).parent.parent / "data" / "dummy_finder_chart_1.pdf"
+        pathlib.Path(__file__).parent.parent / "data" / "dummy_finder_chart_1.pdf"
     )
     return Acquisition(finder_charts=[finder_chart], position_angle=45 * u.deg)
 
@@ -237,3 +238,21 @@ def base_nirwals_dither_pattern_step():
         gain="faint",
         sampling="up-the-ramp",
     )
+
+
+@pytest.fixture()
+def create_test_binary_file(tmp_path: pathlib.Path):
+    """
+    Return a function for generating test files.
+
+    The returned function accepts content (as bytes, such as b"I'm a test file." and a
+    file extension (such as ".pdf"), generates a temporary file with the given content
+    and file extension, and returns the path to the generated file.
+    """
+
+    def _create_file(content: bytes, extension: str) -> pathlib.Path:
+        file_path = tmp_path / f"{str(uuid.uuid4())}{extension}"
+        file_path.write_bytes(content)
+        return file_path
+
+    return _create_file
