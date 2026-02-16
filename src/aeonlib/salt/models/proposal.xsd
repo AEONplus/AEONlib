@@ -4811,9 +4811,38 @@
         </xs:sequence>
     </xs:complexType>
 
+    <!-- +++++++++++ -:BlockSubmission:- +++++++++++ -->
+    <xs:complexType name="BlockSubmission">
+        <xs:annotation>
+            <xs:documentation>
+                A block submission.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Year" type="xs:unsignedInt">
+                <xs:annotation>
+                    <xs:documentation>
+                        The year for which the submission is made.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Semester" type="Semester">
+                <xs:annotation>
+                    <xs:documentation>
+                        The semester for which the submission is made.
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element maxOccurs="unbounded" name="Block" type="Block"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <!-- +++++++++++ -:the global proposal elements:- +++++++++++ -->
     <xs:element name="P1Proposal" type="P1Proposal"/>
     <xs:element name="Proposal" type="Proposal"/>
+
+    <!-- +++++++++++ -:the global element for block submissioms:- +++++++++++ -->
+    <xs:element name="BlockSubmission" type="BlockSubmission"/>
 
 
     <xs:element name="P1TargetOfOpportunity" type="P1TargetOfOpportunity"/>
