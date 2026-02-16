@@ -568,3 +568,6 @@ class TestBlocks:
 
         assert "<Blocks>" in xml
         assert len(re.findall(r"<Block ", xml)) == 2
+
+        validate_xml(xml)
+        assert True
