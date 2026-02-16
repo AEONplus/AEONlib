@@ -86,7 +86,7 @@ def base_constraints():
 @pytest.fixture()
 def base_acquisition():
     finder_chart = (
-        pathlib.Path(__file__).parent.parent / "data" / "dummy_finder_chart.pdf"
+            pathlib.Path(__file__).parent.parent / "data" / "dummy_finder_chart_1.pdf"
     )
     return Acquisition(finder_charts=[finder_chart], position_angle=45 * u.deg)
 

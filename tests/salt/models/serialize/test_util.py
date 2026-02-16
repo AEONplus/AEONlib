@@ -61,17 +61,18 @@ def test_render_template_with_escaping():
 
 
 def test_replace_attachment_paths(
-    base_request, base_block, base_rss, base_rss_multi_object_spectroscopy
+        base_request, base_block, base_rss, base_rss_multi_object_spectroscopy
 ):
     """Test replacing attachment paths."""
     # finder_chart deliberately includes ".." to test resolution.
     finder_chart = (
-        pathlib.Path(__file__).parent.parent.parent
-        / "data/../data"
-        / "dummy_finder_chart.pdf"
+            pathlib.Path(__file__).parent.parent.parent
+            / "data/../data"
+            / "dummy_finder_chart_1.pdf"
     )
     mos_mask = (
-        pathlib.Path(__file__).parent.parent.parent / "data" / "dummy_rss_mos_mask.rsim"
+            pathlib.Path(
+                __file__).parent.parent.parent / "data" / "dummy_rss_mos_mask.rsim"
     )
     request = base_request
     block = base_block
@@ -99,7 +100,8 @@ def test_replace_attachment_paths(
 def test_missing_replacement(base_request, base_block):
     """Test that an error is raised if an attachment path replacement is missing."""
     finder_chart = (
-        pathlib.Path(__file__).parent.parent.parent / "data" / "dummy_finder_chart.pdf"
+            pathlib.Path(
+                __file__).parent.parent.parent / "data" / "dummy_finder_chart_1.pdf"
     )
     request = base_request
     block = base_block
@@ -118,12 +120,13 @@ def test_duplicate_replacement_key(base_request):
     """
     # file_1a and file_1b are the same file
     file_1a = (
-        pathlib.Path(__file__).parent.parent.parent / "data" / "dummy_finder_chart.pdf"
+            pathlib.Path(
+                __file__).parent.parent.parent / "data" / "dummy_finder_chart_1.pdf"
     )
     file_1b = (
-        pathlib.Path(__file__).parent.parent.parent
-        / "data/../data"
-        / "dummy_finder_chart.pdf"
+            pathlib.Path(__file__).parent.parent.parent
+            / "data/../data"
+            / "dummy_finder_chart_1.pdf"
     )
 
     request = base_request
@@ -142,12 +145,13 @@ def test_duplicate_replacement_value(base_request):
     replacements.
     """
     file_1 = (
-        pathlib.Path(__file__).parent.parent.parent / "data" / "dummy_finder_chart.pdf"
+            pathlib.Path(
+                __file__).parent.parent.parent / "data" / "dummy_finder_chart_1.pdf"
     )
     file_2 = (
-        pathlib.Path(__file__).parent.parent.parent
-        / "data"
-        / "dummy_finder_chart_2.pdf"
+            pathlib.Path(__file__).parent.parent.parent
+            / "data"
+            / "dummy_finder_chart_2.pdf"
     )
 
     request = base_request
