@@ -1,5 +1,6 @@
 """This module provides Pydantic models for SALT observation requests."""
 
+import pathlib
 from typing import Annotated
 
 from annotated_types import MinLen
