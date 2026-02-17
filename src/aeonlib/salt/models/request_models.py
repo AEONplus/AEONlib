@@ -4,23 +4,38 @@ import pathlib
 from typing import Annotated
 
 from annotated_types import MinLen
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Request(BaseModel, validate_assignment=True):
     """
     An observation request for SALT.
 
+    A request is made up of a proposal code, which must be the proposal code of a
+    proposal existing already, the semester for which the request is submitted and a
+    non-empty list of blocks.
+
+    The semester must be of the form yyyy-s with the year yyyy and its semester (1 or
+    2). Semester 1 runs from 1 May to 1 November, semester 2 from November to May (in
+    the following year). For example, semester 2026-1 runs from noon on 1 May 2026 to
+    noon on 1 November 2026, whereas semester 2026-2 runs from noon on 1 November 2026
+    to noon on 1 May 2027.
+
     Parameters
     ----------
     proposal_code
         Unique identifier of the proposal for which this request is submitted.
+    semester
+        Semester for which the submission is intended, in the form yyyy-s, where yyyy
+        denotes the year and s can be 1 or 2. Examples are 2025-1 or 2026-2.
     blocks
         List of blocks to observe.
 
     """
 
     proposal_code: str
+
+    semester: str = Field(pattern=r"\d{4}-[12]")
 
     blocks: Annotated[list, MinLen(1)]
 

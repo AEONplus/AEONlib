@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<BlockSubmission>
+    <Year>{{ request.semester.split("-")[0] }}</Year>
+    <Semester>{{ request.semester.split("-")[1] }}</Semester>
+    {% for block in request.blocks %}
+        {% include "block.xml" %}
+    {% endfor %}
+</BlockSubmission>

@@ -36,7 +36,9 @@ from aeonlib.salt.models import (
 @pytest.fixture()
 def base_request(base_block):
     """A simple request to edit or build from."""
-    return Request(proposal_code="2025-1-SCI-042", blocks=[base_block])
+    return Request(
+        proposal_code="2025-1-SCI-042", semester="2026-1", blocks=[base_block]
+    )
 
 
 @pytest.fixture()

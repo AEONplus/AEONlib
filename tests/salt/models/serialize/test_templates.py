@@ -557,17 +557,32 @@ class TestBlock:
         assert True
 
 
-class TestBlocks:
-    def test_blocks(self, base_request):
+class TestBlockSubmission:
+    def test_block_submission(self, base_request):
         request = base_request
         block = base_request.blocks[0]
         block_copy = deepcopy(block)
         request.blocks.append(block_copy)
 
-        xml = render_template("blocks.xml", blocks=request.model_dump()["blocks"])
+        xml = render_template("block_submission.xml", request=request.model_dump())
 
-        assert "<Blocks>" in xml
+        assert "<BlockSubmission>" in xml
         assert len(re.findall(r"<Block ", xml)) == 2
 
         validate_xml(xml)
         assert True
+
+    @pytest.mark.parametrize(
+        "semester_string, year, semester", [("2025-2", 2025, 2), ("2026-1", 2026, 1)]
+    )
+    def test_year_and_semester(
+        self, semester_string: str, year: int, semester: int, base_request
+    ):
+        """Test that the semester is serialized correctly."""
+        request = base_request
+        request.semester = semester_string
+
+        xml = render_template("block_submission.xml", request=request.model_dump())
+
+        assert f"<Year>{year}</Year>" in xml
+        assert f"<Semester>{semester}</Semester>" in xml

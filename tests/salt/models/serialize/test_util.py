@@ -61,18 +61,17 @@ def test_render_template_with_escaping():
 
 
 def test_replace_attachment_paths(
-        base_request, base_block, base_rss, base_rss_multi_object_spectroscopy
+    base_request, base_block, base_rss, base_rss_multi_object_spectroscopy
 ):
     """Test replacing attachment paths."""
     # finder_chart deliberately includes ".." to test resolution.
     finder_chart = (
-            pathlib.Path(__file__).parent.parent.parent
-            / "data/../data"
-            / "dummy_finder_chart_1.pdf"
+        pathlib.Path(__file__).parent.parent.parent
+        / "data/../data"
+        / "dummy_finder_chart_1.pdf"
     )
     mos_mask = (
-            pathlib.Path(
-                __file__).parent.parent.parent / "data" / "dummy_rss_mos_mask.rsim"
+        pathlib.Path(__file__).parent.parent.parent / "data" / "dummy_rss_mos_mask.rsim"
     )
     request = base_request
     block = base_block
@@ -84,7 +83,7 @@ def test_replace_attachment_paths(
     block.instrument = rss
     request.blocks = [block]
 
-    xml = render_template("blocks.xml", blocks=request.model_dump()["blocks"])
+    xml = render_template("block_submission.xml", request=request.model_dump())
 
     replacements = {
         finder_chart.resolve(): "Included/FinderChart.pdf",
@@ -100,15 +99,16 @@ def test_replace_attachment_paths(
 def test_missing_replacement(base_request, base_block):
     """Test that an error is raised if an attachment path replacement is missing."""
     finder_chart = (
-            pathlib.Path(
-                __file__).parent.parent.parent / "data" / "dummy_finder_chart_1.pdf"
+        pathlib.Path(__file__).parent.parent.parent
+        / "data"
+        / "dummy_finder_chart_1.pdf"
     )
     request = base_request
     block = base_block
     block.acquisition.finder_charts = [finder_chart]
     request.blocks = [block]
 
-    xml = render_template("blocks.xml", blocks=request.model_dump()["blocks"])
+    xml = render_template("block_submission.xml", request=request.model_dump())
     with pytest.raises(ValueError, match="Path missing"):
         replace_attachment_paths(xml, {})
 
@@ -120,18 +120,19 @@ def test_duplicate_replacement_key(base_request):
     """
     # file_1a and file_1b are the same file
     file_1a = (
-            pathlib.Path(
-                __file__).parent.parent.parent / "data" / "dummy_finder_chart_1.pdf"
+        pathlib.Path(__file__).parent.parent.parent
+        / "data"
+        / "dummy_finder_chart_1.pdf"
     )
     file_1b = (
-            pathlib.Path(__file__).parent.parent.parent
-            / "data/../data"
-            / "dummy_finder_chart_1.pdf"
+        pathlib.Path(__file__).parent.parent.parent
+        / "data/../data"
+        / "dummy_finder_chart_1.pdf"
     )
 
     request = base_request
 
-    xml = render_template("blocks.xml", blocks=request.model_dump()["blocks"])
+    xml = render_template("block_submission.xml", request=request.model_dump())
 
     replacements = {file_1a: "Included/File_1a.pdf", file_1b: "Included/File_1b.pdf"}
 
@@ -145,18 +146,19 @@ def test_duplicate_replacement_value(base_request):
     replacements.
     """
     file_1 = (
-            pathlib.Path(
-                __file__).parent.parent.parent / "data" / "dummy_finder_chart_1.pdf"
+        pathlib.Path(__file__).parent.parent.parent
+        / "data"
+        / "dummy_finder_chart_1.pdf"
     )
     file_2 = (
-            pathlib.Path(__file__).parent.parent.parent
-            / "data"
-            / "dummy_finder_chart_2.pdf"
+        pathlib.Path(__file__).parent.parent.parent
+        / "data"
+        / "dummy_finder_chart_2.pdf"
     )
 
     request = base_request
 
-    xml = render_template("blocks.xml", blocks=request.model_dump()["blocks"])
+    xml = render_template("block_submission.xml", request=request.model_dump())
 
     replacements = {file_1: "Included/File.pdf", file_2: "Included/File.pdf"}
 
