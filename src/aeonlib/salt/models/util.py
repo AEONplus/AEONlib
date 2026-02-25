@@ -4,6 +4,7 @@ import pathlib
 import uuid
 import zoneinfo
 from typing import Any
+from uuid import uuid4
 
 import astropy.units as u
 from astropy.coordinates import Angle
@@ -233,6 +234,34 @@ A serializer for converting string values to upper case.
 
 This serializer is only intended for use in the serialization of SALT data models.
 """
+
+
+def attachment_path_replacements(
+    attachments: list[pathlib.Path],
+) -> dict[pathlib.Path, str]:
+    """
+    Return a dictionary of attachments and corresponding paths to use in submitted XML.
+
+    The paths to use for submitted XML are of the form "Included/<uuid4><extension>",
+    where <uuid4> denotes a UUID version 4 string and <extension> is the file extension
+    of the attachment, including the dot and in lower case, such as ".jpg" or ".pdf".
+
+    Parameters
+    ----------
+    attachments
+        List of attachment paths.
+
+    Returns
+    -------
+    Dictionary of attachment paths and paths for submitted XML.
+    """
+    replacements = {}
+    for attachment in attachments:
+        extension = attachment.suffix.lower()
+        replacement = f"Included/{uuid4()}{extension}"
+        replacements[attachment] = replacement
+
+    return replacements
 
 
 def replace_attachment_paths(xml: str, replacements: dict[pathlib.Path, str]) -> str:

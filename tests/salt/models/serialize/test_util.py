@@ -5,6 +5,7 @@ import pytest
 from jinja2 import FileSystemLoader
 
 from aeonlib.salt.models.util import (
+    attachment_path_replacements,
     validate_xml,
     render_template,
     replace_attachment_paths,
@@ -58,6 +59,29 @@ def test_render_template_with_escaping():
     loader = FileSystemLoader(pathlib.Path(__file__).parent.parent.parent / "data")
     rendered = render_template("test.xml", loader, a="a >= 1 & a <= 5", b=2)
     assert "<a>a &gt;= 1 &amp; a &lt;= 5</a>" in rendered
+
+
+def test_attachment_replacement_paths():
+    """Test that the replacement paths for attachments are generated correctly."""
+    path1 = pathlib.Path("/a/b/c.PNG")
+    path2 = pathlib.Path("a.pdf")
+    path3 = pathlib.Path("something")
+    attachments = [path1, path2, path3]
+    replacements = attachment_path_replacements(attachments)
+
+    assert len(replacements) == 3
+
+    for path in [path1, path2, path3]:
+        assert replacements[path].startswith("Included/")
+
+        # The replacement looks as if it includes a UUID v4 string.
+        assert len(replacements[path1]) > 36
+        assert "-" in replacements[path1]
+
+    # The correct file extension (if any) is used.
+    assert replacements[path1].endswith(".png")
+    assert replacements[path2].endswith(".pdf")
+    assert not replacements[path3].endswith(".")
 
 
 def test_replace_attachment_paths(
