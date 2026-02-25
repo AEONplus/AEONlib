@@ -5,7 +5,7 @@ import astropy.coordinates
 import pytest
 from pydantic import ValidationError
 
-from aeonlib.salt.models import Block, Acquisition
+from aeonlib.salt.models import Acquisition
 from aeonlib.salt.models.block_models import ReferenceStar
 from aeonlib.salt.models.util import render_template, validate_xml
 

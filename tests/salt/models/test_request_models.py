@@ -4,7 +4,6 @@ import pytest
 from pydantic import ValidationError
 
 from aeonlib.salt.models import Request
-from aeonlib.salt.models.util import validate_xml, render_template
 
 
 class TestRequest:
