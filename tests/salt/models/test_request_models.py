@@ -1,4 +1,5 @@
 import pathlib
+from copy import deepcopy
 
 import pytest
 from pydantic import ValidationError
@@ -85,14 +86,23 @@ class TestRequest:
         rss = base_rss
         configuration = base_rss_multi_object_spectroscopy
         configuration.mask = mos_mask
-        block.acquisition.finder_charts = [
+        rss.configuration = configuration
+        block.instrument = rss
+
+        block1 = block
+        block2 = deepcopy(block1)
+
+        block1.acquisition.finder_charts = [
             finder_chart_1a,
             finder_chart_2,
             finder_chart_1b,
         ]
-        rss.configuration = configuration
-        block.instrument = rss
-        request.blocks = [block]
+        block2.acquisition.finder_charts = [
+            finder_chart_1c,
+            finder_chart_2,
+        ]
+
+        request.blocks = [block1, block2]
 
         assert request.attachments() == {
             finder_chart_1a.resolve(),
