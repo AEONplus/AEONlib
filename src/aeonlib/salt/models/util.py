@@ -3,7 +3,7 @@ import io
 import pathlib
 import uuid
 import zoneinfo
-from typing import Any
+from typing import Any, Iterable
 from uuid import uuid4
 
 import astropy.units as u
@@ -237,7 +237,7 @@ This serializer is only intended for use in the serialization of SALT data model
 
 
 def attachment_path_replacements(
-    attachments: list[pathlib.Path],
+    attachments: Iterable[pathlib.Path],
 ) -> dict[pathlib.Path, str]:
     """
     Return a dictionary of attachments and corresponding paths to use in submitted XML.
