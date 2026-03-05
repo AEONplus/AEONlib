@@ -95,7 +95,7 @@ def test_replace_attachment_paths(
         / "dummy_finder_chart_1.pdf"
     )
     mos_mask = (
-        pathlib.Path(__file__).parent.parent.parent / "data" / "dummy_rss_mos_mask.rsim"
+        pathlib.Path(__file__).parent.parent.parent / "data" / "dummy_rss_mos_mask.rsmt"
     )
     request = base_request
     block = base_block
