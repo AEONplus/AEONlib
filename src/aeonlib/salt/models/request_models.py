@@ -1,10 +1,18 @@
 """This module provides Pydantic models for SALT observation requests."""
 
+import os
 import pathlib
-from typing import Annotated
+import zipfile
+from typing import Annotated, BinaryIO
 
 from annotated_types import MinLen
 from pydantic import BaseModel, Field
+
+from aeonlib.salt.models.util import (
+    render_template,
+    attachment_path_replacements,
+    replace_attachment_paths,
+)
 
 
 class Request(BaseModel, validate_assignment=True):
@@ -67,3 +75,25 @@ class Request(BaseModel, validate_assignment=True):
 
         # Remove duplicates
         return set(a.resolve() for a in _attachments)
+
+    def export(self, out: pathlib.Path | os.PathLike | str | BinaryIO) -> None:
+        """
+        Export this request as a zip file.
+
+        Parameters
+        ----------
+        out
+            Path of the zip file or a byte stream.
+        """
+        with zipfile.ZipFile(out, "w") as archive:
+            block_submission_xml = render_template(
+                "block_submission.xml", request=self.model_dump()
+            )
+            attachments = self.attachments()
+            replacements = attachment_path_replacements(attachments)
+            block_submission_xml = replace_attachment_paths(
+                block_submission_xml, replacements
+            )
+            archive.writestr("BlockSubmission.xml", block_submission_xml)
+            for path, zip_path in replacements.items():
+                archive.write(path, zip_path)
