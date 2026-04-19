@@ -32,7 +32,7 @@ from aeonlib.salt.validators import GreaterEqual, LessEqual
 from aeonlib.types import Angle
 
 
-class Nirwals(BaseModel, validate_assignment=True):
+class Nirwals(BaseModel, validate_assignment=True):  # type: ignore
     """
     A NIRWALS configuration.
 
@@ -85,7 +85,7 @@ class Nirwals(BaseModel, validate_assignment=True):
     @classmethod
     def check_articulation_angle(cls, angle: Angle) -> Angle:
         error = "The articulation angle must be a multiple of 0.5 degress between 0 and 100 degrees (both inclusive"
-        degrees = angle.to(u.deg).value
+        degrees = angle.to(u.deg).value  # type: ignore
 
         if degrees < 0 or degrees > 100:
             raise ValueError(error)
@@ -97,7 +97,7 @@ class Nirwals(BaseModel, validate_assignment=True):
         return angle
 
 
-class NirwalsDitherPatternStep(BaseModel, validate_assignment=True):
+class NirwalsDitherPatternStep(BaseModel, validate_assignment=True):  # type: ignore
     """
     A step in a NIRWALS dither pattern.
 
@@ -158,7 +158,7 @@ class NirwalsDitherPatternStep(BaseModel, validate_assignment=True):
     num_reads: Literal[1] = 1
     num_ramps: Literal[1] = 1
 
-    @computed_field
+    @computed_field  # type: ignore
     @property
     def num_groups(self) -> int:
         """

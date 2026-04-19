@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import uuid
-from typing import Annotated, Literal, Self
+from typing import Annotated, Literal, Self, TypeAlias
 
 import astropy.units as u
 from pydantic import (
@@ -30,10 +30,10 @@ from aeonlib.salt.models.types import (
 from aeonlib.salt.validators import GreaterEqual, LessEqual, check_in_visibility_range
 
 
-Instrument = Salticam | Rss | Hrs | Nirwals
+Instrument: TypeAlias = Salticam | Rss | Hrs | Nirwals
 
 
-class Block(BaseModel, validate_assignment=True):
+class Block(BaseModel, validate_assignment=True):  # type: ignore
     """
     A block for SALT.
 
@@ -137,7 +137,7 @@ class Block(BaseModel, validate_assignment=True):
         return self
 
 
-class Constraints(BaseModel, validate_assignment=True):
+class Constraints(BaseModel, validate_assignment=True):  # type: ignore
     """
     Observing constraints.
 
@@ -176,7 +176,7 @@ class Constraints(BaseModel, validate_assignment=True):
     max_seeing: PositiveFloat
 
 
-class Acquisition(BaseModel, validate_assignment=True):
+class Acquisition(BaseModel, validate_assignment=True):  # type: ignore
     """
     An acquisition.
 
@@ -240,7 +240,7 @@ class Acquisition(BaseModel, validate_assignment=True):
         return self
 
 
-class ReferenceStar(BaseModel, validate_assignment=True):
+class ReferenceStar(BaseModel, validate_assignment=True):  # type: ignore
     """
     A reference star on which to acquire.
 

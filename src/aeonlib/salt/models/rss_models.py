@@ -44,7 +44,7 @@ from aeonlib.salt.models.types import (
 from aeonlib.salt.validators import GreaterEqual, GreaterThan, LessEqual
 
 
-class Rss(BaseModel, validate_assignment=True):
+class Rss(BaseModel, validate_assignment=True):  # type: ignore
     """
     An RSS configuration.
 
@@ -102,7 +102,7 @@ class Rss(BaseModel, validate_assignment=True):
     dither_pattern: RssDitherPattern | None
 
 
-class RssImaging(BaseModel, validate_assignment=True):
+class RssImaging(BaseModel, validate_assignment=True):  # type: ignore
     """
     An RSS imaging configuration.
 
@@ -144,7 +144,7 @@ _WavePlatePattern = (
 )
 
 
-class RssSpectroscopy(BaseModel, validate_assignment=True):
+class RssSpectroscopy(BaseModel, validate_assignment=True):  # type: ignore
     """
     An RSS spectroscopy configuration.
 
@@ -185,11 +185,11 @@ class RssSpectroscopy(BaseModel, validate_assignment=True):
     include_arc: bool = True
     request_spectrophotometric_standard: bool = False
 
-    @computed_field
+    @computed_field  # type: ignore
     @property
     def articulation_station(self) -> int:
         """Return the articulation station."""
-        degrees = self.articulation_angle.to(u.deg).value
+        degrees = self.articulation_angle.to(u.deg).value  # type: ignore
         if degrees < 1:
             return 0
         return round((degrees - 1) / 0.75)
@@ -198,7 +198,7 @@ class RssSpectroscopy(BaseModel, validate_assignment=True):
     @classmethod
     def check_articulation_angle(cls, angle: Angle) -> Angle:
         error = "The articulation angle must either be 0 deg or a value 1.75 deg + (n - 1) * 0.75 deg with 1 <= n <= 132."
-        degrees = angle.to(u.deg).value
+        degrees = angle.to(u.deg).value  # type: ignore
 
         if degrees < 0:
             raise ValueError(error)
@@ -266,7 +266,7 @@ class RssSlitMaskIFUSpectroscopy(RssSpectroscopy):
     slit_mask_ifu: Annotated[RssSlitMaskIFU, LowerCaseValidator, UpperCaseSerializer]
 
 
-class RssPolarimetry(BaseModel, validate_assignment=True):
+class RssPolarimetry(BaseModel, validate_assignment=True):  # type: ignore
     """
     An RSS polarimetry setup.
 
@@ -311,21 +311,21 @@ class RssPolarimetry(BaseModel, validate_assignment=True):
     @staticmethod
     def validate_pattern_before(value: _WavePlatePattern) -> _WavePlatePattern:
         if isinstance(value, str):
-            return value.lower()
+            return value.lower()  # type: ignore
         return value
 
     @staticmethod
     def validate_pattern_after(value: _WavePlatePattern) -> _WavePlatePattern:
         if value == "linear":
-            value = LINEAR_POLARIMETRY_PATTERN
+            value = LINEAR_POLARIMETRY_PATTERN  # type: ignore
         elif value == "linear hi":
-            value = LINEAR_HI_POLARIMETRY_PATTERN
+            value = LINEAR_HI_POLARIMETRY_PATTERN  # type: ignore
         elif value == "circular":
-            value = CIRCULAR_POLARIMETRY_PATTERN
+            value = CIRCULAR_POLARIMETRY_PATTERN  # type: ignore
         elif value == "circular hi":
-            value = CIRCULAR_HI_POLARIMETRY_PATTRERN
+            value = CIRCULAR_HI_POLARIMETRY_PATTRERN  # type: ignore
         elif value == "all-stokes":
-            value = ALL_STOKES_POLARIMETRY_PATTERN
+            value = ALL_STOKES_POLARIMETRY_PATTERN  # type: ignore
 
         if isinstance(value, str):
             raise ValueError(f"Unsupported string value: {value}")
@@ -352,17 +352,17 @@ class RssPolarimetry(BaseModel, validate_assignment=True):
 
             # Check that the ratio of the angle and 11.25 deg is (very close to) an
             # integer.
-            x = (angle.to(u.deg) / 11.25).value
+            x = (angle.to(u.deg) / 11.25).value  # type: ignore
             if abs(round(x) - x) > 1e-6:
                 raise ValueError(error)
 
     @staticmethod
-    def _check_angle_values(value: _WavePlatePattern) -> _WavePlatePattern:
+    def _check_angle_values(value: _WavePlatePattern) -> None:
         for step in value:
-            RssPolarimetry._check_pattern_step(step)
+            RssPolarimetry._check_pattern_step(step)  # type: ignore
 
 
-class RssDetector(BaseModel, validate_assignment=True):
+class RssDetector(BaseModel, validate_assignment=True):  # type: ignore
     """
     An Rss detector setup.
 
@@ -401,7 +401,7 @@ class RssDetector(BaseModel, validate_assignment=True):
     ] = None
 
 
-class RssDitherPattern(BaseModel, validate_assignment=True):
+class RssDitherPattern(BaseModel, validate_assignment=True):  # type: ignore
     """
     A dither pattern for RSS.
 

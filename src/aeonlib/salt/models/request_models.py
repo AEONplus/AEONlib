@@ -15,7 +15,7 @@ from aeonlib.salt.models.util import (
 )
 
 
-class Request(BaseModel, validate_assignment=True):
+class Request(BaseModel, validate_assignment=True):  # type: ignore
     """
     An observation request for SALT.
 

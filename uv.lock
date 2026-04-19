@@ -34,6 +34,7 @@ codegen = [
     { name = "textcase" },
 ]
 dev = [
+    { name = "lxml-stubs" },
     { name = "pytest" },
     { name = "time-machine" },
 ]
@@ -60,6 +61,7 @@ codegen = [
     { name = "textcase", specifier = ">=0.2.1" },
 ]
 dev = [
+    { name = "lxml-stubs", specifier = ">=0.5.1" },
     { name = "pytest", specifier = ">=8.3.5" },
     { name = "time-machine", specifier = ">=3.2.0" },
 ]

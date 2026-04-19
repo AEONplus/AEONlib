@@ -12,7 +12,7 @@ from aeonlib.salt.models.types import MagnitudeBandpass, TargetType
 from aeonlib.salt.validators import check_in_visibility_range
 
 
-class SaltSiderealTarget(SiderealTarget, validate_assignment=True):
+class SaltSiderealTarget(SiderealTarget, validate_assignment=True):  # type: ignore
     """
     A sidereal target to observe with SALT.
 
@@ -58,7 +58,7 @@ class SaltSiderealTarget(SiderealTarget, validate_assignment=True):
         return check_in_visibility_range(value)
 
 
-class MagnitudeRange(BaseModel, validate_assignment=True):
+class MagnitudeRange(BaseModel, validate_assignment=True):  # type: ignore
     """
     A magnitude range.
 
