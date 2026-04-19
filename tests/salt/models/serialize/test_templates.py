@@ -1,12 +1,16 @@
 import re
 from copy import deepcopy
+from datetime import datetime
 from typing import Any
+from zoneinfo import ZoneInfo
 
 import astropy.units as u
 import pytest
+import time_machine
 from astropy.coordinates import Angle
 from astropy.units import Quantity
 
+from aeonlib.models import Window
 from aeonlib.salt.models import SalticamFilterSequenceStep
 from aeonlib.salt.models.util import render_template, validate_xml
 
@@ -555,6 +559,57 @@ class TestBlock:
 
         validate_xml(xml)
         assert True
+
+    def test_windows_with_start_and_end(self, base_block):
+        """Test that windows with start and end are serialized correctly."""
+        block = base_block
+        block.windows = [
+            Window(
+                start=datetime(
+                    2026, 4, 20, 3, 4, 5, 0, tzinfo=ZoneInfo("Africa/Johannesburg")
+                ),
+                end=datetime(
+                    2026, 4, 22, 4, 5, 6, 0, tzinfo=ZoneInfo("Africa/Johannesburg")
+                ),
+            ),
+            Window(
+                start=datetime(
+                    2026, 5, 1, 22, 0, 17, 0, tzinfo=ZoneInfo("Africa/Johannesburg")
+                ),
+                end=datetime(
+                    2026, 5, 2, 2, 15, 6, 0, tzinfo=ZoneInfo("Africa/Johannesburg")
+                ),
+            ),
+        ]
+
+        xml = render_template("block.xml", block=block.model_dump())
+
+        assert "<TimeStart>2026-04-20T01:04:05Z</TimeStart>" in xml
+        assert "<TimeEnd>2026-04-22T02:05:06Z</TimeEnd>" in xml
+        assert "<TimeStart>2026-05-01T20:00:17Z</TimeStart>" in xml
+        assert "<TimeEnd>2026-05-02T00:15:06Z</TimeEnd>" in xml
+
+        validate_xml(xml)
+        assert True
+
+    def test_window_with_end_only(self, base_block):
+        """Test that a window with an end only is serialized correctly."""
+        block = base_block
+        block.windows = [
+            Window(
+                end=datetime(
+                    2026, 5, 21, 2, 21, 7, 0, tzinfo=ZoneInfo("Africa/Johannesburg")
+                )
+            )
+        ]
+
+        with time_machine.travel(
+            datetime(2026, 5, 21, 17, 0, 0, 0, tzinfo=ZoneInfo("UTC"))
+        ):
+            xml = render_template("block.xml", block=block.model_dump())
+
+            assert "<TimeStart>2026-05-21T17:00:00Z</TimeStart>" in xml
+            assert "<TimeEnd>2026-05-21T00:21:07Z</TimeEnd>" in xml
 
 
 class TestBlockSubmission:

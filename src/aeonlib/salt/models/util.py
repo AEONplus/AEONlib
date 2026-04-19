@@ -3,8 +3,9 @@ import io
 import pathlib
 import uuid
 import zoneinfo
-from typing import Any, Iterable
+from typing import Any, Iterable, cast
 from uuid import uuid4
+from zoneinfo import ZoneInfo
 
 import astropy.units as u
 from astropy.coordinates import Angle
@@ -94,7 +95,7 @@ def validate_xml(xml: str) -> None:
 
     try:
         xml_doc = etree.parse(io.BytesIO(xml.encode("utf-8")))
-        _schema.assertValid(xml_doc)
+        cast(etree.XMLSchema, _schema).assertValid(xml_doc)  # noqa
     except (etree.DocumentInvalid, etree.XMLSyntaxError) as e:
         raise ValueError(str(e))
 
@@ -127,6 +128,17 @@ def _nirwals_articulation_station(angle):
 def _year_as_iso_timestamp(year):
     t = datetime.datetime(year, 1, 1, 0, 0, 0, 0, tzinfo=zoneinfo.ZoneInfo("UTC"))
     return t.isoformat()
+
+
+def _to_utc(t: datetime.datetime | None) -> str:
+    if t is None:
+        t = datetime.datetime.now(ZoneInfo("UTC"))
+    else:
+        if t.tzinfo:
+            raise ValueError("The datetime instance must be naive.")
+        t = t.replace(tzinfo=ZoneInfo("UTC"))
+
+    return cast(datetime.datetime, t).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _sign(value):
@@ -178,6 +190,7 @@ def render_template(
     env.filters["iodine_cell_position"] = _iodine_cell_position
     env.filters["nirwals_articulation_station"] = _nirwals_articulation_station
     env.filters["year_as_iso_timestamp"] = _year_as_iso_timestamp
+    env.filters["utc"] = _to_utc
     env.filters["sign"] = _sign
     env.globals["uuid"] = _uuid
     env.globals["to_angle"] = _to_angle
