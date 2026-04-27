@@ -94,6 +94,6 @@ class Request(BaseModel, validate_assignment=True):  # type: ignore
             block_submission_xml = replace_attachment_paths(
                 block_submission_xml, replacements
             )
-            archive.writestr("BlockSubmission.xml", block_submission_xml)
+            archive.writestr("Blocks.xml", block_submission_xml)
             for path, zip_path in replacements.items():
                 archive.write(path, zip_path)

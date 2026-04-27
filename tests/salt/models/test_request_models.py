@@ -160,16 +160,14 @@ class TestRequest:
         # Check the content of the generated zip file.
         zip_content.seek(0)
         with zipfile.ZipFile(zip_content) as archive:
-            block_submission = archive.read("BlockSubmission.xml").decode(
-                encoding="utf-8"
-            )
+            block_submission = archive.read("Blocks.xml").decode(encoding="utf-8")
             for file in archive.namelist():
-                if file != "BlockSubmission.xml":
+                if file != "Blocks.xml":
                     assert file.startswith("Included/")
                     assert (
-                            file.endswith(".pdf")
-                            or file.endswith(".png")
-                            or file.endswith(".rsmt")
+                        file.endswith(".pdf")
+                        or file.endswith(".png")
+                        or file.endswith(".rsmt")
                     )
                     assert file in block_submission
 
