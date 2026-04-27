@@ -19,7 +19,7 @@ class TestRequest:
         assert exc_info.value.errors()[0]["type"] == "too_short"
 
     def test_no_attachments(
-            self, base_request, base_block, base_rss, base_rss_longslit_spectroscopy
+        self, base_request, base_block, base_rss, base_rss_longslit_spectroscopy
     ):
         """Test the case that the request includes no attachments."""
         request = base_request
@@ -34,20 +34,17 @@ class TestRequest:
         assert request.attachments() == set()
 
     def test_multiple_attachments(
-            self, base_request, base_block, base_rss, base_rss_multi_object_spectroscopy
+        self, base_request, base_block, base_rss, base_rss_multi_object_spectroscopy
     ):
         """Test the case that the request includes multiple attachments."""
         finder_chart_1 = (
-                pathlib.Path(
-                    __file__).parent.parent / "data" / "dummy_finder_chart_1.pdf"
+            pathlib.Path(__file__).parent.parent / "data" / "dummy_finder_chart_1.pdf"
         )
         finder_chart_2 = (
-                pathlib.Path(
-                    __file__).parent.parent / "data" / "dummy_finder_chart_2.pdf"
+            pathlib.Path(__file__).parent.parent / "data" / "dummy_finder_chart_2.pdf"
         )
         mos_mask = (
-                pathlib.Path(
-                    __file__).parent.parent / "data" / "dummy_rss_mos_mask.rsmt"
+            pathlib.Path(__file__).parent.parent / "data" / "dummy_rss_mos_mask.rsmt"
         )
         request = base_request
         block = base_block
@@ -66,27 +63,25 @@ class TestRequest:
         }
 
     def test_duplicate_attachments(
-            self, base_request, base_block, base_rss, base_rss_multi_object_spectroscopy
+        self, base_request, base_block, base_rss, base_rss_multi_object_spectroscopy
     ):
         """Test the case that the request uses the same attachment multiple times."""
         # finder_chart_1a, finder_chart_1b and finder_chart_1c denote the sane file
         finder_chart_1a = (
-                pathlib.Path(
-                    __file__).parent.parent / "data" / "dummy_finder_chart_1.pdf"
+            pathlib.Path(__file__).parent.parent / "data" / "dummy_finder_chart_1.pdf"
         )
         finder_chart_1b = (
-                pathlib.Path(__file__).parent.parent
-                / "data/../data"
-                / "dummy_finder_chart_1.pdf"
+            pathlib.Path(__file__).parent.parent
+            / "data/../data"
+            / "dummy_finder_chart_1.pdf"
         )
         finder_chart_1c = (
-                pathlib.Path(__file__).parent.parent
-                / "data/../../salt/data"
-                / "dummy_finder_chart_1.pdf"
+            pathlib.Path(__file__).parent.parent
+            / "data/../../salt/data"
+            / "dummy_finder_chart_1.pdf"
         )
         finder_chart_2 = (
-                pathlib.Path(
-                    __file__).parent.parent / "data" / "dummy_finder_chart_2.pdf"
+            pathlib.Path(__file__).parent.parent / "data" / "dummy_finder_chart_2.pdf"
         )
         mos_mask = finder_chart_1c  # as we are testing for duplicates
         request = base_request
@@ -122,16 +117,13 @@ class TestRequest:
 
         # Set up the attachments.
         finder_chart_1 = (
-                pathlib.Path(
-                    __file__).parent.parent / "data" / "dummy_finder_chart_1.pdf"
+            pathlib.Path(__file__).parent.parent / "data" / "dummy_finder_chart_1.pdf"
         )
         finder_chart_2 = (
-                pathlib.Path(
-                    __file__).parent.parent / "data" / "dummy_finder_chart_3.png"
+            pathlib.Path(__file__).parent.parent / "data" / "dummy_finder_chart_3.png"
         )
         mos_file = (
-                pathlib.Path(
-                    __file__).parent.parent / "data" / "dummy_rss_mos_mask.rsmt"
+            pathlib.Path(__file__).parent.parent / "data" / "dummy_rss_mos_mask.rsmt"
         )
 
         # Store the attachment sizes.

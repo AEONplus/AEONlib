@@ -88,9 +88,7 @@ def base_constraints():
 
 @pytest.fixture()
 def base_acquisition():
-    finder_chart = (
-        pathlib.Path(__file__).parent.parent / "data" / "dummy_finder_chart_1.pdf"
-    )
+    finder_chart = pathlib.Path(__file__).parent / "data" / "dummy_finder_chart_1.pdf"
     return Acquisition(finder_charts=[finder_chart], position_angle=45 * u.deg)
 
 
@@ -173,7 +171,7 @@ def base_rss_longslit_spectroscopy(base_rss_spectroscopy):
 def base_rss_multi_object_spectroscopy(base_rss_spectroscopy):
     return RssMultiObjectSpectroscopy(
         **base_rss_spectroscopy.model_dump(),
-        mask=pathlib.Path(__file__).parent.parent / "data" / "dummy_rss_mos_mask.rsmt",
+        mask=pathlib.Path(__file__).parent / "data" / "dummy_rss_mos_mask.rsmt",
     )
 
 
