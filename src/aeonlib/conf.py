@@ -35,5 +35,9 @@ class Settings(BaseSettings):
     lt_host: str = ""
     lt_port: str = ""
 
+    # Southern African Large Telescope
+    salt_username: str = ""
+    salt_password: str = ""
+
 
 settings = Settings()
