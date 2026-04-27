@@ -38,6 +38,8 @@
         <RssCalibration>
             <RssDefaultArc/>
         </RssCalibration>
+    {% else %}
+        <UseNoArc>true</UseNoArc>
     {% endif %}
     {% if rss.configuration.request_spectrophotometric_standard %}
         <RssNonChargedCalibration>
