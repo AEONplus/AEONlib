@@ -40,9 +40,9 @@ class Hrs(BaseModel, validate_assignment=True):  # type: ignore
     fibre_separation
         The angle between the target and sky fibres. This must be between 16 and 63
         arcseconds (both inclusive).
-    blue_arm: None
+    blue_arm
         The detector setup for the red arm.
-    red_arm: None
+    red_arm
         The detector setup for the blue arm.
     """
 
