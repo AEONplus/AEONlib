@@ -2,6 +2,7 @@ import datetime
 import io
 import pathlib
 import uuid
+import xml.etree.ElementTree as ET
 import zoneinfo
 from typing import Any, Iterable, cast
 from uuid import uuid4
@@ -319,5 +320,22 @@ def replace_attachment_paths(xml: str, replacements: dict[pathlib.Path, str]) ->
                 f"Path missing in replacements dictionary: {path_text} (resolved: {str(path)}"
             )
         path_element.string = replacements_resolved[path]
+    xml = soup.prettify()
 
-    return soup.prettify()
+    # BeautifulSoup inserts extraneous whitespace around text in elements, but this
+    # renders the XML invalid.
+    return _remove_whitespace(xml)
+
+
+def _remove_whitespace(xml: str) -> str:
+    # Remove whitespace around text in XML elements.
+    # Adapted from https://stackoverflow.com/questions/58344879/how-to-output-xml-from-beautifulsoup-without-extraneous-newlines
+    tree = ET.fromstring(xml)
+
+    # Remove extraneous newlines and whitespace from text elements.
+    for element in tree.iter():
+        if element.text:
+            element.text = element.text.strip()
+
+    # Return the updated XML.
+    return ET.tostring(tree).decode("UTF-8")
