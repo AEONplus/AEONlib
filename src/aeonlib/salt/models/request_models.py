@@ -8,6 +8,7 @@ from typing import Annotated, BinaryIO
 from annotated_types import MinLen
 from pydantic import BaseModel, Field
 
+from aeonlib.salt.models import Block
 from aeonlib.salt.models.util import (
     render_template,
     attachment_path_replacements,
@@ -45,7 +46,7 @@ class Request(BaseModel, validate_assignment=True):  # type: ignore
 
     semester: str = Field(pattern=r"\d{4}-[12]")
 
-    blocks: Annotated[list, MinLen(1)]
+    blocks: Annotated[list[Block], MinLen(1)]
 
     def attachments(self) -> set[pathlib.Path]:
         """
