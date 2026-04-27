@@ -95,12 +95,14 @@
                             {% endwith %}
                         </PayloadConfig>
                     </TelescopeConfig>
-                    {% for window in block.windows %}
-                        <TimeRestriction>
-                            <TimeStart>{{ window.start | utc }}</TimeStart>
-                            <TimeEnd>{{ window.end | utc }}</TimeEnd>
-                        </TimeRestriction>
-                    {% endfor %}
+                    {% if block.windows %}
+                        {% for window in block.windows %}
+                            <TimeRestriction>
+                                <TimeStart>{{ window.start | utc }}</TimeStart>
+                                <TimeEnd>{{ window.end | utc }}</TimeEnd>
+                            </TimeRestriction>
+                        {% endfor %}
+                    {% endif %}
                     <PipelineConfig>
                         <Notification>Normal</Notification>
                         <ReductionDocumentationFormat>HTML</ReductionDocumentationFormat>
