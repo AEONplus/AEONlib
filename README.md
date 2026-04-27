@@ -7,6 +7,7 @@ A suite of modules to enable TDA/MMA observations
 [issues](https://github.com/AEONplus/AEONlib/issues)
 
 # Configuration
+
 Many of the facilities and services accessed by AEONlib require specific configuration such
 as api keys, urls, etc. All configuration can be supplied by either supplying a .env file or
 setting environmental variables in the execution environment.
@@ -33,8 +34,8 @@ Environmental variables take precedence over .env files. See the
 [pydantic-settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/) documentation
 for more details.
 
-
 # Testing
+
 This project uses [pytest](https://docs.pytest.org/) to run tests:
 
 ```bash
@@ -59,6 +60,7 @@ pytest -m "not side_effect"
 CI does not run tests marked as online.
 
 ## Viewing logs during tests
+
 Aeonlib turns on the Pytest
 [Live Logging](https://docs.pytest.org/en/stable/how-to/logging.html#live-logs) feature.
 By default any logging calls with a level above `WARNING` will be displayed to the console
@@ -70,9 +72,11 @@ pytest -m online --log-cli-level=debug
 ```
 
 # Linting
+
 All code is formatted via [ruff](https://astral.sh/ruff).
 
 # Code Generation
+
 Las Cumbres Observatory [instrument classes](src/aeonlib/ocs/lco/instruments.py)
 are generated via the [generator.py](codegen/lco/generator.py) script. This script
 takes as input the [OCS instruments api](https://observe.lco.global/api/instruments/)
@@ -105,6 +109,7 @@ LCO instruments definition file:
 ```bash
 curl https://observe.lco.global/api/instruments/ | codegen/lco/generator.py {facility} > src/aeonlib/ocs/lco/instruments.py
 ```
+
 # Supported Facilities
 
 This list is a work in progress.
@@ -112,15 +117,18 @@ This list is a work in progress.
 ## Las Cumbres Observatory (LCO)
 
 ### Dependency group
+
 Las Cumbres Observatory requires no additional dependency groups to be installed.
 
 ### Configuration Values
+
 See [configuration](#configuration) for instructions on setting these values.
 
 ```python
 lco_token: str = ""
 lco_api_root: str = "https://observe.lco.global/api/"
 ```
+
 ### Helpful links
 
 * [LCO Observation Portal](https://observe.lco.global/)
@@ -132,15 +140,18 @@ lco_api_root: str = "https://observe.lco.global/api/"
 SOAR is functionally the same as LCO, but has its own set of instruments and can be configured separately.
 
 ### Dependency group
+
 SOAR requires no additional dependency groups to be installed.
 
 ### Configuration Values
+
 See [configuration](#configuration) for instructions on setting these values.
 
 ```python
 soar_token: str = ""
 soar_api_root: str = "https://observe.lco.global/api/"
 ```
+
 Note: the soar API token will default to the same value as lco_token, if it is set.
 
 ## BLANCO
@@ -148,15 +159,18 @@ Note: the soar API token will default to the same value as lco_token, if it is s
 BLANCO is functionally the same as LCO, but has its own set of instruments and can be configured separately.
 
 ### Dependency group
+
 BLANCO requires no additional dependency groups to be installed.
 
 ### Configuration Values
+
 See [configuration](#configuration) for instructions on setting these values.
 
 ```python
 blanco_token: str = ""
 blanco_api_root: str = "https://observe.lco.global/api/"
 ```
+
 Note: the blanco API token will default to the same value as lco_token, if it is set.
 
 ## ESO (European Southern Observatory)
@@ -164,7 +178,9 @@ Note: the blanco API token will default to the same value as lco_token, if it is
 Full documentation: TODO
 
 ### Dependency Group
+
 To use the ESO facility, you must install the `eso` group:
+
 ```bash
 pip install aeonlib[eso]
 uv sync --extra eso
@@ -172,6 +188,7 @@ poetry install --with eso
 ```
 
 ### Configuration Values
+
 See [configuration](#configuration) for instructions on setting these values.
 
 ```python
@@ -185,17 +202,20 @@ eso_password: str = ""
 * [ESO Phase 2 API](https://www.eso.org/sci/observing/phase2/p2intro/Phase2API.html)
 * [ESO Phase 2 Demo Application](https://www.eso.org/p2demo/home)
 
-
 ## LT (Liverpool Telescope)
 
 ### Dependency Group
+
 To use the LT facility, you must install the `lt` group:
+
 ```bash
 pip install aeonlib[lt]
 uv sync --extra lt
 poetry install --with lt
 ```
+
 ### Configuration Values
+
 See [configuration](#configuration) for instructions on setting these values.
 
 ```python
@@ -204,17 +224,43 @@ lt_password: str = ""
 lt_host: str = ""
 lt_port: str = ""
 ```
-### Helpful links
-* [LT Phase 2 Information](https://telescope.livjm.ac.uk/PropInst/Phase2/)
 
+### Helpful links
+
+* [LT Phase 2 Information](https://telescope.livjm.ac.uk/PropInst/Phase2/)
 
 ## SAAO (South African Astronomical Observatory)
 
 ### Configuration Values
+
 ```python
     saao_token: str = ""
-    saao_api_root: str = "https://ocsio.saao.ac.za/api/"
+saao_api_root: str = "https://ocsio.saao.ac.za/api/"
 ```
 
 ### Helpful links
+
 * [SAAO Observatory Control System](https://ocsio.saao.ac.za/create)
+
+## SALT (Southern African Large Telescope)
+
+### Dependency Group
+
+To use the SALT facility, you must install the `salt` group:
+
+```bash
+pip install aeonlib[salt]
+uv sync --extra salt
+poetry install --with salt
+```
+
+### Configuration values
+
+See [configuration](#configuration) for instructions on setting these values.
+
+```python
+salt_username: str = ""
+salt_password = ""
+```
+
+The username and password are those you would use for the [SALT Web Manager](https://www.salt.ac.za/wm/).
