@@ -26,6 +26,7 @@ salt = [
     { name = "beautifulsoup4" },
     { name = "jinja2" },
     { name = "lxml" },
+    { name = "pyastrosalt" },
 ]
 
 [package.dev-dependencies]
@@ -49,6 +50,7 @@ requires-dist = [
     { name = "lxml", marker = "extra == 'salt'", specifier = ">=6.0.1" },
     { name = "lxml-stubs", marker = "extra == 'lt'", specifier = ">=0.5.1" },
     { name = "p2api", marker = "extra == 'eso'", specifier = ">=1.0.10" },
+    { name = "pyastrosalt", marker = "extra == 'salt'", specifier = ">=0.2.0" },
     { name = "pydantic", specifier = ">=2.11.1" },
     { name = "pydantic-settings", specifier = ">=2.9.1" },
     { name = "suds", marker = "extra == 'lt'", specifier = ">=1.2.0" },
@@ -279,6 +281,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/94/0f/f66125ecf88e4cb5b8017ff43f3a87ede2d064cb54a1c5893f9da9d65093/cryptography-46.0.1-cp38-abi3-manylinux_2_34_x86_64.whl", hash = "sha256:ed957044e368ed295257ae3d212b95456bd9756df490e1ac4538857f67531fcc", size = 4591247, upload-time = "2025-09-17T00:10:02.874Z" },
     { url = "https://files.pythonhosted.org/packages/f6/22/9f3134ae436b63b463cfdf0ff506a0570da6873adb4bf8c19b8a5b4bac64/cryptography-46.0.1-cp38-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:f7de12fa0eee6234de9a9ce0ffcfa6ce97361db7a50b09b65c63ac58e5f22fc7", size = 4428534, upload-time = "2025-09-17T00:10:04.994Z" },
     { url = "https://files.pythonhosted.org/packages/89/39/e6042bcb2638650b0005c752c38ea830cbfbcbb1830e4d64d530000aa8dc/cryptography-46.0.1-cp38-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:7fab1187b6c6b2f11a326f33b036f7168f5b996aedd0c059f9738915e4e8f53a", size = 4699541, upload-time = "2025-09-17T00:10:06.925Z" },
+]
+
+[[package]]
+name = "defusedxml"
+version = "0.7.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/0f/d5/c66da9b79e5bdb124974bfe172b4daf3c984ebd9c2a06e2b8a4dc7331c72/defusedxml-0.7.1.tar.gz", hash = "sha256:1bb3032db185915b62d7c6209c5a8792be6a32ab2fedacc84e01b52c51aa3e69", size = 75520, upload-time = "2021-03-08T10:59:26.269Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/07/6c/aa3f2f849e01cb6a001cd8554a88d4c77c5c1a31c95bdf1cf9301e6d9ef4/defusedxml-0.7.1-py2.py3-none-any.whl", hash = "sha256:a352e7e428770286cc899e2542b6cdaedb2b4953ff269a210103ec58f6198a61", size = 25604, upload-time = "2021-03-08T10:59:24.45Z" },
 ]
 
 [[package]]
@@ -620,6 +631,20 @@ wheels = [
 ]
 
 [[package]]
+name = "pyastrosalt"
+version = "0.2.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "defusedxml" },
+    { name = "requests" },
+    { name = "types-defusedxml" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a3/08/2a45dac29e5e7d2084425209ebf55c6cc2ef75d54c1b3dd65cb54bb9d09f/pyastrosalt-0.2.0.tar.gz", hash = "sha256:4e6d14eefaa34520fca1ac6f53675053c42deb5526d4d8605a940ea1dca316e4", size = 16204, upload-time = "2026-04-24T17:05:04.279Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6d/74/0ba659828893ce394ba999f64dabbd0f051039d7ab474363394d54c97b45/pyastrosalt-0.2.0-py3-none-any.whl", hash = "sha256:fe94f6290c7e2d007256b7e7b615ad7b6c041f347dcf5df8385e572e7c10dd79", size = 11986, upload-time = "2026-04-24T17:05:03.106Z" },
+]
+
+[[package]]
 name = "pycparser"
 version = "2.23"
 source = { registry = "https://pypi.org/simple" }
@@ -911,6 +936,15 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/5b/9e/5f4b2ea63b267bd78f3245e76f5528836611b5f2d30b5e7300a722fe4428/time_machine-3.2.0-cp314-cp314t-win32.whl", hash = "sha256:75724762ffd517e7e80aaec1fad1ff5a7414bd84e2b3ee7a0bacfeb67c14926e", size = 18091, upload-time = "2025-12-17T23:32:59.403Z" },
     { url = "https://files.pythonhosted.org/packages/39/6f/456b1f4d2700ae02b19eba830f870596a4b89b74bac3b6c80666f1b108c5/time_machine-3.2.0-cp314-cp314t-win_amd64.whl", hash = "sha256:2526abbd053c5bca898d1b3e7898eec34626b12206718d8c7ce88fd12c1c9c5c", size = 19208, upload-time = "2025-12-17T23:33:00.488Z" },
     { url = "https://files.pythonhosted.org/packages/2f/22/8063101427ecd3d2652aada4d21d0876b07a3dc789125bca2ee858fec3ed/time_machine-3.2.0-cp314-cp314t-win_arm64.whl", hash = "sha256:7f2fb6784b414edbe2c0b558bfaab0c251955ba27edd62946cce4a01675a992c", size = 17359, upload-time = "2025-12-17T23:33:01.54Z" },
+]
+
+[[package]]
+name = "types-defusedxml"
+version = "0.7.0.20260408"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/39/af/d324da5ffbf0af40477533a09ee6c902de335c445a8dcc88c58f62af6e5f/types_defusedxml-0.7.0.20260408.tar.gz", hash = "sha256:f35377d59344f98b57f9bf319cff2107aac35f9e4d42f9ed6cfeeafacffadb00", size = 10638, upload-time = "2026-04-08T04:26:12.239Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ed/68/7570cfb818d6a5b3ff964114527e28e360eccf18329b457f057a18596e64/types_defusedxml-0.7.0.20260408-py3-none-any.whl", hash = "sha256:2d68db82412170b91b3e490b7c118a4f4e5a27756a126e2453f629c8d514b106", size = 13435, upload-time = "2026-04-08T04:26:11.347Z" },
 ]
 
 [[package]]
