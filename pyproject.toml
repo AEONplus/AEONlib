@@ -39,11 +39,11 @@ salt = [
     "beautifulsoup4>=4.14.3",
     "jinja2>=3.1.6",
     "lxml>=6.0.1",
-    "pyastrosalt>=0.2.0",
+    "pyastrosalt>=0.2.1",
 ]
 
 [tool.pytest.ini_options]
-addopts = ["--import-mode=importlib",  "-m not online"]
+addopts = ["--import-mode=importlib", "-m not online"]
 markers = [
     "online: Marks tests that run online, for example, validating schemas",
     "side_effect: Online tests that have side effects such as creating observation requests",
