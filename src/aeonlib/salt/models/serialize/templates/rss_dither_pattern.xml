@@ -1,0 +1,9 @@
+<Dithering>
+    <HorizontalTileCount>{{ dither_pattern.num_columns }}</HorizontalTileCount>
+    <VerticalTileCount>{{ dither_pattern.num_rows }}</VerticalTileCount>
+    <StepCount>{{ dither_pattern.num_steps }}</StepCount>
+    <Offset>
+        <Value>{{ dither_pattern.offset }}</Value>
+        <Units>arcseconds</Units>
+    </Offset>
+</Dithering>

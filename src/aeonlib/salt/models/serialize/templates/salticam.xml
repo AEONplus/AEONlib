@@ -1,0 +1,30 @@
+<Salticam>
+    <Name>Salticam</Name>
+    <Cycles>{{ salticam.num_cycles }}</Cycles>
+    <SalticamProcedure>
+        {% for step in salticam.filter_sequence %}
+            <SalticamFilterArray>
+                <Filter>{{ step.filter }}</Filter>
+                <ExposureTime>
+                    <Value>{{ step.exposure_time }}</Value>
+                    <Units>seconds</Units>
+                </ExposureTime>
+            </SalticamFilterArray>
+        {% endfor %}
+    </SalticamProcedure>
+    {% with detector=salticam.detector %}
+        {% include "salticam_detector.xml" %}
+    {% endwith %}
+    <MinimumSN>0</MinimumSN>
+    {% if salticam.dither_pattern %}
+        {% with dither_pattern=salticam.dither_pattern %}
+            {% include "salticam_dither_pattern.xml" %}
+        {% endwith %}
+    {% endif %}
+    <InCalibration>false</InCalibration>
+    {% if salticam.include_flat %}
+        <SalticamCalibration>
+            <SalticamDefaultCalibrationFlat/>
+        </SalticamCalibration>
+    {% endif %}
+</Salticam>

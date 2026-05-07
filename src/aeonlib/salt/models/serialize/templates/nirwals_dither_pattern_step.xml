@@ -1,0 +1,20 @@
+<NirDitherStep>
+    <Offset>
+        <X>{{ step.horizontal_offset }}</X>
+        <Y>{{ step.vertical_offset }}</Y>
+    </Offset>
+    <OffsetType>{{ step.offset_type }}</OffsetType>
+    <Detector>
+        <ExposureTime>
+            <Value>{{ step.exposure_time }}</Value>
+            <Units>seconds</Units>
+        </ExposureTime>
+        <Iterations>1</Iterations>
+        <Gain>{{ step.gain }}</Gain>
+        <Sampling>{{ step.sampling }}</Sampling>
+        <Reads>{{ step.num_reads }}</Reads>
+        <Ramps>{{ step.num_ramps }}</Ramps>
+        <Groups>{{ step.num_groups }}</Groups>
+    </Detector>
+    <ExposureType>{{ step.exposure_type }}</ExposureType>
+</NirDitherStep>

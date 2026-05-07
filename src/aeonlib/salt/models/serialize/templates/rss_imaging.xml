@@ -1,0 +1,20 @@
+<RssConfig>
+    <SlitMask/>
+    <Mode>
+        <Imaging/>
+    </Mode>
+    {% if configuration.filter.startswith("pi") %}
+        <FilterId>{{ configuration.filter }}</FilterId>
+    {% else %}
+        <SalticamFilter>{{ configuration.filter }}</SalticamFilter>
+    {% endif %}
+    {% if configuration.polarimetry %}
+        <Polarimetry>
+            <BeamsplitterOrientation>normal</BeamsplitterOrientation>
+        </Polarimetry>
+    {% endif %}
+    <FocusPosition>
+        <Value>1000</Value>
+        <Units>microns</Units>
+    </FocusPosition>
+</RssConfig>

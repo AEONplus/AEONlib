@@ -1,0 +1,643 @@
+import re
+from copy import deepcopy
+from datetime import datetime
+from typing import Any
+from zoneinfo import ZoneInfo
+
+import astropy.units as u
+import pytest
+import time_machine
+from astropy.coordinates import Angle
+from astropy.units import Quantity
+
+from aeonlib.models import Window
+from aeonlib.salt.models import SalticamFilterSequenceStep
+from aeonlib.salt.models.util import render_template, validate_xml
+
+
+class TestSalticamTemplates:
+    def test_salticam_detector_template(self, base_salticam_detector):
+        """Test that the Salticam detector template generates valid XML."""
+        xml = render_template(
+            "salticam_detector.xml", detector=base_salticam_detector.model_dump()
+        )
+        validate_xml(xml)
+        assert True
+
+    def test_salticam_dithering_pattern(self, base_salticam_dither_pattern):
+        """Test that the Salticam dither pattern template generates valid XML."""
+        dither_pattern = base_salticam_dither_pattern
+
+        xml = render_template(
+            "salticam_dither_pattern.xml", dither_pattern=dither_pattern.model_dump()
+        )
+
+        validate_xml(xml)
+
+    @pytest.mark.parametrize("full", [False, True])
+    def test_salticam_template(
+        self, full: bool, base_salticam, base_salticam_dither_pattern
+    ):
+        """Test that the Salticam template generates valid XML."""
+        salticam = base_salticam
+        salticam.filter_sequence.append(
+            SalticamFilterSequenceStep(filter="Cousins R", exposure_time=42)
+        )
+        if full:
+            salticam.dither_pattern = base_salticam_dither_pattern
+            salticam.include_flat = True
+        else:
+            salticam.dither_pattern = None
+            salticam.include_flat = False
+        xml = render_template("salticam.xml", salticam=salticam.model_dump())
+
+        if full:
+            assert "Dither" in xml
+            assert "SalticamDefaultCalibrationFlat" in xml
+        else:
+            assert "Dither" not in xml
+            assert "SalticamDefaultCalibrationFlat" not in xml
+
+        validate_xml(xml)
+        assert True
+
+
+class TestRssTemplates:
+    @pytest.mark.parametrize("full", [False, True])
+    def test_rss_detector_template(self, full: bool, base_rss_detector):
+        """Test that the RSS detector template generates valid XML."""
+        detector = base_rss_detector
+
+        if full:
+            detector.window_height = 45 * u.arcsec
+        else:
+            detector.window_height = None
+
+        xml = render_template("rss_detector.xml", detector=detector.model_dump())
+
+        if full:
+            assert "Height" in xml
+        else:
+            assert "Height" not in xml
+
+        validate_xml(xml)
+        assert True
+
+    @pytest.mark.parametrize("full", [False, True])
+    def test_rss_imaging(self, full: bool, base_rss_imaging, base_rss_polarimetry):
+        """Tests that the RSS imaging template generates valid XML."""
+        configuration = base_rss_imaging
+
+        if full:
+            configuration.polarimetry = base_rss_polarimetry
+        else:
+            configuration.polarimetry = None
+
+        xml = render_template(
+            "rss_imaging.xml", configuration=configuration.model_dump()
+        )
+
+        if full:
+            assert "BeamsplitterOrientation" in xml
+        else:
+            assert "BeamsplitterOrientation" not in xml
+
+        validate_xml(xml)
+        assert True
+
+    @pytest.mark.parametrize(
+        "filter_name, expected_element",
+        [("pi04340", "FilterId"), ("Johnson V", "SalticamFilter")],
+    )
+    def test_rss_imaging_filter(
+        self, filter_name: str, expected_element: str, base_rss_imaging
+    ):
+        """Tests that RSS imaging filters are handled correctly when generating XML."""
+        configuration = base_rss_imaging
+        configuration.filter = filter_name
+
+        xml = render_template(
+            "rss_imaging.xml", configuration=configuration.model_dump()
+        )
+        assert expected_element in xml
+
+        validate_xml(xml)
+        assert True
+
+    @pytest.mark.parametrize("full", [False, True])
+    def test_rss_longslit_spectroscopy(
+        self, full: bool, base_rss_longslit_spectroscopy, base_rss_polarimetry
+    ):
+        """Test that the template for RSS longslit spectroscopy generates valid XML."""
+        configuration = base_rss_longslit_spectroscopy
+
+        if full:
+            configuration.polarimetry = base_rss_polarimetry
+        else:
+            configuration.polarimetry = None
+
+        xml = render_template(
+            "rss_spectroscopy.xml", configuration=configuration.model_dump()
+        )
+
+        assert "PredefinedMask" in xml
+
+        if full:
+            assert "BeamsplitterOrientation" in xml
+        else:
+            assert "BeamsplitterOrientation" not in xml
+
+        validate_xml(xml)
+        assert True
+
+    @pytest.mark.parametrize("full", [False, True])
+    def test_rss_mos_spectroscopy(
+        self, full: bool, base_rss_multi_object_spectroscopy, base_rss_polarimetry
+    ):
+        """
+        Test that the template for RSS multi-object spectroscopy generates valid XML.
+        """
+        configuration = base_rss_multi_object_spectroscopy
+
+        if full:
+            configuration.polarimetry = base_rss_polarimetry
+        else:
+            configuration.polarimetry = None
+
+        xml = render_template(
+            "rss_spectroscopy.xml", configuration=configuration.model_dump()
+        )
+
+        assert "MOS" in xml
+        assert "Path" in xml
+
+        if full:
+            assert "BeamsplitterOrientation" in xml
+        else:
+            assert "BeamsplitterOrientation" not in xml
+
+        validate_xml(xml)
+        assert True
+
+    @pytest.mark.parametrize("full", [False, True])
+    def test_rss_slit_mask_ifu_spectroscopy(
+        self, full: bool, base_rss_slit_mask_ifu_spectroscopy, base_rss_polarimetry
+    ):
+        """
+        Test that the template for RSS slit mask IFY spectroscopy generates valid XML.
+        """
+        configuration = base_rss_slit_mask_ifu_spectroscopy
+
+        if full:
+            configuration.polarimetry = base_rss_polarimetry
+        else:
+            configuration.polarimetry = None
+
+        xml = render_template(
+            "rss_spectroscopy.xml", configuration=configuration.model_dump()
+        )
+
+        assert "SMI" in xml
+
+        if full:
+            assert "BeamsplitterOrientation" in xml
+        else:
+            assert "BeamsplitterOrientation" not in xml
+
+        validate_xml(xml)
+        assert True
+
+    def test_rss_dithering_pattern(self, base_rss_dither_pattern):
+        dither_pattern = base_rss_dither_pattern
+        """Test that the template for RSS dither patterns generates valid XML."""
+
+        xml = render_template(
+            "rss_dither_pattern.xml", dither_pattern=dither_pattern.model_dump()
+        )
+
+        validate_xml(xml)
+
+    @pytest.mark.parametrize("full", [False, True])
+    def test_rss(
+        self, full: bool, base_rss, base_rss_polarimetry, base_rss_longslit_spectroscopy
+    ):
+        """Test that the RSS template generates valid XML."""
+        rss = base_rss
+        rss.configuration = base_rss_longslit_spectroscopy
+
+        if full:
+            rss.configuration.polarimetry.wave_plate_pattern = (
+                "circular"  # base_rss_polarimetry
+            )
+            rss.configuration.include_flat = True
+            rss.configuration.include_arc = True
+            rss.configuration.request_spectrophotometric_standard = True
+        else:
+            rss.configuration.polarimetry = None
+            rss.configuration.include_flat = False
+            rss.configuration.include_arc = False
+            rss.configuration.request_spectrophotometric_standard = False
+
+        xml = render_template("rss.xml", rss=rss.model_dump())
+
+        if full:
+            assert "RssProcedure" in xml
+            assert "WaveplatePattern" in xml
+            assert "RssDefaultCalibrationFlat" in xml
+            assert "RssDefaultArc" in xml
+            assert "RssStandard" in xml
+        else:
+            assert "RssProcedure" not in xml
+            assert "WaveplatePattern" not in xml
+            assert "RssDefaultCalibrationFlat" not in xml
+            assert "RssDefaultArc" not in xml
+            assert "RssStandard" not in xml
+
+        validate_xml(xml)
+        assert True
+
+    def test_rss_wave_plate_pattern_step_values(
+        self, base_rss, base_rss_longslit_spectroscopy, base_rss_polarimetry
+    ):
+        """Test that the wave plate pattern step values are correct."""
+        rss = base_rss
+        rss.configuration = base_rss_longslit_spectroscopy
+        rss.configuration.polarimetry = base_rss_polarimetry
+        rss.configuration.polarimetry.wave_plate_pattern = "circular"
+
+        xml = render_template("rss.xml", rss=rss.model_dump())
+
+        assert "<HWStation>0_0</HWStation>" in xml
+        assert "<QWStation>4_45.00</QWStation>" in xml
+        assert "<QWStation>28_315.00</QWStation>" in xml
+
+
+class TestHrs:
+    @pytest.mark.parametrize(
+        "mode, iodine_cell_position",
+        [
+            ("low resolution", "OUT"),
+            ("medium resolution", "OUT"),
+            ("high resolution", "OUT"),
+            ("high stability", "ThAr"),
+        ],
+    )
+    def test_hrs(self, mode: str, iodine_cell_position: str, base_hrs):
+        hrs = base_hrs
+        hrs.mode = mode
+
+        xml = render_template("hrs.xml", hrs=hrs.model_dump())
+
+        assert f"<IodineCellPosition>{iodine_cell_position}</IodineCellPosition>" in xml
+
+        validate_xml(xml)
+        assert True
+
+
+class TestNirwalsTemplates:
+    def test_nirwals_dither_pattern_step(self, base_nirwals_dither_pattern_step):
+        """Test that the NIRWALS dither pattern step templates generates valid XML."""
+        step = base_nirwals_dither_pattern_step
+
+        xml = render_template("nirwals_dither_pattern_step.xml", step=step.model_dump())
+
+        validate_xml(xml)
+        assert True
+
+    @pytest.mark.parametrize("full", [False, True])
+    def test_nirwals(self, full: bool, base_nirwals):
+        """Test that the NIRWALS template generates valid XML."""
+        nirwals = base_nirwals
+
+        if full:
+            nirwals.include_flat = True
+            nirwals.include_arc = True
+            nirwals.request_spectrophotometric_standard = True
+        else:
+            nirwals.include_flat = False
+            nirwals.include_arc = False
+            nirwals.request_spectrophotometric_standard = False
+
+        xml = render_template("nirwals.xml", nirwals=nirwals.model_dump())
+
+        if full:
+            assert "NirDefaultCalibrationFlat" in xml
+            assert "NirDefaultArc" in xml
+            assert "NirStandard" in xml
+        else:
+            assert "NirDefaultCalibrationFlat" not in xml
+            assert "NirDefaultArc" not in xml
+            assert "NirStandard" not in xml
+
+        validate_xml(xml)
+        assert True
+
+    @pytest.mark.parametrize(
+        "angle, station",
+        [
+            (0 * u.deg, "0_0"),
+            (0.5 * u.deg, "1_0.5"),
+            (14 * u.deg, "28_14.0"),
+            (37.5 * u.deg, "75_37.5"),
+            (100 * u.deg, "200_100.0"),
+        ],
+    )
+    def test_nirwals_articulation_station(
+        self, angle: Quantity, station: str, base_nirwals
+    ):
+        """Test that the NIRWALS articulation station is output correctly."""
+        nirwals = base_nirwals
+        nirwals.articulation_angle = angle
+
+        xml = render_template("nirwals.xml", nirwals=nirwals.model_dump())
+
+        assert f"<ArtStation>{station}</ArtStation>" in xml
+
+
+class TestTarget:
+    @pytest.mark.parametrize("full", [False, True])
+    def test_target(self, full: bool, base_target):
+        """Test that the target template generates valid XML."""
+        target = base_target
+
+        if full:
+            target.proper_motion_ra = 17
+            target.proper_motion_dec = -3
+        else:
+            target.proper_motion_ra = 0
+            target.proper_motion_dec = 0
+
+        xml = render_template("target.xml", target=target.model_dump())
+
+        if full:
+            assert "RightAscensionDot" in xml
+            assert "DeclinationDot" in xml
+        else:
+            assert "RightAscensionDot" not in xml
+            assert "DeclinationDot" not in xml
+
+        validate_xml(xml)
+        assert True
+
+    @pytest.mark.parametrize(
+        "ra, hours, minutes, seconds",
+        [
+            ("0d", "0", "0", "0.0"),
+            ("13h 24m 34.67s", "13", "24", "34.67"),
+            ("22.5d", "1", "30", "0.0"),
+        ],
+    )
+    def test_right_ascension(
+        self, ra: str, hours: str, minutes: str, seconds: str, base_target
+    ):
+        """Test that the right ascension is mapped correctly to XML."""
+        target = base_target
+        target.ra = Angle(ra)
+
+        xml = render_template("target.xml", target=target.model_dump())
+
+        assert f"<Hours>{hours}</Hours>" in xml
+        assert f"<Minutes>{minutes}</Minutes>" in xml
+        assert f"<Seconds>{seconds}</Seconds>" in xml
+
+    @pytest.mark.parametrize(
+        "dec, sign, degrees, arcminutes, arcseconds",
+        [
+            ("0d", "+", "0", "0", "0.0"),
+            ("-53d 13m 47.44s", "-", "53", "13", "47.44"),
+            ("+6d 30m 17.6s", "+", "6", "30", "17.6"),
+            ("10d", "+", "10", "0", "0.0"),
+        ],
+    )
+    def test_declination(
+        self,
+        sign: str,
+        dec: str,
+        degrees: str,
+        arcminutes: str,
+        arcseconds: str,
+        base_target,
+    ):
+        """Test that the declination is mapped correctly to XML."""
+        target = base_target
+        target.dec = dec
+
+        xml = render_template("target.xml", target=target.model_dump())
+
+        assert f"<Sign>{sign}</Sign>" in xml
+        assert f"<Degrees>{degrees}</Degrees>" in xml
+        assert f"<Arcminutes>{arcminutes}</Arcminutes>" in xml
+        assert f"<Arcseconds>{arcseconds}</Arcseconds>" in xml
+
+    @pytest.mark.parametrize(
+        "proper_motion_ra, proper_motion_dec, required",
+        [(0, 0, False), (0, 34, True), (45, 0, True), (-5, -7, True)],
+    )
+    def test_proper_motion(
+        self,
+        proper_motion_ra: float,
+        proper_motion_dec: float,
+        required: bool,
+        base_target,
+    ):
+        """Test that the proper motion is mapped correctly to XML."""
+        target = base_target
+
+        target.proper_motion_ra = proper_motion_ra
+        target.proper_motion_dec = proper_motion_dec
+
+        xml = render_template("target.xml", target=target.model_dump())
+
+        if required:
+            assert "RightAscensionDot" in xml
+            assert "DeclinationDot" in xml
+        else:
+            assert "RightAscensionDot" not in xml
+            assert "DeclinationDot" not in xml
+
+        validate_xml(xml)
+        assert True
+
+
+class TestAcquisition:
+    @pytest.mark.parametrize("full", [False, True])
+    def test_acquisition(
+        self, full: bool, base_acquisition, base_reference_star, base_target
+    ):
+        """Test that the acquisition template generates valid XML."""
+        acquisition = base_acquisition
+        target = base_target
+
+        if full:
+            acquisition.reference_star = base_reference_star
+            acquisition.include_focused_image = True
+        else:
+            acquisition.reference_star = None
+            acquisition.include_focused_image = False
+
+        xml = render_template(
+            "acquisition.xml",
+            acquisition=acquisition.model_dump(),
+            target=target.model_dump(),
+        )
+
+        if full:
+            assert "<ReferenceStar>" in xml
+            assert "<IncludeFocusedImage/>" in xml
+        else:
+            assert "<ReferenceStar>" not in xml
+            assert "<IncludeFocusedImage/>" not in xml
+
+        validate_xml(xml)
+        assert True
+
+
+class TestBlock:
+    @pytest.mark.parametrize("full", [False, True])
+    def test_block(self, full: bool, base_block):
+        """Test that the block template generates valid XML."""
+        block = base_block
+
+        if full:
+            block.comments = "some comment"
+            block.acquisition.position_angle = 67 * u.deg
+        else:
+            block.comments = None
+            block.acquisition.position_angle = None
+
+        xml = render_template("block.xml", block=block.model_dump())
+
+        if full:
+            assert "<Comments>" in xml
+            assert "<OnSkyPositionAngle>" in xml
+
+        validate_xml(xml)
+        assert True
+
+    @pytest.mark.parametrize(
+        "position_angle, do_not_flip, expected, not_expected",
+        [
+            (
+                17 * u.deg,
+                True,
+                ["OnSkyPositionAngle", "Fixed"],
+                ["UseParallacticAngle"],
+            ),
+            (
+                "parallactic",
+                False,
+                ["OnSkyPositionAngle", "UseParallacticAngle"],
+                ["Fixed"],
+            ),
+            (
+                None,
+                True,
+                [],
+                ["OnSkyPositionAngle", "Fixed", "UseParallacticAngle"],
+            ),
+        ],
+    )
+    def test_position_angle(
+        self,
+        position_angle: Any,
+        do_not_flip: bool,
+        expected: list[str],
+        not_expected: list[str],
+        base_block,
+    ):
+        """Test that the position angle is handled correctly in the generated XML."""
+        block = base_block
+        block.acquisition.position_angle = position_angle
+        block.acquisition.do_not_flip_position_angle = do_not_flip
+
+        xml = render_template("block.xml", block=block.model_dump())
+
+        for e in expected:
+            assert e in xml
+        for ne in not_expected:
+            assert ne not in xml
+
+        validate_xml(xml)
+        assert True
+
+    def test_windows_with_start_and_end(self, base_block):
+        """Test that windows with start and end are serialized correctly."""
+        block = base_block
+        block.windows = [
+            Window(
+                start=datetime(
+                    2026, 4, 20, 3, 4, 5, 0, tzinfo=ZoneInfo("Africa/Johannesburg")
+                ),
+                end=datetime(
+                    2026, 4, 22, 4, 5, 6, 0, tzinfo=ZoneInfo("Africa/Johannesburg")
+                ),
+            ),
+            Window(
+                start=datetime(
+                    2026, 5, 1, 22, 0, 17, 0, tzinfo=ZoneInfo("Africa/Johannesburg")
+                ),
+                end=datetime(
+                    2026, 5, 2, 2, 15, 6, 0, tzinfo=ZoneInfo("Africa/Johannesburg")
+                ),
+            ),
+        ]
+
+        xml = render_template("block.xml", block=block.model_dump())
+
+        assert "<TimeStart>2026-04-20T01:04:05Z</TimeStart>" in xml
+        assert "<TimeEnd>2026-04-22T02:05:06Z</TimeEnd>" in xml
+        assert "<TimeStart>2026-05-01T20:00:17Z</TimeStart>" in xml
+        assert "<TimeEnd>2026-05-02T00:15:06Z</TimeEnd>" in xml
+
+        validate_xml(xml)
+        assert True
+
+    def test_window_with_end_only(self, base_block):
+        """Test that a window with an end only is serialized correctly."""
+        block = base_block
+        block.windows = [
+            Window(
+                end=datetime(
+                    2026, 5, 21, 2, 21, 7, 0, tzinfo=ZoneInfo("Africa/Johannesburg")
+                )
+            )
+        ]
+
+        with time_machine.travel(
+            datetime(2026, 5, 21, 17, 0, 0, 0, tzinfo=ZoneInfo("UTC"))
+        ):
+            xml = render_template("block.xml", block=block.model_dump())
+
+            assert "<TimeStart>2026-05-21T17:00:00Z</TimeStart>" in xml
+            assert "<TimeEnd>2026-05-21T00:21:07Z</TimeEnd>" in xml
+
+
+class TestBlockSubmission:
+    def test_block_submission(self, base_request):
+        request = base_request
+        block = base_request.blocks[0]
+        block_copy = deepcopy(block)
+        request.blocks.append(block_copy)
+
+        xml = render_template("block_submission.xml", request=request.model_dump())
+
+        assert "<BlockSubmission>" in xml
+        assert len(re.findall(r"<Block ", xml)) == 2
+
+        validate_xml(xml)
+        assert True
+
+    @pytest.mark.parametrize(
+        "semester_string, year, semester", [("2025-2", 2025, 2), ("2026-1", 2026, 1)]
+    )
+    def test_year_and_semester(
+        self, semester_string: str, year: int, semester: int, base_request
+    ):
+        """Test that the semester is serialized correctly."""
+        request = base_request
+        request.semester = semester_string
+
+        xml = render_template("block_submission.xml", request=request.model_dump())
+
+        assert f"<Year>{year}</Year>" in xml
+        assert f"<Semester>{semester}</Semester>" in xml

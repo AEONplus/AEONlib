@@ -1,0 +1,31 @@
+from typing import Literal
+
+
+NirwalsGrating = Literal["ng0950"]
+"""A NIRWALS grating."""
+
+
+NirwalsFilter = Literal["empty"]
+"""A NIRWALS filter."""
+
+
+NirwalsCameraFilter = Literal[
+    "block", "clear", "cutoff 1.5um", "cutoff 1.7um", "diffuser"
+]
+"""A NIRWALS camera filter."""
+
+
+NirwalsOffsetType = Literal["FIF offset", "fif offset", "tracker guided offset"]
+"""An offset type for NIRWALS."""
+
+
+NirwalsExposureType = Literal["science", "sky"]
+"""An exposure type for NIRWALS."""
+
+
+NirwalsGain = Literal["faint"]
+"""A gain option for NIRWALS."""
+
+
+NirwalsSampling = Literal["up-the-ramp", "up-the-ramp group"]
+"""A sampling mode for NIRWALS."""

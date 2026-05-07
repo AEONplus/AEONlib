@@ -1,0 +1,52 @@
+<Rss>
+    <Name>RSS</Name>
+    {% if rss.configuration.polarimetry %}
+        <RssProcedure>
+            <WaveplatePattern>
+                {% for step in rss.configuration.polarimetry.wave_plate_pattern %}
+                    <PatternStep>
+                        {% if step[0] is not none %}
+                            <HWStation>{{ step[0]|wave_plate_station }}</HWStation>
+                        {% endif %}
+                        {% if step[1] is not none %}
+                            <QWStation>{{ step[1]|wave_plate_station }}</QWStation>
+                        {% endif %}
+                    </PatternStep>
+                {% endfor %}
+            </WaveplatePattern>
+        </RssProcedure>
+    {% endif %}
+    {% with configuration=rss.configuration %}
+        {% if configuration.mode == "imaging" %}
+            {% include "rss_imaging.xml" %}
+        {% endif %}
+        {% if configuration.mode == "spectroscopy" %}
+            {% include "rss_spectroscopy.xml" %}
+        {% endif %}
+    {% endwith %}
+    {% with detector=rss.detector %}
+        {% include "rss_detector.xml" %}
+    {% endwith %}
+    <MinimumSN>0</MinimumSN>
+    <Cycles>{{ rss.num_cycles }}</Cycles>
+    {% if rss.configuration.include_flat %}
+        <RssCalibration>
+            <RssDefaultCalibrationFlat/>
+        </RssCalibration>
+    {% endif %}
+    {% if rss.configuration.include_arc %}
+        <RssCalibration>
+            <RssDefaultArc/>
+        </RssCalibration>
+    {% else %}
+        <UseNoArc>true</UseNoArc>
+    {% endif %}
+    {% if rss.configuration.request_spectrophotometric_standard %}
+        <RssNonChargedCalibration>
+            <RssStandard>
+                <StandardType>Spectrophotometric</StandardType>
+            </RssStandard>
+        </RssNonChargedCalibration>
+    {% endif %}
+    <InCalibration>false</InCalibration>
+</Rss>

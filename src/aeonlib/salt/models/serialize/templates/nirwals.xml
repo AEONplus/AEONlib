@@ -1,0 +1,41 @@
+<Nir>
+    <Name>NIRWALS</Name>
+    <Cycles>{{ nirwals.num_cycles }}</Cycles>
+    <NirProcedure>
+        <ProcedureType>Normal</ProcedureType>
+        <NirDitherPattern>
+            {% for step in nirwals.dither_pattern %}
+                {% include "nirwals_dither_pattern_step.xml" %}
+            {% endfor %}
+        </NirDitherPattern>
+    </NirProcedure>
+    <NirConfig>
+        <FilterId>{{ nirwals.filter }}</FilterId>
+        <CameraFilterWheel>{{ nirwals.camera_filter }}</CameraFilterWheel>
+        <Grating>{{ nirwals.grating }}</Grating>
+        <GratingAngle>
+            <Value>{{ nirwals.grating_angle }}</Value>
+            <Units>degrees</Units>
+        </GratingAngle>
+        <ArtStation>{{ nirwals.articulation_angle|nirwals_articulation_station }}</ArtStation>
+        <BundleSeparation>97.0</BundleSeparation>
+    </NirConfig>
+    {% if nirwals.include_flat %}
+        <NirCalibration>
+            <NirDefaultCalibrationFlat/>
+        </NirCalibration>
+    {% endif %}
+    {% if nirwals.include_arc %}
+        <NirCalibration>
+            <NirDefaultArc/>
+        </NirCalibration>
+    {% endif %}
+    {% if nirwals.request_spectrophotometric_standard %}
+        <NirNonChargedCalibration>
+            <NirStandard>
+                <StandardType>Spectrophotometric</StandardType>
+            </NirStandard>
+        </NirNonChargedCalibration>
+    {% endif %}
+    <InCalibration>false</InCalibration>
+</Nir>

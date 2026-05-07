@@ -1,0 +1,9 @@
+<SalticamDetector>
+    <DetMode>{{ detector.readout_mode }}</DetMode>
+    <PreBinRows>{{ detector.num_prebinned_rows }}</PreBinRows>
+    <PreBinCols>{{ detector.num_prebinned_columns }}</PreBinCols>
+    <ExposureType>Science</ExposureType>
+    <Gain>{{ detector.gain }}</Gain>
+    <ReadoutSpeed>{{ detector.readout_speed }}</ReadoutSpeed>
+    <Iterations>{{ detector.num_exposures }}</Iterations>
+</SalticamDetector>
