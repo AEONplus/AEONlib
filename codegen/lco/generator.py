@@ -11,7 +11,9 @@ from jinja2 import Environment, FileSystemLoader
 VALID_FACILITIES = ["SOAR", "LCO", "SAAO", "BLANCO"]
 
 
-def get_extra_params_fields(extra_params_validation_schema: dict) -> dict:
+def get_extra_params_fields(
+    extra_params_validation_schema: dict[Any, Any],
+) -> dict[Any, Any]:
     """Loops over the "extra_params" section of a validation_schema dict and creates a dictionary of
     field to aeonlib field_class to place into the template
     """
@@ -132,10 +134,12 @@ def generate_instrument_configs(ins_s: str, facility: str) -> str:
                     for k, v in ins["optical_elements"].items()
                 },
                 "configuration_extra_params": get_extra_params_fields(
-                    ins["validation_schema"].get("extra_params", {}).get("schema", {})
+                    ins.get("validation_schema", {})
+                    .get("extra_params", {})
+                    .get("schema", {})
                 ),
                 "instrument_config_extra_params": get_extra_params_fields(
-                    ins["validation_schema"]
+                    ins.get("validation_schema", {})
                     .get("instrument_configs", {})
                     .get("schema", {})
                     .get("schema", {})
