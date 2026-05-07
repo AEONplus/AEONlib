@@ -222,9 +222,11 @@ class Acquisition(BaseModel, validate_assignment=True):  # type: ignore
     position_angle: Annotated[Angle | Literal["parallactic"] | None, LowerCaseValidator]
     reference_star: ReferenceStar | None = None
     do_not_flip_position_angle: bool | None = Field(
-        default_factory=lambda data: None
-        if isinstance(data["position_angle"], str) or data["position_angle"] is None
-        else False
+        default_factory=lambda data: (
+            None
+            if isinstance(data["position_angle"], str) or data["position_angle"] is None
+            else False
+        )
     )
     include_focused_image: bool = False
 
