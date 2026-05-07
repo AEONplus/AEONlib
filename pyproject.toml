@@ -6,7 +6,7 @@ readme = "README.md"
 authors = [{ name = "Austin Riba", email = "ariba@lco.global" }]
 requires-python = ">=3.12"
 dependencies = [
-    "astropy>=7.0.1",
+    "astropy>=6.0",
     "httpx>=0.28.1",
     "pydantic>=2.11.1",
     "pydantic-settings>=2.9.1",
