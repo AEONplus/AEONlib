@@ -50,7 +50,7 @@ requires-dist = [
     { name = "lxml", marker = "extra == 'salt'", specifier = ">=6.0.1" },
     { name = "lxml-stubs", marker = "extra == 'lt'", specifier = ">=0.5.1" },
     { name = "p2api", marker = "extra == 'eso'", specifier = ">=1.0.10" },
-    { name = "pyastrosalt", marker = "extra == 'salt'", specifier = ">=0.2.1" },
+    { name = "pyastrosalt", marker = "extra == 'salt'", specifier = ">=0.2.2" },
     { name = "pydantic", specifier = ">=2.11.1" },
     { name = "pydantic-settings", specifier = ">=2.9.1" },
     { name = "suds", marker = "extra == 'lt'", specifier = ">=1.2.0" },
@@ -632,16 +632,16 @@ wheels = [
 
 [[package]]
 name = "pyastrosalt"
-version = "0.2.1"
+version = "0.2.2"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "defusedxml" },
     { name = "requests" },
     { name = "types-defusedxml" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/89/79/fee35e0b4ae20729caf841605973a0bbc82703ec7494aa3a306729e5844e/pyastrosalt-0.2.1.tar.gz", hash = "sha256:fca18a4917432b76027556e9796e51144a11eaeca2d1a974e0625e84ed8d3699", size = 16185, upload-time = "2026-04-28T15:24:27.231Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/8d/1c/27756fc0b4e058fc9f9d6b5246661a285c671e9e8008236a6fecb3e17220/pyastrosalt-0.2.2.tar.gz", hash = "sha256:ae6debbc552f3592260fde1504e59d46ca56dd82400cd59e3a03f9a4b324e637", size = 18419, upload-time = "2026-05-07T09:48:10.25Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/5c/05/4c17fa38c7dd8c229915551b25857b790b5067207a7e5588f28a8a8e0759/pyastrosalt-0.2.1-py3-none-any.whl", hash = "sha256:372c930e02f430b01afcae6e3044a2b4142e28257a57c1e8a3639bdfcfcd3cce", size = 12156, upload-time = "2026-04-28T15:24:26.16Z" },
+    { url = "https://files.pythonhosted.org/packages/68/9f/469888b597ad0017f78228efef10017c9cd7c1f5077c2fa20c9805734dd0/pyastrosalt-0.2.2-py3-none-any.whl", hash = "sha256:7ed089864166b3fd1fe5c79936e2f8f3b547aa696c899bf86d701368a82590e7", size = 14198, upload-time = "2026-05-07T09:48:11.183Z" },
 ]
 
 [[package]]
