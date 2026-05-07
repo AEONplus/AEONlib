@@ -33,7 +33,7 @@ lt = [
 ]
 
 [tool.pytest.ini_options]
-addopts = ["--import-mode=importlib",  "-m not online"]
+addopts = ["--import-mode=importlib", "-m not online"]
 markers = [
     "online: Marks tests that run online, for example, validating schemas",
     "side_effect: Online tests that have side effects such as creating observation requests",
@@ -54,3 +54,15 @@ exclude = [
 reportExplicitAny = false
 reportAny = false
 reportMissingTypeStubs = false
+
+[[tool.mypy.overrides]]
+module = "astropy.*"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "p2api"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "suds.client"
+ignore_missing_imports = true
