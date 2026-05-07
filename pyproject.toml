@@ -1,6 +1,6 @@
 [project]
 name = "aeonlib"
-version = "0.1.1"
+version = "0.2.0"
 description = "A suite of modules to enable TDA/MMA observations"
 readme = "README.md"
 authors = [{ name = "Austin Riba", email = "ariba@lco.global" }]
