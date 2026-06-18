@@ -11,6 +11,7 @@ from aeonlib.ocs.lco.instruments import (
     Lco1M0ScicamSinistro,
     Lco2M0FloydsScicam,
     Lco2M0ScicamMuscat,
+    Lco2M0ScicamMuscatInstrumentConfigExtraParams,
 )
 
 target = SiderealTarget(
@@ -125,12 +126,9 @@ lco_2m0_scicam_muscat = RequestGroup(
                                 narrowband_i_position="in",
                                 narrowband_z_position="out",
                             ),
-                            extra_params={  # Hate this. TODO: Hoist these to class
-                                "exposure_time_g": 10,
-                                "exposure_time_r": 10,
-                                "exposure_time_i": 10,
-                                "exposure_time_z": 10,
-                            },
+                            extra_params=Lco2M0ScicamMuscatInstrumentConfigExtraParams(
+                                defocus=0
+                            ),
                         )
                     ],
                     acquisition_config=Lco2M0ScicamMuscat.acquisition_config_class(
