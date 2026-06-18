@@ -21,7 +21,7 @@ class Lco0M4ScicamQhy600ConfigExtraParams(BaseModel):
 
 class Lco0M4ScicamQhy600InstrumentConfigExtraParams(BaseModel):
     model_config = ConfigDict(validate_assignment=True, extra='allow')
-    defocus: Annotated[float, Ge(-5.0), Le(5.0), "Observations may be defocused to prevent the CCD from saturating on bright targets. This term describes the offset (in mm) of the secondary mirror from its default (focused) position. The limits are ± 5mm."] | None = None
+    defocus: Annotated[float, Ge(-0.5), Le(0.5), "Observations may be defocused to prevent the CCD from saturating on bright targets. This term describes the offset (in mm) of the secondary mirror from its default (focused) position. A typical defocus step size is around ±0.025 mm. The limits are ±0.5 mm."] | None = None
 
 
 class Lco0M4ScicamQhy600OpticalElements(BaseModel):
