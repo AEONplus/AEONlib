@@ -11,7 +11,6 @@ from aeonlib.ocs.lco.instruments import (
     Lco1M0ScicamSinistro,
     Lco2M0FloydsScicam,
     Lco2M0ScicamMuscat,
-    Lco2M0ScicamMuscatInstrumentConfigExtraParams,
 )
 
 target = SiderealTarget(
