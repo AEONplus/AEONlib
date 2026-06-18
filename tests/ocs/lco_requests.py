@@ -23,7 +23,7 @@ target = SiderealTarget(
 
 window = Window(
     start=datetime.now(),
-    end=datetime.now() + timedelta(days=60),
+    end=datetime.now() + timedelta(days=7),
 )
 
 lco_1m0_scicam_sinistro = RequestGroup(
@@ -126,9 +126,14 @@ lco_2m0_scicam_muscat = RequestGroup(
                                 narrowband_i_position="in",
                                 narrowband_z_position="out",
                             ),
-                            extra_params=Lco2M0ScicamMuscatInstrumentConfigExtraParams(
-                                defocus=0
-                            ),
+                            # TODO: Not sure what's happening here. These exp time arguments are required by the API,
+                            # but configdb doesn't seem to include them (or the generation script is broken)
+                            extra_params={  # ty: ignore[invalid-argument-type]
+                                "exposure_time_g": 10,
+                                "exposure_time_r": 10,
+                                "exposure_time_i": 10,
+                                "exposure_time_z": 10,
+                            },
                         )
                     ],
                     acquisition_config=Lco2M0ScicamMuscat.acquisition_config_class(

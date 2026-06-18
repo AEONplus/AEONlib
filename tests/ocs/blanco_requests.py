@@ -18,7 +18,7 @@ target = SiderealTarget(
 
 window = Window(
     start=datetime.now(),
-    end=datetime.now() + timedelta(days=60),
+    end=datetime.now() + timedelta(days=7),
 )
 
 blanco_newfirm = RequestGroup(
