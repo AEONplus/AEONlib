@@ -46,7 +46,7 @@ class SoarGhtsBluecamConfig(BaseModel):
     """The number of exposures to take. This field must be set to a value greater than 0"""
     exposure_time: NonNegativeInt
     """ Exposure time in seconds"""
-    mode: Literal["GHTS_B_600UV_2x2_slit1p5", "GHTS_B_400m1_2x2", "GHTS_B_600UV_2x2_slit1p0", "GHTS_B_930m2_1x2_slit0p45"]
+    mode: Literal["GHTS_B_400m1_2x2", "GHTS_B_400m1_2x2_slit1p5"]
     rotator_mode: Literal["SKY"]
     rois: list[Roi] | None = None
     extra_params: SoarGhtsBluecamInstrumentConfigExtraParams = Field(default_factory=SoarGhtsBluecamInstrumentConfigExtraParams)
@@ -161,7 +161,7 @@ class SoarGhtsRedcamConfig(BaseModel):
     """The number of exposures to take. This field must be set to a value greater than 0"""
     exposure_time: NonNegativeInt
     """ Exposure time in seconds"""
-    mode: Literal["GHTS_R_2100_5000A_1x2_slit1p0", "GHTS_R_400m1_2x2", "GHTS_R_400m2_2x2"]
+    mode: Literal["GHTS_R_2100_5000A_1x2_slit1p0", "GHTS_R_400m1_2x2", "GHTS_R_400m2_2x2", "GHTS_R_400m1_2x2_slit1p5"]
     rotator_mode: Literal["SKY"]
     rois: list[Roi] | None = None
     extra_params: SoarGhtsRedcamInstrumentConfigExtraParams = Field(default_factory=SoarGhtsRedcamInstrumentConfigExtraParams)
