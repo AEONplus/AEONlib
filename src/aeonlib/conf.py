@@ -39,5 +39,9 @@ class Settings(BaseSettings):
     salt_username: str = ""
     salt_password: str = ""
 
+    # Canada/France/Hawaii Telescope
+    cfht_api_root: str = "https://api-stage.cfht.hawaii.edu/"
+    cfht_access_token: str = ""
+
 
 settings = Settings()

@@ -26,6 +26,10 @@ update-blanco:
 update-saao:
     curl https://ocsio.saao.ac.za/api/instruments/ | codegen/lco/generator.py SAAO > src/aeonlib/ocs/saao/instruments.py
 
+# Update the CFHT generated models via swagger
+update-cfht:
+    sh codegen/cfht/generate_models.sh
+
 # Update all generated instrument files
 update-all: update-lco update-soar update-saao update-blanco
     @echo "All updates completed"

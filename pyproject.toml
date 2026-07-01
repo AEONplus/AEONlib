@@ -20,6 +20,7 @@ build-backend = "hatchling.build"
 codegen = [
     "jinja2>=3.1.6",
     "textcase>=0.2.1",
+    "datamodel-code-generator>=0.66.3",
 ]
 
 dev = [
