@@ -3,6 +3,7 @@ set -euxo pipefail
 # The CFHT API uses OAS 2.0 use the online Swagger converter to convert to OAS 3.0
 curl -L \
 "https://converter.swagger.io/api/convert?url=https://hou-stage.cfht.hawaii.edu/api-docs/piapi_openapiv2.swagger.json" \
+--create-dirs \
 -o build/cfht.openapi3.json
 
 # Generate Pydantic models from the OpenAPI 3.0 spec
