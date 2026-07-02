@@ -18,4 +18,4 @@ datamodel-codegen \
     --formatters builtin
 
 # Ignore some ruff rules that are not relevant for generated code
-sed -i '1s/^/# ruff: noqa: E741\n/' src/aeonlib/cfht/models.py
+sed -i '1s/^/# Auto generated file, do not edit\n# ruff: noqa: E741\n/' src/aeonlib/cfht/models.py
