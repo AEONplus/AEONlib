@@ -13,6 +13,7 @@ datamodel-codegen \
     --openapi-scopes schemas \
     --output src/aeonlib/cfht/models.py \
     --output-model-type pydantic_v2.BaseModel \
+    --snake-case-field \
     --use-annotated \
     --set-default-enum-member \
     --formatters builtin
