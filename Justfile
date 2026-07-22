@@ -28,7 +28,7 @@ update-saao:
 
 # Update the CFHT generated models via swagger
 update-cfht:
-    sh codegen/cfht/generate_models.sh
+    codegen/cfht/generator.py > src/aeonlib/cfht/models.py
 
 # Update all generated instrument files
 update-all: update-lco update-soar update-saao update-blanco
