@@ -27,9 +27,6 @@ class CFHTFacility:
     def programs(self) -> list[ObservingProgramInfo]:
         """Get the list of observing programs"""
         response = self._client.get("/programs/")
-        import json
-
-        print(json.dumps(response.json(), indent=4))
         response.raise_for_status()
 
         payload = response.json()

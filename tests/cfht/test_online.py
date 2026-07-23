@@ -5,12 +5,8 @@ from aeonlib.cfht.facility import CFHTFacility
 pytestmark = pytest.mark.online
 
 
-def test_target_api():
+def test_programs():
     facility = CFHTFacility()
     programs = facility.programs()
-    print(programs)
-    for program in programs:
-        print(program.program_data)
-        # assert program.program_data
-        # assert program.program_data.token
-    assert False
+    assert programs[0].pi_info
+    assert programs[0].pi_info.first_name == "AEON"
