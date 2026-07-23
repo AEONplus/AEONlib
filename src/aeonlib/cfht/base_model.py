@@ -7,4 +7,4 @@ class CFHTBaseModel(BaseModel):
     if necessary
     """
 
-    model_config = ConfigDict(coerce_numbers_to_str=False)
+    model_config = ConfigDict(validate_assignment=True)
