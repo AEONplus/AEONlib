@@ -4,7 +4,7 @@ import httpx
 
 from aeonlib.conf import settings
 
-from .models import ObservingProgramInfo
+from .models import ProgramInfo
 
 INSTRUMENTS = Literal["SPIROU", "ESPADONS", "MEGACAM"]
 
@@ -24,13 +24,12 @@ class CFHTFacility:
         }
         self._client = httpx.Client(base_url=base_url, headers=headers)
 
-    def programs(self) -> list[ObservingProgramInfo]:
+    def programs(self) -> list[ProgramInfo]:
         """Get the list of observing programs"""
         response = self._client.get("/programs/")
         response.raise_for_status()
 
         payload = response.json()
         return [
-            ObservingProgramInfo.model_validate(program)
-            for program in payload.get("entity", [])
+            ProgramInfo.model_validate(program) for program in payload.get("entity", [])
         ]
