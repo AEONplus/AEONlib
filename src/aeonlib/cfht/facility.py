@@ -14,11 +14,14 @@ class CFHTFacility:
 
     def __init__(self):
         base_url = settings.cfht_api_root
+    def __init__(self, api_root: str | None = None, access_token: str | None = None):
         if not base_url:
             raise ValueError("AEON_CFHT_API_ROOT is not set")
-        access_token = settings.cfht_access_token
+
+        access_token = access_token or settings.cfht_access_token
         if not access_token:
             raise ValueError("AEON_CFHT_ACCESS_TOKEN token is not set")
+
         headers = {
             "Authorization": f"Bearer {access_token}",
         }
