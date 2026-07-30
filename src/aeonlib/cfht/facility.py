@@ -47,10 +47,9 @@ class CFHTFacility:
     def create_or_update_target(
         self, program_token: str, target: TargetData, instrument: Instrument
     ) -> TargetData:
-        print(str(instrument.value))
         version = {"value": target.version} if target.version else None
         data = {
-            "entity": target.model_dump(),
+            "entity": target.api_dump(),
             "lock_version": version,
             "instrument": instrument.value,
         }
@@ -58,7 +57,6 @@ class CFHTFacility:
             f"/programs/{program_token}/targets/{target.token}/",
             json=data,
         )
-        print(response.text)
         response.raise_for_status()
         payload = response.json()
         return TargetData.model_validate(payload["entity"])

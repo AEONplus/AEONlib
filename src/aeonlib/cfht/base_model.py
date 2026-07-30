@@ -8,3 +8,11 @@ class CFHTBaseModel(BaseModel):
     """
 
     model_config = ConfigDict(validate_assignment=True)
+
+    def api_dump(self, **kwargs):
+        return self.model_dump(
+            mode="json",
+            by_alias=True,
+            exclude_none=True,
+            **kwargs,
+        )

@@ -52,7 +52,7 @@ def example_fixed_target(program_token: str, instrument: Instrument) -> TargetDa
         magnitude=None,
         temperature_effective=1234.5,
         standard_star=False,
-        pointing_offset_token=f"00AZ00-PO+{instrument}+1",
+        pointing_offset_token=f"00AZ00-PO+{instrument.value}+1",
     )
 
 
@@ -75,7 +75,7 @@ def example_moving_target(program_token: str, instrument: Instrument) -> TargetD
         magnitude=None,
         temperature_effective=1234.5,
         standard_star=False,
-        pointing_offset_token=f"00AZ00-PO+{instrument}+1",
+        pointing_offset_token=f"00AZ00-PO+{instrument.value}+1",
     )
 
 
@@ -102,12 +102,22 @@ def target_api_examples(program_token: str, instrument: Instrument):
         new_target.fixed_target.coordinate.ra = "invalid"  # type: ignore
     assert new_target.fixed_target.coordinate.ra == old_ra
 
+    # Successfully create new target with instrument-specific checks
     new_target.fixed_target.coordinate.ra = 20.7
     mag = TargetDataMagnitude()
     setattr(mag, required_mag_by_instrument[instrument], DoubleValue(value=10.0))
+    print(mag)
     new_target.magnitude = mag
     old_version = new_target.version if new_target.version is not None else 0
     target = FACILITY.create_or_update_target(program_token, new_target, instrument)
+    assert target.version == old_version + 1
+    old_version += 1
+
+    # Update target
+    update_target = target
+    update_target.standard_star = True
+    target = FACILITY.create_or_update_target(program_token, update_target, instrument)
+    assert target.standard_star is True
     assert target.version == old_version + 1
 
 
