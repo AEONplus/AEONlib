@@ -2,7 +2,8 @@ from typing import Literal
 
 import httpx
 
-from aeonlib.conf import settings
+from aeonlib.conf import Settings
+from aeonlib.conf import settings as default_settings
 
 from .models import Instrument, ProgramInfo, TargetData
 
@@ -12,7 +13,7 @@ INSTRUMENTS = Literal["SPIROU", "ESPADONS", "MEGACAM"]
 class CFHTFacility:
     """CFHT Facility class"""
 
-    def __init__(self):
+    def __init__(self, settings: Settings = default_settings):
         base_url = settings.cfht_api_root
         if not base_url:
             raise ValueError("AEON_CFHT_API_ROOT is not set")
