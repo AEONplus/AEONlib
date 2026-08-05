@@ -127,6 +127,7 @@ class TestAstropyAngle:
         t = Target(ra=40 * u.deg, dec=-76.8 * (math.pi / 180) * u.rad)
         assert isinstance(t.ra, Angle)
         assert pytest.approx(t.ra.to(u.deg).value) == 40
+        assert isinstance(t.dec, Angle)
         assert pytest.approx(t.dec.to(u.deg).value) == -76.8
         assert isinstance(t.dec, Angle)
 
