@@ -163,4 +163,4 @@ if __name__ == "__main__":
             )
     except IndexError:
         _ = sys.stdout.write("Usage: python generator.py <facility>")
-        exit(1)
+        sys.exit(1)
