@@ -140,7 +140,7 @@ def _to_utc(t: datetime.datetime | None) -> str:
             raise ValueError("The datetime instance must be naive.")
         t = t.replace(tzinfo=ZoneInfo("UTC"))
 
-    return cast(datetime.datetime, t).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return t.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _sign(value):
