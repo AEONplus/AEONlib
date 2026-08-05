@@ -194,8 +194,10 @@ def render_template(
     env.filters["year_as_iso_timestamp"] = _year_as_iso_timestamp
     env.filters["utc"] = _to_utc
     env.filters["sign"] = _sign
-    env.globals["uuid"] = _uuid
-    env.globals["to_angle"] = _to_angle
+    # jinja does't type env.globals completely
+    template_globals = cast(dict[str, Any], env.globals)
+    template_globals["uuid"] = _uuid
+    template_globals["to_angle"] = _to_angle
     template = env.get_template(template_path)
     return template.render(**kwargs)
 
