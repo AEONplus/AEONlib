@@ -21,9 +21,9 @@ logger = logging.getLogger(__name__)
 
 try:
     import p2api
-except ImportError as e:
+except ImportError:
     logger.critical("p2api not found. Install the 'eso' dependency group for Aeonlib.")
-    raise e
+    raise
 
 
 class ESONetworkError(ServiceNetworkError):
