@@ -1,5 +1,5 @@
 # pyright: reportUnknownArgumentType=false
-from datetime import datetime
+from datetime import UTC, datetime
 
 import pytest
 from astropy.coordinates.earth import Angle
@@ -17,8 +17,12 @@ def test_constraints_from_window():
 
     abs_constraint = AbsoluteTimeConstraint.construct_from(window)
 
-    assert abs_constraint.start == datetime(2025, 4, 10, 0, 0)
-    assert abs_constraint.end == datetime(2025, 4, 11, 0, 0)
+    assert abs_constraint.start.replace(tzinfo=UTC) == datetime(
+        2025, 4, 10, 0, 0, tzinfo=UTC
+    )
+    assert abs_constraint.end.replace(tzinfo=UTC) == datetime(
+        2025, 4, 11, 0, 0, tzinfo=UTC
+    )
 
 
 def test_constraints_from_window_must_enter_start():

@@ -1,6 +1,7 @@
 from datetime import UTC, datetime, timedelta
 
 import pytest
+from astropy.time import Time
 from pydantic import ValidationError
 
 from aeonlib.conf import Settings
@@ -131,7 +132,7 @@ class TestSerialization:
         facility = LcoFacility(settings=Settings(lco_token="", lco_api_root=""))
         target = JplMinorPlanetTarget(
             name="mover",
-            epochofel=datetime(2025, 1, 1),  # Time as datetime
+            epochofel=Time("2025-01-01", scale="tt").to_datetime(),
             perihdist=1.0,
             orbinc=0.0,
             longascnode=0.0,

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import UTC, datetime
 
 import pytest
 from astropy.coordinates import Angle
@@ -17,7 +17,10 @@ TARGET = SiderealTarget(
     ra=Angle("18:36:56.336", unit="hourangle"),
     dec=Angle("+38:47:01.280", unit="deg"),
 )
-WINDOW = Window(start=datetime(2020, 2, 18, 18), end=datetime(2020, 2, 28))
+WINDOW = Window(
+    start=datetime(2020, 2, 18, 18, tzinfo=UTC),
+    end=datetime(2020, 2, 28, tzinfo=UTC),
+)
 
 INSTRUMENT_TESTS = {
     "IOO": Ioo(),
