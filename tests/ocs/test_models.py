@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
 import pytest
 from pydantic import ValidationError
@@ -56,8 +56,8 @@ def request_group() -> RequestGroup:
                 ],
                 windows=[
                     Window(
-                        start=datetime.now(),
-                        end=datetime.now() + timedelta(days=30),
+                        start=datetime.now(UTC),
+                        end=datetime.now(UTC) + timedelta(days=30),
                     )
                 ],
             )

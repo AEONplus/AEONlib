@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
 from aeonlib.models import SiderealTarget, Window
 from aeonlib.ocs import (
@@ -17,8 +17,8 @@ target = SiderealTarget(
 )
 
 window = Window(
-    start=datetime.now(),
-    end=datetime.now() + timedelta(days=7),
+    start=datetime.now(UTC),
+    end=datetime.now(UTC) + timedelta(days=7),
 )
 
 saao_sibonise_imager = RequestGroup(

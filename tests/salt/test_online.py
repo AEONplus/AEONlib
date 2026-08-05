@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
 import pytest
 
@@ -6,8 +6,8 @@ from aeonlib.models import Window
 from aeonlib.salt.facility import SALTFacility
 
 window = Window(
-    start=datetime.now(),
-    end=datetime.now() + timedelta(days=365),
+    start=datetime.now(UTC),
+    end=datetime.now(UTC) + timedelta(days=365),
 )
 
 # Replace with an appropriate proposal code.
