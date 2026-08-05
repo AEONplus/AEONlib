@@ -75,7 +75,7 @@ class Request(BaseModel, validate_assignment=True):  # type: ignore
                     _attachments.add(mask)
 
         # Remove duplicates
-        return set(a.resolve() for a in _attachments)
+        return {a.resolve() for a in _attachments}
 
     def export(self, out: pathlib.Path | os.PathLike | str | BinaryIO) -> None:
         """
