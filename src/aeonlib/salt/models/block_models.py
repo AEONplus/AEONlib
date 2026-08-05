@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import uuid
-from typing import Annotated, Literal, Self, TypeAlias
+from typing import Annotated, Literal, Self
 
 import astropy.units as u
 from pydantic import (
@@ -33,7 +33,7 @@ from aeonlib.salt.models.types import (
 from aeonlib.salt.models.util import CapitalizingSerializer, LowerCaseValidator
 from aeonlib.salt.validators import GreaterEqual, LessEqual, check_in_visibility_range
 
-Instrument: TypeAlias = Salticam | Rss | Hrs | Nirwals
+type Instrument = Salticam | Rss | Hrs | Nirwals
 
 
 class Block(BaseModel, validate_assignment=True):  # type: ignore
