@@ -6,6 +6,19 @@ A suite of modules to enable TDA/MMA observations
 
 [issues](https://github.com/AEONplus/AEONlib/issues)
 
+# Purpose
+
+An increasing amount of observatories and instruments related to time-domain astronomy are coming online
+with programmatic abilities from the start. While most of these APIs are unique, AEONLib attempts to unify
+and abstract as much as possible. Thus AEONLib can be thought of as a suite of client libraries with shared structure and code. The goal is to make writing observing programs for multiple facilities as easy and intuitive as possible.
+
+AEONLib is not a "write once, observe everywhere" meta-language. Every observing facility provides unique
+opportunities to do science and it is not the goal of AEONLib to paper over differences in order to 
+achieve homogeneity. 
+
+For concrete examples, see the iPython notebooks in the [examples/](examples/) directory. The
+[tests/](tests/) are also illustrative.
+
 # Configuration
 
 Many of the facilities and services accessed by AEONlib require specific configuration such
