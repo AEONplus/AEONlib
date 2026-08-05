@@ -32,7 +32,7 @@ from aeonlib.salt.validators import GreaterEqual, LessEqual
 from aeonlib.types import Angle
 
 
-class Nirwals(BaseModel, validate_assignment=True):  # type: ignore
+class Nirwals(BaseModel, validate_assignment=True):
     """
     A NIRWALS configuration.
 
@@ -97,7 +97,7 @@ class Nirwals(BaseModel, validate_assignment=True):  # type: ignore
         return angle
 
 
-class NirwalsDitherPatternStep(BaseModel, validate_assignment=True):  # type: ignore
+class NirwalsDitherPatternStep(BaseModel, validate_assignment=True):
     """
     A step in a NIRWALS dither pattern.
 
@@ -158,7 +158,7 @@ class NirwalsDitherPatternStep(BaseModel, validate_assignment=True):  # type: ig
     num_reads: Literal[1] = 1
     num_ramps: Literal[1] = 1
 
-    @computed_field  # type: ignore
+    @computed_field
     @property
     def num_groups(self) -> int:
         """

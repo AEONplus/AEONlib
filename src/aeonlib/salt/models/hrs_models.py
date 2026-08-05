@@ -15,7 +15,7 @@ from aeonlib.salt.validators import GreaterEqual, LessEqual
 from aeonlib.types import Angle
 
 
-class Hrs(BaseModel, validate_assignment=True):  # type: ignore
+class Hrs(BaseModel, validate_assignment=True):
     """
     An HRS setup.
 
@@ -55,13 +55,13 @@ class Hrs(BaseModel, validate_assignment=True):  # type: ignore
     blue_arm: HrsDetector
     red_arm: HrsDetector
 
-    @computed_field  # type: ignore
+    @computed_field
     @property
     def prv_calibration(self) -> HrsPrvCalibration | None:
         return "ThAr" if self.mode == "high stability" else None
 
 
-class HrsDetector(BaseModel, validate_assignment=True):  # type: ignore
+class HrsDetector(BaseModel, validate_assignment=True):
     """
     An HRS detector setup.
 

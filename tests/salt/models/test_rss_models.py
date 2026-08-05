@@ -175,7 +175,7 @@ class TestRssDitherPattern:
         dither_pattern["num_columns"] = 3
         if "num_steps" in dither_pattern:
             del dither_pattern["num_steps"]
-        assert RssDitherPattern(**dither_pattern).num_steps == 12  # type: ignore
+        assert RssDitherPattern(**dither_pattern).num_steps == 12
 
     @pytest.mark.parametrize(
         "num_rows, num_columns, num_steps, expectation",
@@ -203,4 +203,4 @@ class TestRssDitherPattern:
         dither_pattern["num_columns"] = num_columns
         dither_pattern["num_steps"] = num_steps
         with expectation:
-            RssDitherPattern(**dither_pattern)  # type: ignore
+            RssDitherPattern(**dither_pattern)

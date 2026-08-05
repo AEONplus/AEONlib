@@ -44,7 +44,7 @@ from aeonlib.salt.validators import GreaterEqual, GreaterThan, LessEqual
 from aeonlib.types import Angle
 
 
-class Rss(BaseModel, validate_assignment=True):  # type: ignore
+class Rss(BaseModel, validate_assignment=True):
     """
     An RSS configuration.
 
@@ -102,7 +102,7 @@ class Rss(BaseModel, validate_assignment=True):  # type: ignore
     dither_pattern: RssDitherPattern | None
 
 
-class RssImaging(BaseModel, validate_assignment=True):  # type: ignore
+class RssImaging(BaseModel, validate_assignment=True):
     """
     An RSS imaging configuration.
 
@@ -144,7 +144,7 @@ _WavePlatePattern = (
 )
 
 
-class RssSpectroscopy(BaseModel, validate_assignment=True):  # type: ignore
+class RssSpectroscopy(BaseModel, validate_assignment=True):
     """
     An RSS spectroscopy configuration.
 
@@ -185,7 +185,7 @@ class RssSpectroscopy(BaseModel, validate_assignment=True):  # type: ignore
     include_arc: bool = True
     request_spectrophotometric_standard: bool = False
 
-    @computed_field  # type: ignore
+    @computed_field
     @property
     def articulation_station(self) -> int:
         """Return the articulation station."""
@@ -266,7 +266,7 @@ class RssSlitMaskIFUSpectroscopy(RssSpectroscopy):
     slit_mask_ifu: Annotated[RssSlitMaskIFU, LowerCaseValidator, UpperCaseSerializer]
 
 
-class RssPolarimetry(BaseModel, validate_assignment=True):  # type: ignore
+class RssPolarimetry(BaseModel, validate_assignment=True):
     """
     An RSS polarimetry setup.
 
@@ -362,7 +362,7 @@ class RssPolarimetry(BaseModel, validate_assignment=True):  # type: ignore
             RssPolarimetry._check_pattern_step(step)  # type: ignore
 
 
-class RssDetector(BaseModel, validate_assignment=True):  # type: ignore
+class RssDetector(BaseModel, validate_assignment=True):
     """
     An Rss detector setup.
 
@@ -401,7 +401,7 @@ class RssDetector(BaseModel, validate_assignment=True):  # type: ignore
     ] = None
 
 
-class RssDitherPattern(BaseModel, validate_assignment=True):  # type: ignore
+class RssDitherPattern(BaseModel, validate_assignment=True):
     """
     A dither pattern for RSS.
 

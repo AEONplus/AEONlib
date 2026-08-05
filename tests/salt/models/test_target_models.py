@@ -52,7 +52,7 @@ class TestSaltSiderealTarget:
         target = base_target.model_dump()
         target["dec"] = dec
         with expectation:
-            SaltSiderealTarget(**target)  # type: ignore
+            SaltSiderealTarget(**target)
 
 
 class TestMagnitudeRange:
@@ -79,6 +79,6 @@ class TestMagnitudeRange:
         magnitude_range["max_magnitude"] = max_magnitude
 
         with expectation:
-            MagnitudeRange(**magnitude_range)  # type: ignore
+            MagnitudeRange(**magnitude_range)
 
         assert True

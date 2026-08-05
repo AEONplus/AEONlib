@@ -36,7 +36,7 @@ from aeonlib.salt.validators import GreaterEqual, LessEqual, check_in_visibility
 type Instrument = Salticam | Rss | Hrs | Nirwals
 
 
-class Block(BaseModel, validate_assignment=True):  # type: ignore
+class Block(BaseModel, validate_assignment=True):
     """
     A block for SALT.
 
@@ -139,7 +139,7 @@ class Block(BaseModel, validate_assignment=True):  # type: ignore
         return self
 
 
-class Constraints(BaseModel, validate_assignment=True):  # type: ignore
+class Constraints(BaseModel, validate_assignment=True):
     """
     Observing constraints.
 
@@ -178,7 +178,7 @@ class Constraints(BaseModel, validate_assignment=True):  # type: ignore
     max_seeing: PositiveFloat
 
 
-class Acquisition(BaseModel, validate_assignment=True):  # type: ignore
+class Acquisition(BaseModel, validate_assignment=True):
     """
     An acquisition.
 
@@ -247,7 +247,7 @@ class Acquisition(BaseModel, validate_assignment=True):  # type: ignore
         return self
 
 
-class ReferenceStar(BaseModel, validate_assignment=True):  # type: ignore
+class ReferenceStar(BaseModel, validate_assignment=True):
     """
     A reference star on which to acquire.
 
