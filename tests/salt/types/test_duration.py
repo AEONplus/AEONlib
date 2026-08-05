@@ -2,6 +2,7 @@ from contextlib import nullcontext
 
 import pytest
 from astropy import units as u
+from astropy.units import Quantity
 from pydantic import BaseModel, ValidationError
 
 from aeonlib.salt.models.types import Duration, PositiveDuration
@@ -20,6 +21,7 @@ class TestDuration:
     def test_duration(self, a):
         """Test that durations are stored with a unit."""
         v = A(a=a)
+        assert isinstance(v.a, Quantity)
         assert v.a.value == 5
         assert v.a.unit == u.s
 
