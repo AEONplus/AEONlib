@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 import pytest
+
 from aeonlib.models import Window
 from aeonlib.salt.facility import SALTFacility
 

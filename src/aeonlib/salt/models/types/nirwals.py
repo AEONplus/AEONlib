@@ -1,6 +1,5 @@
 from typing import Literal
 
-
 NirwalsGrating = Literal["ng0950"]
 """A NIRWALS grating."""
 

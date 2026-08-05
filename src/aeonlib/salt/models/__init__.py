@@ -1,6 +1,7 @@
-from .target_models import MagnitudeRange, SaltSiderealTarget
+from .block_models import Acquisition, Block, Constraints, ReferenceStar
 from .hrs_models import Hrs, HrsDetector
 from .nirwals_models import Nirwals, NirwalsDitherPatternStep
+from .request_models import Request
 from .rss_models import (
     Rss,
     RssDetector,
@@ -13,14 +14,12 @@ from .rss_models import (
     RssSpectroscopy,
 )
 from .salticam_models import (
-    SalticamFilterSequenceStep,
     Salticam,
     SalticamDetector,
     SalticamDitherPattern,
+    SalticamFilterSequenceStep,
 )
-from .block_models import Acquisition, Block, Constraints, ReferenceStar
-from .request_models import Request
-
+from .target_models import MagnitudeRange, SaltSiderealTarget
 
 __all__ = [
     "Acquisition",
@@ -28,11 +27,9 @@ __all__ = [
     "Constraints",
     "Hrs",
     "HrsDetector",
+    "MagnitudeRange",
     "Nirwals",
     "NirwalsDitherPatternStep",
-    "SalticamDitherPattern",
-    "SalticamFilterSequenceStep",
-    "MagnitudeRange",
     "ReferenceStar",
     "Request",
     "Rss",
@@ -44,7 +41,9 @@ __all__ = [
     "RssPolarimetry",
     "RssSlitMaskIFUSpectroscopy",
     "RssSpectroscopy",
+    "SaltSiderealTarget",
     "Salticam",
     "SalticamDetector",
-    "SaltSiderealTarget",
+    "SalticamDitherPattern",
+    "SalticamFilterSequenceStep",
 ]

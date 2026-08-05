@@ -9,8 +9,8 @@ from pydantic import (
     computed_field,
 )
 
-from aeonlib.salt.models.util import LowerCaseValidator, UpperCaseSerializer
 from aeonlib.salt.models.types import HrsMode, HrsPrvCalibration, PositiveDuration
+from aeonlib.salt.models.util import LowerCaseValidator, UpperCaseSerializer
 from aeonlib.salt.validators import GreaterEqual, LessEqual
 from aeonlib.types import Angle
 

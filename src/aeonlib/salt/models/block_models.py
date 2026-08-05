@@ -7,28 +7,31 @@ from typing import Annotated, Literal, Self, TypeAlias
 
 import astropy.units as u
 from pydantic import (
-    BaseModel,
-    FilePath,
-    NonNegativeInt,
-    NonNegativeFloat,
-    PositiveInt,
-    PositiveFloat,
-    model_validator,
     AfterValidator,
+    BaseModel,
     Field,
+    FilePath,
+    NonNegativeFloat,
+    NonNegativeInt,
+    PositiveFloat,
+    PositiveInt,
+    model_validator,
 )
 
 from aeonlib.models import Angle, Window
-from aeonlib.salt.models import SaltSiderealTarget, Salticam, Rss, Hrs, Nirwals
-from aeonlib.salt.models.util import LowerCaseValidator, CapitalizingSerializer
+from aeonlib.salt.models.hrs_models import Hrs
+from aeonlib.salt.models.nirwals_models import Nirwals
+from aeonlib.salt.models.rss_models import Rss
+from aeonlib.salt.models.salticam_models import Salticam
+from aeonlib.salt.models.target_models import SaltSiderealTarget
 from aeonlib.salt.models.types import (
     PositiveDuration,
     SalticamFilter,
     SalticamFilterSerializer,
     SkyTransparency,
 )
+from aeonlib.salt.models.util import CapitalizingSerializer, LowerCaseValidator
 from aeonlib.salt.validators import GreaterEqual, LessEqual, check_in_visibility_range
-
 
 Instrument: TypeAlias = Salticam | Rss | Hrs | Nirwals
 

@@ -12,24 +12,24 @@ from aeonlib.salt.models import (
     Hrs,
     HrsDetector,
     MagnitudeRange,
+    Nirwals,
+    NirwalsDitherPatternStep,
     ReferenceStar,
     Request,
-    Salticam,
-    SalticamDitherPattern,
-    SaltSiderealTarget,
-    SalticamFilterSequenceStep,
-    SalticamDetector,
     Rss,
     RssDetector,
     RssDitherPattern,
     RssImaging,
-    RssPolarimetry,
-    RssSpectroscopy,
     RssLongslitSpectroscopy,
     RssMultiObjectSpectroscopy,
+    RssPolarimetry,
     RssSlitMaskIFUSpectroscopy,
-    Nirwals,
-    NirwalsDitherPatternStep,
+    RssSpectroscopy,
+    Salticam,
+    SalticamDetector,
+    SalticamDitherPattern,
+    SalticamFilterSequenceStep,
+    SaltSiderealTarget,
 )
 
 
@@ -251,7 +251,7 @@ def create_test_binary_file(tmp_path: pathlib.Path):
     """
 
     def _create_file(content: bytes, extension: str) -> pathlib.Path:
-        file_path = tmp_path / f"{str(uuid.uuid4())}{extension}"
+        file_path = tmp_path / f"{uuid.uuid4()}{extension}"
         file_path.write_bytes(content)
         return file_path
 

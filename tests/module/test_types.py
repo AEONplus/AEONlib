@@ -3,9 +3,9 @@ import math
 from datetime import datetime
 
 import pytest
+from astropy import units as u
 from astropy.coordinates import Angle
 from astropy.time import Time
-from astropy import units as u
 from pydantic import BaseModel
 
 import aeonlib.types

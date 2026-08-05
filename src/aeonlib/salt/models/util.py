@@ -4,16 +4,17 @@ import pathlib
 import uuid
 import xml.etree.ElementTree as ET
 import zoneinfo
-from typing import Any, Iterable, cast
+from collections.abc import Iterable
+from typing import Any, cast
 from uuid import uuid4
 from zoneinfo import ZoneInfo
 
 import astropy.units as u
 from astropy.coordinates import Angle
 from bs4 import BeautifulSoup
-from jinja2 import Environment, PackageLoader, select_autoescape, BaseLoader
+from jinja2 import BaseLoader, Environment, PackageLoader, select_autoescape
 from lxml import etree
-from pydantic import PlainSerializer, BeforeValidator
+from pydantic import BeforeValidator, PlainSerializer
 
 _schema: etree.XMLSchema | None = None
 
@@ -96,7 +97,7 @@ def validate_xml(xml: str) -> None:
 
     try:
         xml_doc = etree.parse(io.BytesIO(xml.encode("utf-8")))
-        cast(etree.XMLSchema, _schema).assertValid(xml_doc)  # noqa
+        cast(etree.XMLSchema, _schema).assertValid(xml_doc)
     except (etree.DocumentInvalid, etree.XMLSyntaxError) as e:
         raise ValueError(str(e))
 
@@ -317,7 +318,7 @@ def replace_attachment_paths(xml: str, replacements: dict[pathlib.Path, str]) ->
         path = pathlib.Path(path_text).resolve()
         if path not in replacements_resolved:
             raise ValueError(
-                f"Path missing in replacements dictionary: {path_text} (resolved: {str(path)}"
+                f"Path missing in replacements dictionary: {path_text} (resolved: {path!s}"
             )
         path_element.string = replacements_resolved[path]
     xml = soup.prettify()

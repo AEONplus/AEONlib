@@ -7,11 +7,11 @@ from pydantic import ValidationError
 
 from aeonlib.salt.models import RssDitherPattern, RssPolarimetry, RssSpectroscopy
 from aeonlib.salt.models.util import (
-    LINEAR_POLARIMETRY_PATTERN,
-    LINEAR_HI_POLARIMETRY_PATTERN,
-    CIRCULAR_POLARIMETRY_PATTERN,
-    CIRCULAR_HI_POLARIMETRY_PATTRERN,
     ALL_STOKES_POLARIMETRY_PATTERN,
+    CIRCULAR_HI_POLARIMETRY_PATTRERN,
+    CIRCULAR_POLARIMETRY_PATTERN,
+    LINEAR_HI_POLARIMETRY_PATTERN,
+    LINEAR_POLARIMETRY_PATTERN,
 )
 
 

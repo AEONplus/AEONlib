@@ -8,10 +8,10 @@ from typing import Annotated, BinaryIO
 from annotated_types import MinLen
 from pydantic import BaseModel, Field
 
-from aeonlib.salt.models import Block
+from aeonlib.salt.models.block_models import Block
 from aeonlib.salt.models.util import (
-    render_template,
     attachment_path_replacements,
+    render_template,
     replace_attachment_paths,
 )
 

@@ -1,9 +1,8 @@
 from contextlib import nullcontext
 
 import pytest
-
 from astropy import units as u
-from pydantic import ValidationError, BaseModel
+from pydantic import BaseModel, ValidationError
 
 from aeonlib.salt.models.types import Duration, PositiveDuration
 

@@ -1,16 +1,16 @@
 from __future__ import annotations
 
 import math
-from typing import Annotated, Literal, Any
+from typing import Annotated, Any, Literal
 
 from astropy import units as u
 from pydantic import (
     BaseModel,
-    PositiveInt,
-    field_validator,
-    PlainSerializer,
     BeforeValidator,
+    PlainSerializer,
+    PositiveInt,
     computed_field,
+    field_validator,
 )
 
 from aeonlib.salt.models.types import (
@@ -24,9 +24,9 @@ from aeonlib.salt.models.types import (
     PositiveDuration,
 )
 from aeonlib.salt.models.util import (
+    CapitalizingSerializer,
     LowerCaseValidator,
     UpperCaseSerializer,
-    CapitalizingSerializer,
 )
 from aeonlib.salt.validators import GreaterEqual, LessEqual
 from aeonlib.types import Angle

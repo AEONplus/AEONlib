@@ -1,35 +1,24 @@
 from __future__ import annotations
 
-from typing import Literal, Annotated, Union
+from typing import Annotated, Literal
 
 from astropy import units as u
 from astropy.units import Quantity
 from pydantic import (
+    AfterValidator,
     BaseModel,
+    BeforeValidator,
     Field,
     FilePath,
+    PlainSerializer,
     PositiveInt,
+    computed_field,
     field_validator,
     model_validator,
-    PlainSerializer,
-    BeforeValidator,
-    AfterValidator,
-    computed_field,
 )
 
-from aeonlib.salt.models.types.salticam import serialize_salticam_filter
-from aeonlib.types import Angle
-from aeonlib.salt.models.util import (
-    TitleCaseSerializer,
-    LowerCaseValidator,
-    UpperCaseSerializer,
-    LINEAR_POLARIMETRY_PATTERN,
-    LINEAR_HI_POLARIMETRY_PATTERN,
-    CIRCULAR_POLARIMETRY_PATTERN,
-    CIRCULAR_HI_POLARIMETRY_PATTRERN,
-    ALL_STOKES_POLARIMETRY_PATTERN,
-)
 from aeonlib.salt.models.types import (
+    AstropyQuantityTypeAnnotation,
     PositiveDuration,
     RssGain,
     RssGrating,
@@ -39,9 +28,20 @@ from aeonlib.salt.models.types import (
     RssReadoutSpeed,
     RssSlitMaskIFU,
     SalticamFilter,
-    AstropyQuantityTypeAnnotation,
+)
+from aeonlib.salt.models.types.salticam import serialize_salticam_filter
+from aeonlib.salt.models.util import (
+    ALL_STOKES_POLARIMETRY_PATTERN,
+    CIRCULAR_HI_POLARIMETRY_PATTRERN,
+    CIRCULAR_POLARIMETRY_PATTERN,
+    LINEAR_HI_POLARIMETRY_PATTERN,
+    LINEAR_POLARIMETRY_PATTERN,
+    LowerCaseValidator,
+    TitleCaseSerializer,
+    UpperCaseSerializer,
 )
 from aeonlib.salt.validators import GreaterEqual, GreaterThan, LessEqual
+from aeonlib.types import Angle
 
 
 class Rss(BaseModel, validate_assignment=True):  # type: ignore
@@ -433,7 +433,7 @@ class RssDitherPattern(BaseModel, validate_assignment=True):  # type: ignore
         default_factory=lambda data: data["num_rows"] * data["num_columns"]
     )
     offset: Annotated[
-        Union[Quantity, float], AstropyQuantityTypeAnnotation(default_unit=u.arcsec)
+        Quantity | float, AstropyQuantityTypeAnnotation(default_unit=u.arcsec)
     ]
 
     @model_validator(mode="after")

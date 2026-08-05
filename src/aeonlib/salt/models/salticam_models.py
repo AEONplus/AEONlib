@@ -1,17 +1,17 @@
 from __future__ import annotations
 
-from typing import Annotated, Literal, Union
+from typing import Annotated, Literal
 
 from annotated_types import MinLen
 from astropy import units as u
 from astropy.units import Quantity
-from pydantic import BaseModel, PositiveInt, Field, model_validator
+from pydantic import BaseModel, Field, PositiveInt, model_validator
 
 from aeonlib.salt.models.types import (
+    AstropyQuantityTypeAnnotation,
     PositiveDuration,
     SalticamFilter,
     SalticamFilterSerializer,
-    AstropyQuantityTypeAnnotation,
 )
 from aeonlib.salt.models.util import CapitalizingSerializer, LowerCaseValidator
 from aeonlib.salt.validators import GreaterEqual, LessEqual
@@ -130,7 +130,7 @@ class SalticamDitherPattern(BaseModel, validate_assignment=True):  # type: ignor
         default_factory=lambda data: data["num_rows"] * data["num_columns"]
     )
     offset: Annotated[
-        Union[Quantity, float], AstropyQuantityTypeAnnotation(default_unit=u.arcsec)
+        Quantity | float, AstropyQuantityTypeAnnotation(default_unit=u.arcsec)
     ]
 
     @model_validator(mode="after")

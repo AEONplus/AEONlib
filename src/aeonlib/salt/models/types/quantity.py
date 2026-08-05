@@ -1,7 +1,7 @@
 import dataclasses
 from typing import Any
 
-from astropy.units import UnitBase, Quantity
+from astropy.units import Quantity, UnitBase
 from pydantic import GetCoreSchemaHandler, GetJsonSchemaHandler
 from pydantic.json_schema import JsonSchemaValue
 from pydantic_core import core_schema

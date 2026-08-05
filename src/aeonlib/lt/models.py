@@ -26,7 +26,7 @@ class Ioo(BaseModel):
     U: IooFilterTimeCnt = (120.0, 1)
     R: IooFilterTimeCnt = (120.0, 1)
     G: IooFilterTimeCnt = (120.0, 1)
-    I: IooFilterTimeCnt = (120.0, 1)  # noqa: E741
+    I: IooFilterTimeCnt = (120.0, 1)
     Z: IooFilterTimeCnt = (120.0, 1)
     B: IooFilterTimeCnt = (120.0, 1)
     V: IooFilterTimeCnt = (120.0, 1)
