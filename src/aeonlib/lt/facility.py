@@ -29,8 +29,8 @@ class LTFacility:
             "Username": settings.lt_username,
             "Password": settings.lt_password,
         }
-        url = "{0}://{1}:{2}/node_agent2/node_agent?wsdl".format(
-            "http", settings.lt_host, settings.lt_port
+        url = (
+            f"http://{settings.lt_host}:{settings.lt_port}/node_agent2/node_agent?wsdl"
         )
         self.client: Client = Client(url, headers=headers)
 
