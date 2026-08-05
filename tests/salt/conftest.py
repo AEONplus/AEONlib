@@ -215,7 +215,7 @@ def base_hrs_detector():
 @pytest.fixture()
 def base_nirwals(base_nirwals_dither_pattern_step):
     return Nirwals(
-        grating="NG0950",
+        grating="ng0950",
         grating_angle=25 * u.deg,
         articulation_angle=50 * u.deg,
         camera_filter="cutoff 1.5um",
