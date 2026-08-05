@@ -67,12 +67,13 @@ class Request(BaseModel, validate_assignment=True):  # type: ignore
                     raise ValueError("The finder chart value is not a Path instance.")
                 _attachments.add(finder_chart)
 
-            if block.instrument.instrument_name == "RSS":
-                if hasattr(block.instrument.configuration, "mask"):
-                    mask = block.instrument.configuration.mask
-                    if not isinstance(mask, pathlib.Path):
-                        raise ValueError("The mask value is not a Path instance.")
-                    _attachments.add(mask)
+            if block.instrument.instrument_name == "RSS" and hasattr(
+                block.instrument.configuration, "mask"
+            ):
+                mask = block.instrument.configuration.mask
+                if not isinstance(mask, pathlib.Path):
+                    raise ValueError("The mask value is not a Path instance.")
+                _attachments.add(mask)
 
         # Remove duplicates
         return {a.resolve() for a in _attachments}
