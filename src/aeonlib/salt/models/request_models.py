@@ -64,7 +64,7 @@ class Request(BaseModel, validate_assignment=True):  # type: ignore
         for block in self.blocks:
             for finder_chart in block.acquisition.finder_charts:
                 if not isinstance(finder_chart, pathlib.Path):
-                    raise ValueError("The finder chart value is not a Path instance.")
+                    raise TypeError("The finder chart value is not a Path instance.")
                 _attachments.add(finder_chart)
 
             if block.instrument.instrument_name == "RSS" and hasattr(
