@@ -328,7 +328,7 @@ class RssPolarimetry(BaseModel, validate_assignment=True):  # type: ignore
             value = ALL_STOKES_POLARIMETRY_PATTERN  # type: ignore
 
         if isinstance(value, str):
-            raise ValueError(f"Unsupported string value: {value}")
+            raise TypeError(f"Unsupported string value: {value}")
 
         if len(value) < 1 or len(value) > 8:
             raise ValueError("The wave plate pattern must have between 1 and 8 steps.")
