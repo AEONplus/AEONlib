@@ -1,4 +1,4 @@
-from typing import Any, Literal
+from typing import Any
 
 import httpx
 
@@ -6,8 +6,6 @@ from aeonlib.conf import Settings
 from aeonlib.conf import settings as default_settings
 
 from .models import Instrument, ProgramInfo, TargetData
-
-INSTRUMENTS = Literal["SPIROU", "ESPADONS", "MEGACAM"]
 
 
 class VersionMismatchError(ValueError):
@@ -46,21 +44,13 @@ class CFHTFacility:
         self._client = httpx.Client(base_url=base_url, headers=headers)
 
     def _request(self, method: str, url: str, **kwargs: Any) -> Any:
-        if not self.program_token:
-            raise ValueError(
-                "Program must be set. Initialize the facility with a ProgramInfo or use `select_program`"
-            )
-        url = f"/programs/{self.program_token}/{url.lstrip('/')}"
         response = self._client.request(method, url, **kwargs)
-
         if response.status_code == httpx.codes.CONFLICT:
             raise VersionMismatchError(
                 f"Version mismatch while requesting {response.request.url}"
             )
-
         if response.status_code == httpx.codes.NOT_FOUND:
             raise EntityNotFoundError(f"Entity not found: {response.request.url}")
-
         response.raise_for_status()
         if method == "DELETE":
             return None
@@ -70,6 +60,15 @@ class CFHTFacility:
             raise InvalidResponseError(
                 f"CFHT API response from {response.request.url} did not contain an entity"
             ) from exc
+
+    def _program_request(self, method: str, url: str, **kwargs: Any) -> Any:
+        if not self.program_token:
+            raise ValueError(
+                "Program must be set. Initialize the facility with a ProgramInfo or use `select_program`"
+            )
+        return self._request(
+            method, f"programs/{self.program_token}/{url.lstrip('/')}", **kwargs
+        )
 
     def select_program(self, program: ProgramInfo) -> None:
         if program.program_data is None:
@@ -81,25 +80,20 @@ class CFHTFacility:
 
     def programs(self) -> list[ProgramInfo]:
         """Get the list of observing programs"""
-        response = self._client.get("/programs/")
-        response.raise_for_status()
-
-        payload = response.json()
-        return [
-            ProgramInfo.model_validate(program) for program in payload.get("entity", [])
-        ]
+        entities = self._request("GET", "programs/")
+        return [ProgramInfo.model_validate(entity) for entity in entities]
 
     def targets(self) -> list[TargetData]:
         """Get the list of targets for a given program"""
-        entities = self._request("GET", "targets/")
+        entities = self._program_request("GET", "targets/")
         return [TargetData.model_validate(target) for target in entities]
 
     def get_target(self, target_token: str) -> TargetData:
-        entity = self._request("GET", f"targets/{target_token}")
+        entity = self._program_request("GET", f"targets/{target_token}")
         return TargetData.model_validate(entity)
 
     def delete_target(self, target_token: str) -> None:
-        self._request("DELETE", f"targets/{target_token}")
+        self._program_request("DELETE", f"targets/{target_token}")
 
     def create_or_update_target(
         self, target: TargetData, instrument: Instrument
@@ -110,5 +104,5 @@ class CFHTFacility:
             "lock_version": version,
             "instrument": instrument.value,
         }
-        entity = self._request("PUT", f"targets/{target.token}/", json=data)
+        entity = self._program_request("PUT", f"targets/{target.token}/", json=data)
         return TargetData.model_validate(entity)
