@@ -1,5 +1,4 @@
 # ruff: noqa: F401
-# pyright:  reportUnannotatedClassAttribute=false
 # This file is generated automatically and should not be edited by hand.
 
 from typing import Any, Annotated, ClassVar, Literal
@@ -11,6 +10,63 @@ from pydantic.types import NonNegativeInt, PositiveInt
 from aeonlib.models import TARGET_TYPES
 from aeonlib.ocs.target_models import Constraints
 from aeonlib.ocs.config_models import Roi
+
+
+class BlancoDecamConfigExtraParams(BaseModel):
+    model_config = ConfigDict(validate_assignment=True, extra='allow')
+    detector_centering: Literal["central_gap", "N4", "S4"] = "central_gap"
+
+
+class BlancoDecamOpticalElements(BaseModel):
+    model_config = ConfigDict(validate_assignment=True)
+    filter: Literal["r", "g", "i", "z"]
+
+
+class BlancoDecamGuidingConfig(BaseModel):
+    model_config = ConfigDict(validate_assignment=True)
+    mode: Literal["ON"]
+    optional: bool
+    """Whether the guiding is optional or not"""
+    exposure_time: Annotated[int, NonNegativeInt, Le(120)] | None = None
+    """Guiding exposure time"""
+    extra_params: dict[Any, Any] = {}
+
+
+class BlancoDecamAcquisitionConfig(BaseModel):
+    model_config = ConfigDict(validate_assignment=True)
+    mode: Literal["OFF"]
+    exposure_time: Annotated[int, NonNegativeInt, Le(60)] | None = None
+    """Acquisition exposure time"""
+    extra_params: dict[Any, Any] = {}
+
+
+class BlancoDecamConfig(BaseModel):
+    model_config = ConfigDict(validate_assignment=True)
+    exposure_count: PositiveInt
+    """The number of exposures to take. This field must be set to a value greater than 0"""
+    exposure_time: NonNegativeInt
+    """ Exposure time in seconds"""
+    mode: Literal["default"]
+    rois: list[Roi] | None = None
+    optical_elements: BlancoDecamOpticalElements
+
+
+class BlancoDecam(BaseModel):
+    model_config = ConfigDict(validate_assignment=True)
+    type: Literal["EXPOSE"]
+    instrument_type: Literal["BLANCO_DECAM"] = "BLANCO_DECAM"
+    repeat_duration: NonNegativeInt | None = None
+    extra_params: BlancoDecamConfigExtraParams = Field(default_factory=BlancoDecamConfigExtraParams)
+    instrument_configs: list[BlancoDecamConfig] = []
+    acquisition_config: BlancoDecamAcquisitionConfig
+    guiding_config: BlancoDecamGuidingConfig
+    target: TARGET_TYPES
+    constraints: Constraints
+
+    config_class: ClassVar = BlancoDecamConfig
+    guiding_config_class: ClassVar = BlancoDecamGuidingConfig
+    acquisition_config_class: ClassVar = BlancoDecamAcquisitionConfig
+    optical_elements_class: ClassVar = BlancoDecamOpticalElements
 
 
 class BlancoNewfirmConfigExtraParams(BaseModel):
@@ -64,7 +120,7 @@ class BlancoNewfirmConfig(BaseModel):
 
 class BlancoNewfirm(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    type: Literal["EXPOSE", "SKY_FLAT", "STANDARD", "DARK"]
+    type: Literal["EXPOSE", "SKY_FLAT", "STANDARD", "SKY", "DARK"]
     instrument_type: Literal["BLANCO_NEWFIRM"] = "BLANCO_NEWFIRM"
     repeat_duration: NonNegativeInt | None = None
     extra_params: BlancoNewfirmConfigExtraParams = Field(default_factory=BlancoNewfirmConfigExtraParams)
@@ -81,4 +137,4 @@ class BlancoNewfirm(BaseModel):
 
 
 # Export a type that encompasses all instruments
-BLANCO_INSTRUMENTS = BlancoNewfirm
+BLANCO_INSTRUMENTS = BlancoDecam | BlancoNewfirm
