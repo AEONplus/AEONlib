@@ -39,7 +39,7 @@ def generate_models(openapi_document: dict[str, Any]) -> str:
 
     result = generate(openapi_document, config=config)
     if not isinstance(result, str):
-        raise RuntimeError(
+        raise TypeError(
             "Expected string output from datamodel-code-generator "
             f"got {type(result).__name__}."
         )
@@ -59,6 +59,6 @@ def main() -> int:
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except (yaml.YAMLError, DataModelCodegenError, OSError, RuntimeError) as exc:
+    except (yaml.YAMLError, DataModelCodegenError, OSError, TypeError) as exc:
         print(f"CFHT model generation failed: {exc}", file=sys.stderr)
         raise SystemExit(1)
