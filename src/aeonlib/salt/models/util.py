@@ -16,10 +16,12 @@ from jinja2 import BaseLoader, Environment, PackageLoader, select_autoescape
 from lxml import etree
 from pydantic import BeforeValidator, PlainSerializer
 
+from aeonlib.salt.models.types import WavePlatePatternStep
+
 _schema: etree.XMLSchema | None = None
 
 
-LINEAR_POLARIMETRY_PATTERN = [
+LINEAR_POLARIMETRY_PATTERN: list[WavePlatePatternStep] = [
     (Angle(0 * u.deg), None),
     (Angle(45 * u.deg), None),
     (Angle(22.5 * u.deg), None),
@@ -28,7 +30,7 @@ LINEAR_POLARIMETRY_PATTERN = [
 # The half and quarter wave plate angles for the linear polarimetry pattern.
 
 
-LINEAR_HI_POLARIMETRY_PATTERN = [
+LINEAR_HI_POLARIMETRY_PATTERN: list[WavePlatePatternStep] = [
     (Angle(0 * u.deg), None),
     (Angle(45 * u.deg), None),
     (Angle(22.5 * u.deg), None),
@@ -41,14 +43,14 @@ LINEAR_HI_POLARIMETRY_PATTERN = [
 # The half and quarter wave plate angles for the linear-hi polarimetry pattern.
 
 
-CIRCULAR_POLARIMETRY_PATTERN = [
+CIRCULAR_POLARIMETRY_PATTERN: list[WavePlatePatternStep] = [
     (Angle(0 * u.deg), Angle(45 * u.deg)),
     (Angle(0 * u.deg), Angle(315 * u.deg)),
 ]
 # The half and quarter wave plate angles for the circular polarimetry pattern.
 
 
-CIRCULAR_HI_POLARIMETRY_PATTRERN = [
+CIRCULAR_HI_POLARIMETRY_PATTRERN: list[WavePlatePatternStep] = [
     (Angle(0 * u.deg), Angle(45 * u.deg)),
     (Angle(0 * u.deg), Angle(315 * u.deg)),
     (Angle(22.5 * u.deg), Angle(315 * u.deg)),
@@ -61,7 +63,7 @@ CIRCULAR_HI_POLARIMETRY_PATTRERN = [
 # The half and quarter wave plate angles for the circular-hi polarimetry pattern.
 
 
-ALL_STOKES_POLARIMETRY_PATTERN = [
+ALL_STOKES_POLARIMETRY_PATTERN: list[WavePlatePatternStep] = [
     (Angle(0 * u.deg), Angle(0 * u.deg)),
     (Angle(45 * u.deg), Angle(0 * u.deg)),
     (Angle(22.5 * u.deg), Angle(0 * u.deg)),

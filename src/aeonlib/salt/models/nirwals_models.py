@@ -4,6 +4,7 @@ import math
 from typing import Annotated, Any, Literal
 
 from astropy import units as u
+from astropy.coordinates import Angle as AstropyAngle
 from pydantic import (
     BaseModel,
     BeforeValidator,
@@ -85,7 +86,8 @@ class Nirwals(BaseModel, validate_assignment=True):
     @classmethod
     def check_articulation_angle(cls, angle: Angle) -> Angle:
         error = "The articulation angle must be a multiple of 0.5 degress between 0 and 100 degrees (both inclusive"
-        degrees = angle.to(u.deg).value  # type: ignore
+        assert isinstance(angle, AstropyAngle)
+        degrees = angle.to(u.deg).value
 
         if degrees < 0 or degrees > 100:
             raise ValueError(error)

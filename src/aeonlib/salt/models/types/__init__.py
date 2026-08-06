@@ -19,6 +19,7 @@ from .rss import (
     RssReadoutMode,
     RssReadoutSpeed,
     RssSlitMaskIFU,
+    WavePlatePatternStep,
 )
 from .salticam import SalticamFilter, SalticamFilterSerializer
 from .target import MagnitudeBandpass, TargetType
@@ -48,4 +49,5 @@ __all__ = [
     "SalticamFilterSerializer",
     "SkyTransparency",
     "TargetType",
+    "WavePlatePatternStep",
 ]
