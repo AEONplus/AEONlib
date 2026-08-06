@@ -10,6 +10,10 @@ from .models import Instrument, ProgramInfo, TargetData
 INSTRUMENTS = Literal["SPIROU", "ESPADONS", "MEGACAM"]
 
 
+class VersionMismatchError(ValueError):
+    """Raised when the version of the target does not match the server"""
+
+
 class CFHTFacility:
     """CFHT Facility class"""
 
@@ -22,6 +26,7 @@ class CFHTFacility:
             raise ValueError("AEON_CFHT_ACCESS_TOKEN token is not set")
         headers = {
             "Authorization": f"Bearer {access_token}",
+            "Content-Type": "application/json",
         }
         self._client = httpx.Client(base_url=base_url, headers=headers)
 
@@ -44,6 +49,28 @@ class CFHTFacility:
             TargetData.model_validate(target) for target in payload.get("entity", [])
         ]
 
+    def get_target(self, program_token: str, target_token: str) -> TargetData | None:
+        response = self._client.get(f"/programs/{program_token}/targets/{target_token}")
+        if response.status_code == 404:
+            return None
+
+        response.raise_for_status()
+        payload = response.json()
+        return (
+            TargetData.model_validate(payload.get("entity"))
+            if payload.get("entity")
+            else None
+        )
+
+    def delete_target(self, program_token: str, target_token: str) -> None:
+        response = self._client.delete(
+            f"/programs/{program_token}/targets/{target_token}"
+        )
+        if response.status_code == 406:
+            return
+
+        response.raise_for_status()
+
     def create_or_update_target(
         self, program_token: str, target: TargetData, instrument: Instrument
     ) -> TargetData:
@@ -57,6 +84,10 @@ class CFHTFacility:
             f"/programs/{program_token}/targets/{target.token}/",
             json=data,
         )
+        if response.status_code == 409:
+            raise VersionMismatchError(
+                "Version mismatch. Payload had version %s", target.version
+            )
         response.raise_for_status()
         payload = response.json()
         return TargetData.model_validate(payload["entity"])
