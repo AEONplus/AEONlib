@@ -104,7 +104,7 @@ class CFHTFacility:
     def create_or_update_target(
         self, target: TargetData, instrument: Instrument
     ) -> TargetData:
-        version = {"value": target.version} if target.version else None
+        version = {"value": target.version} if target.version is not None else None
         data = {
             "entity": target.api_dump(),
             "lock_version": version,
