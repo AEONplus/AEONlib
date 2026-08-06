@@ -18,14 +18,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - uses: astral-sh/ruff-action@v4.0.0
+      - uses: actions/checkout@v7
+      - uses: astral-sh/ruff-action@v4
         with:
           version: "latest"
-      - uses: astral-sh/ruff-action@v4.0.0
+      - uses: astral-sh/ruff-action@v4
         with:
           version: "latest"
           args: "format --check --diff"
+
+  type-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Install uv and Python
+        uses: astral-sh/setup-uv@v9
+        with:
+          python-version: "3.14"
+
+      - name: Install the project
+        run: uv sync --dev --group codegen --extra eso --extra lt --extra salt
+
+      - name: Run ty
+        run: uvx ty check
 
   test:
     runs-on: ubuntu-latest
@@ -36,10 +53,10 @@ jobs:
           - "3.14"
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - name: Install uv and python
-        uses: astral-sh/setup-uv@v8.2.0
+      - name: Install uv and Python
+        uses: astral-sh/setup-uv@v9
         with:
           python-version: ${{ matrix.python-version }}
 
