@@ -1,5 +1,3 @@
-# pyright: reportUnknownVariableType=false
-# pyright: reportUnknownMemberType=false
 import logging
 from datetime import datetime
 from typing import Annotated, Any, cast
@@ -70,7 +68,7 @@ class _AstropyTimeType:
                         + "Ensure output mapping is an attribute of astropy.time.Time."
                     )
 
-            return time_obj.datetime  # pyright: ignore[reportReturnType]
+            return cast(datetime, time_obj.datetime)
 
         return core_schema.json_or_python_schema(
             json_schema=from_datetime_schema,
@@ -133,7 +131,7 @@ class _AstropyTimeMJDType:
         )
 
         def serialize_time(time_obj: astropy.time.Time) -> float:
-            return time_obj.mjd  # pyright: ignore[reportReturnType]
+            return cast(float, time_obj.mjd)
 
         return core_schema.json_or_python_schema(
             json_schema=core_schema.union_schema(

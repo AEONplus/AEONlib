@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
 from aeonlib.models import SiderealTarget, Window
 from aeonlib.ocs import (
@@ -21,8 +21,8 @@ target = SiderealTarget(
 )
 
 window = Window(
-    start=datetime.now(),
-    end=datetime.now() + timedelta(days=7),
+    start=datetime.now(UTC),
+    end=datetime.now(UTC) + timedelta(days=7),
 )
 
 lco_1m0_scicam_sinistro = RequestGroup(
@@ -127,7 +127,7 @@ lco_2m0_scicam_muscat = RequestGroup(
                             ),
                             # TODO: Not sure what's happening here. These exp time arguments are required by the API,
                             # but configdb doesn't seem to include them (or the generation script is broken)
-                            extra_params={  # ty: ignore[invalid-argument-type]
+                            extra_params={
                                 "exposure_time_g": 10,
                                 "exposure_time_r": 10,
                                 "exposure_time_i": 10,

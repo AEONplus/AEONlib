@@ -8,15 +8,15 @@ from typing import Annotated, BinaryIO
 from annotated_types import MinLen
 from pydantic import BaseModel, Field
 
-from aeonlib.salt.models import Block
+from aeonlib.salt.models.block_models import Block
 from aeonlib.salt.models.util import (
-    render_template,
     attachment_path_replacements,
+    render_template,
     replace_attachment_paths,
 )
 
 
-class Request(BaseModel, validate_assignment=True):  # type: ignore
+class Request(BaseModel, validate_assignment=True):
     """
     An observation request for SALT.
 
@@ -64,18 +64,19 @@ class Request(BaseModel, validate_assignment=True):  # type: ignore
         for block in self.blocks:
             for finder_chart in block.acquisition.finder_charts:
                 if not isinstance(finder_chart, pathlib.Path):
-                    raise ValueError("The finder chart value is not a Path instance.")
+                    raise TypeError("The finder chart value is not a Path instance.")
                 _attachments.add(finder_chart)
 
-            if block.instrument.instrument_name == "RSS":
-                if hasattr(block.instrument.configuration, "mask"):
-                    mask = block.instrument.configuration.mask
-                    if not isinstance(mask, pathlib.Path):
-                        raise ValueError("The mask value is not a Path instance.")
-                    _attachments.add(mask)
+            if block.instrument.instrument_name == "RSS" and hasattr(
+                block.instrument.configuration, "mask"
+            ):
+                mask = block.instrument.configuration.mask
+                if not isinstance(mask, pathlib.Path):
+                    raise ValueError("The mask value is not a Path instance.")
+                _attachments.add(mask)
 
         # Remove duplicates
-        return set(a.resolve() for a in _attachments)
+        return {a.resolve() for a in _attachments}
 
     def export(self, out: pathlib.Path | os.PathLike | str | BinaryIO) -> None:
         """

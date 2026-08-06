@@ -1,5 +1,5 @@
 import base64
-from datetime import datetime, time, timedelta
+from datetime import UTC, datetime, time, timedelta
 from io import BytesIO
 
 import pytest
@@ -124,7 +124,7 @@ def test_save_absolute_time_constraints():
     abs_constraints = AbsoluteTimeConstraints(
         constraints=[
             AbsoluteTimeConstraint(
-                start=datetime.now(), end=datetime.now() + timedelta(days=30)
+                start=datetime.now(UTC), end=datetime.now(UTC) + timedelta(days=30)
             )
         ]
     )
@@ -271,8 +271,8 @@ def test_verify_ob():
     time_constraints = AbsoluteTimeConstraints(
         constraints=[
             AbsoluteTimeConstraint(
-                start=datetime.now() + timedelta(days=1),
-                end=datetime.now() + timedelta(days=30),
+                start=datetime.now(UTC) + timedelta(days=1),
+                end=datetime.now(UTC) + timedelta(days=30),
             )
         ]
     )

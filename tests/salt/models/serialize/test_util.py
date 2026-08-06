@@ -6,9 +6,9 @@ from jinja2 import FileSystemLoader
 
 from aeonlib.salt.models.util import (
     attachment_path_replacements,
-    validate_xml,
     render_template,
     replace_attachment_paths,
+    validate_xml,
 )
 
 

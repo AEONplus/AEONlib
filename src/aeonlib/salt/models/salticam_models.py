@@ -1,23 +1,23 @@
 from __future__ import annotations
 
-from typing import Annotated, Literal, Union
+from typing import Annotated, Literal
 
 from annotated_types import MinLen
 from astropy import units as u
 from astropy.units import Quantity
-from pydantic import BaseModel, PositiveInt, Field, model_validator
+from pydantic import BaseModel, Field, PositiveInt, model_validator
 
 from aeonlib.salt.models.types import (
+    AstropyQuantityTypeAnnotation,
     PositiveDuration,
     SalticamFilter,
     SalticamFilterSerializer,
-    AstropyQuantityTypeAnnotation,
 )
 from aeonlib.salt.models.util import CapitalizingSerializer, LowerCaseValidator
 from aeonlib.salt.validators import GreaterEqual, LessEqual
 
 
-class Salticam(BaseModel, validate_assignment=True):  # type: ignore
+class Salticam(BaseModel, validate_assignment=True):
     """
     A Salticam instrument configuration.
 
@@ -61,7 +61,7 @@ class Salticam(BaseModel, validate_assignment=True):  # type: ignore
     include_flat: bool
 
 
-class SalticamFilterSequenceStep(BaseModel, validate_assignment=True):  # type: ignore
+class SalticamFilterSequenceStep(BaseModel, validate_assignment=True):
     """
     A step in a filter sequence.
 
@@ -78,7 +78,7 @@ class SalticamFilterSequenceStep(BaseModel, validate_assignment=True):  # type: 
     exposure_time: PositiveDuration
 
 
-class SalticamDetector(BaseModel, validate_assignment=True):  # type: ignore
+class SalticamDetector(BaseModel, validate_assignment=True):
     """
     A Salticam detector setup.
 
@@ -98,7 +98,7 @@ class SalticamDetector(BaseModel, validate_assignment=True):  # type: ignore
     num_prebinned_columns: Annotated[int, GreaterEqual(1), LessEqual(9)]
 
 
-class SalticamDitherPattern(BaseModel, validate_assignment=True):  # type: ignore
+class SalticamDitherPattern(BaseModel, validate_assignment=True):
     """
     A dither pattern for Salticam.
 
@@ -130,7 +130,7 @@ class SalticamDitherPattern(BaseModel, validate_assignment=True):  # type: ignor
         default_factory=lambda data: data["num_rows"] * data["num_columns"]
     )
     offset: Annotated[
-        Union[Quantity, float], AstropyQuantityTypeAnnotation(default_unit=u.arcsec)
+        Quantity | float, AstropyQuantityTypeAnnotation(default_unit=u.arcsec)
     ]
 
     @model_validator(mode="after")

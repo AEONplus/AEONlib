@@ -1,5 +1,4 @@
 # ruff: noqa: F401
-# pyright:  reportUnannotatedClassAttribute=false
 # This file is generated automatically and should not be edited by hand.
 
 from typing import Any, Annotated, ClassVar, Literal
@@ -75,62 +74,6 @@ class Lco0M4ScicamQhy600(BaseModel):
     guiding_config_class: ClassVar = Lco0M4ScicamQhy600GuidingConfig
     acquisition_config_class: ClassVar = Lco0M4ScicamQhy600AcquisitionConfig
     optical_elements_class: ClassVar = Lco0M4ScicamQhy600OpticalElements
-
-
-class Lco1M0NresScicamInstrumentConfigExtraParams(BaseModel):
-    model_config = ConfigDict(validate_assignment=True, extra='allow')
-    defocus: Annotated[float, Ge(-5.0), Le(5.0), "Observations may be defocused to prevent the CCD from saturating on bright targets. This term describes the offset (in mm) of the secondary mirror from its default (focused) position. The limits are ± 5mm."] | None = None
-
-
-class Lco1M0NresScicamOpticalElements(BaseModel):
-    model_config = ConfigDict(validate_assignment=True)
-
-
-class Lco1M0NresScicamGuidingConfig(BaseModel):
-    model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["ON"]
-    optional: bool
-    """Whether the guiding is optional or not"""
-    exposure_time: Annotated[int, NonNegativeInt, Le(120)] | None = None
-    """Guiding exposure time"""
-    extra_params: dict[Any, Any] = {}
-
-
-class Lco1M0NresScicamAcquisitionConfig(BaseModel):
-    model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["WCS", "BRIGHTEST"]
-    exposure_time: Annotated[int, NonNegativeInt, Le(60)] | None = None
-    """Acquisition exposure time"""
-    extra_params: dict[Any, Any] = {}
-
-
-class Lco1M0NresScicamConfig(BaseModel):
-    model_config = ConfigDict(validate_assignment=True)
-    exposure_count: PositiveInt
-    """The number of exposures to take. This field must be set to a value greater than 0"""
-    exposure_time: NonNegativeInt
-    """ Exposure time in seconds"""
-    mode: Literal["default"]
-    rois: list[Roi] | None = None
-    extra_params: Lco1M0NresScicamInstrumentConfigExtraParams = Field(default_factory=Lco1M0NresScicamInstrumentConfigExtraParams)
-    optical_elements: Lco1M0NresScicamOpticalElements
-
-
-class Lco1M0NresScicam(BaseModel):
-    model_config = ConfigDict(validate_assignment=True)
-    type: Literal["NRES_SPECTRUM", "REPEAT_NRES_SPECTRUM", "NRES_EXPOSE", "NRES_TEST", "SCRIPT", "ENGINEERING", "ARC", "LAMP_FLAT", "NRES_BIAS", "NRES_DARK", "AUTO_FOCUS"]
-    instrument_type: Literal["1M0-NRES-SCICAM"] = "1M0-NRES-SCICAM"
-    repeat_duration: NonNegativeInt | None = None
-    instrument_configs: list[Lco1M0NresScicamConfig] = []
-    acquisition_config: Lco1M0NresScicamAcquisitionConfig
-    guiding_config: Lco1M0NresScicamGuidingConfig
-    target: TARGET_TYPES
-    constraints: Constraints
-
-    config_class: ClassVar = Lco1M0NresScicamConfig
-    guiding_config_class: ClassVar = Lco1M0NresScicamGuidingConfig
-    acquisition_config_class: ClassVar = Lco1M0NresScicamAcquisitionConfig
-    optical_elements_class: ClassVar = Lco1M0NresScicamOpticalElements
 
 
 class Lco1M0ScicamSinistroInstrumentConfigExtraParams(BaseModel):
@@ -309,4 +252,4 @@ class Lco2M0ScicamMuscat(BaseModel):
 
 
 # Export a type that encompasses all instruments
-LCO_INSTRUMENTS = Lco0M4ScicamQhy600 | Lco1M0NresScicam | Lco1M0ScicamSinistro | Lco2M0FloydsScicam | Lco2M0ScicamMuscat
+LCO_INSTRUMENTS = Lco0M4ScicamQhy600 | Lco1M0ScicamSinistro | Lco2M0FloydsScicam | Lco2M0ScicamMuscat

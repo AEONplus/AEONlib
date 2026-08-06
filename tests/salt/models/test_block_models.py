@@ -176,4 +176,4 @@ class TestReferenceStar:
         ref_star = base_reference_star.model_dump()
         ref_star["dec"] = dec
         with expectation:
-            ReferenceStar(**ref_star)  # type: ignore
+            ReferenceStar(**ref_star)

@@ -1,16 +1,17 @@
 from __future__ import annotations
 
 import math
-from typing import Annotated, Literal, Any
+from typing import Annotated, Any, Literal
 
 from astropy import units as u
+from astropy.coordinates import Angle as AstropyAngle
 from pydantic import (
     BaseModel,
-    PositiveInt,
-    field_validator,
-    PlainSerializer,
     BeforeValidator,
+    PlainSerializer,
+    PositiveInt,
     computed_field,
+    field_validator,
 )
 
 from aeonlib.salt.models.types import (
@@ -24,15 +25,15 @@ from aeonlib.salt.models.types import (
     PositiveDuration,
 )
 from aeonlib.salt.models.util import (
+    CapitalizingSerializer,
     LowerCaseValidator,
     UpperCaseSerializer,
-    CapitalizingSerializer,
 )
 from aeonlib.salt.validators import GreaterEqual, LessEqual
 from aeonlib.types import Angle
 
 
-class Nirwals(BaseModel, validate_assignment=True):  # type: ignore
+class Nirwals(BaseModel, validate_assignment=True):
     """
     A NIRWALS configuration.
 
@@ -85,7 +86,8 @@ class Nirwals(BaseModel, validate_assignment=True):  # type: ignore
     @classmethod
     def check_articulation_angle(cls, angle: Angle) -> Angle:
         error = "The articulation angle must be a multiple of 0.5 degress between 0 and 100 degrees (both inclusive"
-        degrees = angle.to(u.deg).value  # type: ignore
+        assert isinstance(angle, AstropyAngle)
+        degrees = angle.to(u.deg).value
 
         if degrees < 0 or degrees > 100:
             raise ValueError(error)
@@ -97,7 +99,7 @@ class Nirwals(BaseModel, validate_assignment=True):  # type: ignore
         return angle
 
 
-class NirwalsDitherPatternStep(BaseModel, validate_assignment=True):  # type: ignore
+class NirwalsDitherPatternStep(BaseModel, validate_assignment=True):
     """
     A step in a NIRWALS dither pattern.
 
@@ -158,7 +160,7 @@ class NirwalsDitherPatternStep(BaseModel, validate_assignment=True):  # type: ig
     num_reads: Literal[1] = 1
     num_ramps: Literal[1] = 1
 
-    @computed_field  # type: ignore
+    @computed_field
     @property
     def num_groups(self) -> int:
         """
