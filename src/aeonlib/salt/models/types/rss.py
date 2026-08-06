@@ -1,5 +1,11 @@
 from typing import Literal
 
+from aeonlib.types import Angle
+
+type WavePlatePatternStep = tuple[Angle | None, Angle | None]
+"""A pair of half and quarter wave plate angles."""
+
+
 RssImagingFilter = Literal[
     "pi04340",
     "pi04400",

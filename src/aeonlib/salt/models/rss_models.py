@@ -1,35 +1,25 @@
 from __future__ import annotations
 
-from typing import Literal, Annotated, Union
+from typing import Annotated, Literal
 
 from astropy import units as u
+from astropy.coordinates import Angle as AstropyAngle
 from astropy.units import Quantity
 from pydantic import (
+    AfterValidator,
     BaseModel,
+    BeforeValidator,
     Field,
     FilePath,
+    PlainSerializer,
     PositiveInt,
+    computed_field,
     field_validator,
     model_validator,
-    PlainSerializer,
-    BeforeValidator,
-    AfterValidator,
-    computed_field,
 )
 
-from aeonlib.salt.models.types.salticam import serialize_salticam_filter
-from aeonlib.types import Angle
-from aeonlib.salt.models.util import (
-    TitleCaseSerializer,
-    LowerCaseValidator,
-    UpperCaseSerializer,
-    LINEAR_POLARIMETRY_PATTERN,
-    LINEAR_HI_POLARIMETRY_PATTERN,
-    CIRCULAR_POLARIMETRY_PATTERN,
-    CIRCULAR_HI_POLARIMETRY_PATTRERN,
-    ALL_STOKES_POLARIMETRY_PATTERN,
-)
 from aeonlib.salt.models.types import (
+    AstropyQuantityTypeAnnotation,
     PositiveDuration,
     RssGain,
     RssGrating,
@@ -39,12 +29,24 @@ from aeonlib.salt.models.types import (
     RssReadoutSpeed,
     RssSlitMaskIFU,
     SalticamFilter,
-    AstropyQuantityTypeAnnotation,
+    WavePlatePatternStep,
+)
+from aeonlib.salt.models.types.salticam import serialize_salticam_filter
+from aeonlib.salt.models.util import (
+    ALL_STOKES_POLARIMETRY_PATTERN,
+    CIRCULAR_HI_POLARIMETRY_PATTRERN,
+    CIRCULAR_POLARIMETRY_PATTERN,
+    LINEAR_HI_POLARIMETRY_PATTERN,
+    LINEAR_POLARIMETRY_PATTERN,
+    LowerCaseValidator,
+    TitleCaseSerializer,
+    UpperCaseSerializer,
 )
 from aeonlib.salt.validators import GreaterEqual, GreaterThan, LessEqual
+from aeonlib.types import Angle
 
 
-class Rss(BaseModel, validate_assignment=True):  # type: ignore
+class Rss(BaseModel, validate_assignment=True):
     """
     An RSS configuration.
 
@@ -102,7 +104,7 @@ class Rss(BaseModel, validate_assignment=True):  # type: ignore
     dither_pattern: RssDitherPattern | None
 
 
-class RssImaging(BaseModel, validate_assignment=True):  # type: ignore
+class RssImaging(BaseModel, validate_assignment=True):
     """
     An RSS imaging configuration.
 
@@ -136,15 +138,24 @@ class RssImaging(BaseModel, validate_assignment=True):  # type: ignore
             return serialize_salticam_filter(value)
 
 
-_WavePlatePattern = (
-    Literal[
-        "linear", "linear hi", "circular", "circular hi", "all-Stokes", "all-stokes"
-    ]
-    | list[tuple[Angle | None, Angle | None]]
-)
+_WavePlatePatternName = Literal[
+    "linear", "linear hi", "circular", "circular hi", "all-Stokes", "all-stokes"
+]
+_WavePlatePattern = _WavePlatePatternName | list[WavePlatePatternStep]
+
+_PREDEFINED_WAVE_PLATE_PATTERNS: dict[
+    _WavePlatePatternName, list[WavePlatePatternStep]
+] = {
+    "linear": LINEAR_POLARIMETRY_PATTERN,
+    "linear hi": LINEAR_HI_POLARIMETRY_PATTERN,
+    "circular": CIRCULAR_POLARIMETRY_PATTERN,
+    "circular hi": CIRCULAR_HI_POLARIMETRY_PATTRERN,
+    "all-Stokes": ALL_STOKES_POLARIMETRY_PATTERN,
+    "all-stokes": ALL_STOKES_POLARIMETRY_PATTERN,
+}
 
 
-class RssSpectroscopy(BaseModel, validate_assignment=True):  # type: ignore
+class RssSpectroscopy(BaseModel, validate_assignment=True):
     """
     An RSS spectroscopy configuration.
 
@@ -185,11 +196,12 @@ class RssSpectroscopy(BaseModel, validate_assignment=True):  # type: ignore
     include_arc: bool = True
     request_spectrophotometric_standard: bool = False
 
-    @computed_field  # type: ignore
+    @computed_field
     @property
     def articulation_station(self) -> int:
         """Return the articulation station."""
-        degrees = self.articulation_angle.to(u.deg).value  # type: ignore
+        assert isinstance(self.articulation_angle, AstropyAngle)
+        degrees = self.articulation_angle.to(u.deg).value
         if degrees < 1:
             return 0
         return round((degrees - 1) / 0.75)
@@ -198,7 +210,8 @@ class RssSpectroscopy(BaseModel, validate_assignment=True):  # type: ignore
     @classmethod
     def check_articulation_angle(cls, angle: Angle) -> Angle:
         error = "The articulation angle must either be 0 deg or a value 1.75 deg + (n - 1) * 0.75 deg with 1 <= n <= 132."
-        degrees = angle.to(u.deg).value  # type: ignore
+        assert isinstance(angle, AstropyAngle)
+        degrees = angle.to(u.deg).value
 
         if degrees < 0:
             raise ValueError(error)
@@ -266,7 +279,7 @@ class RssSlitMaskIFUSpectroscopy(RssSpectroscopy):
     slit_mask_ifu: Annotated[RssSlitMaskIFU, LowerCaseValidator, UpperCaseSerializer]
 
 
-class RssPolarimetry(BaseModel, validate_assignment=True):  # type: ignore
+class RssPolarimetry(BaseModel, validate_assignment=True):
     """
     An RSS polarimetry setup.
 
@@ -309,26 +322,15 @@ class RssPolarimetry(BaseModel, validate_assignment=True):  # type: ignore
     ]
 
     @staticmethod
-    def validate_pattern_before(value: _WavePlatePattern) -> _WavePlatePattern:
+    def validate_pattern_before(value: object) -> object:
         if isinstance(value, str):
-            return value.lower()  # type: ignore
+            return value.lower()
         return value
 
     @staticmethod
     def validate_pattern_after(value: _WavePlatePattern) -> _WavePlatePattern:
-        if value == "linear":
-            value = LINEAR_POLARIMETRY_PATTERN  # type: ignore
-        elif value == "linear hi":
-            value = LINEAR_HI_POLARIMETRY_PATTERN  # type: ignore
-        elif value == "circular":
-            value = CIRCULAR_POLARIMETRY_PATTERN  # type: ignore
-        elif value == "circular hi":
-            value = CIRCULAR_HI_POLARIMETRY_PATTRERN  # type: ignore
-        elif value == "all-stokes":
-            value = ALL_STOKES_POLARIMETRY_PATTERN  # type: ignore
-
         if isinstance(value, str):
-            raise ValueError(f"Unsupported string value: {value}")
+            value = _PREDEFINED_WAVE_PLATE_PATTERNS[value]
 
         if len(value) < 1 or len(value) > 8:
             raise ValueError("The wave plate pattern must have between 1 and 8 steps.")
@@ -338,7 +340,7 @@ class RssPolarimetry(BaseModel, validate_assignment=True):  # type: ignore
         return value
 
     @staticmethod
-    def _check_pattern_step(step: tuple[Angle | None, Angle | None]) -> None:
+    def _check_pattern_step(step: WavePlatePatternStep) -> None:
         error = (
             "Each angle in a wave plate pattern must be a multiple of 11.25 degrees "
             "between 0 degrees (inclusive) and 360 degrees (exclusive)."
@@ -347,22 +349,23 @@ class RssPolarimetry(BaseModel, validate_assignment=True):  # type: ignore
             if angle is None:
                 continue
 
+            assert isinstance(angle, AstropyAngle)
             if angle < 0 * u.deg or angle >= 360 * u.deg:
                 raise ValueError(error)
 
             # Check that the ratio of the angle and 11.25 deg is (very close to) an
             # integer.
-            x = (angle.to(u.deg) / 11.25).value  # type: ignore
+            x = (angle.to(u.deg) / 11.25).value
             if abs(round(x) - x) > 1e-6:
                 raise ValueError(error)
 
     @staticmethod
-    def _check_angle_values(value: _WavePlatePattern) -> None:
+    def _check_angle_values(value: list[WavePlatePatternStep]) -> None:
         for step in value:
-            RssPolarimetry._check_pattern_step(step)  # type: ignore
+            RssPolarimetry._check_pattern_step(step)
 
 
-class RssDetector(BaseModel, validate_assignment=True):  # type: ignore
+class RssDetector(BaseModel, validate_assignment=True):
     """
     An Rss detector setup.
 
@@ -401,7 +404,7 @@ class RssDetector(BaseModel, validate_assignment=True):  # type: ignore
     ] = None
 
 
-class RssDitherPattern(BaseModel, validate_assignment=True):  # type: ignore
+class RssDitherPattern(BaseModel, validate_assignment=True):
     """
     A dither pattern for RSS.
 
@@ -433,7 +436,7 @@ class RssDitherPattern(BaseModel, validate_assignment=True):  # type: ignore
         default_factory=lambda data: data["num_rows"] * data["num_columns"]
     )
     offset: Annotated[
-        Union[Quantity, float], AstropyQuantityTypeAnnotation(default_unit=u.arcsec)
+        Quantity | float, AstropyQuantityTypeAnnotation(default_unit=u.arcsec)
     ]
 
     @model_validator(mode="after")

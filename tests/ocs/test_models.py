@@ -1,6 +1,7 @@
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
 import pytest
+from astropy.time import Time
 from pydantic import ValidationError
 
 from aeonlib.conf import Settings
@@ -56,8 +57,8 @@ def request_group() -> RequestGroup:
                 ],
                 windows=[
                     Window(
-                        start=datetime.now(),
-                        end=datetime.now() + timedelta(days=30),
+                        start=datetime.now(UTC),
+                        end=datetime.now(UTC) + timedelta(days=30),
                     )
                 ],
             )
@@ -71,7 +72,7 @@ class TestCommonValidationErrors:
         Test that a ValidationError is raised when a required field (proposal) is missing.
         """
         with pytest.raises(ValidationError) as exc_info:
-            _ = RequestGroup(  # pyright: ignore[reportCallIssue] #ty: ignore[missing-argument]
+            _ = RequestGroup(  # ty: ignore[missing-argument]
                 name="test",
                 observation_type="NORMAL",
                 operator="SINGLE",
@@ -96,7 +97,7 @@ class TestCommonValidationErrors:
         RequestGroup is not one of the allowed values.
         """
         with pytest.raises(ValidationError) as exc_info:
-            request_group.observation_type = "INVALID"  # pyright: ignore[reportAttributeAccessIssue] # ty: ignore[invalid-assignment]
+            request_group.observation_type = "INVALID"  # ty: ignore[invalid-assignment]
         assert exc_info.value.errors()[0]["loc"] == ("observation_type",)
         assert exc_info.value.errors()[0]["type"] == "literal_error"
 
@@ -131,7 +132,7 @@ class TestSerialization:
         facility = LcoFacility(settings=Settings(lco_token="", lco_api_root=""))
         target = JplMinorPlanetTarget(
             name="mover",
-            epochofel=datetime(2025, 1, 1),  # Time as datetime
+            epochofel=Time("2025-01-01", scale="tt").to_datetime(),
             perihdist=1.0,
             orbinc=0.0,
             longascnode=0.0,

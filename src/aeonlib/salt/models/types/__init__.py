@@ -1,4 +1,3 @@
-from .quantity import AstropyQuantityTypeAnnotation
 from .block import SkyTransparency
 from .duration import Duration, PositiveDuration
 from .hrs import HrsMode, HrsPrvCalibration
@@ -11,6 +10,7 @@ from .nirwals import (
     NirwalsOffsetType,
     NirwalsSampling,
 )
+from .quantity import AstropyQuantityTypeAnnotation
 from .rss import (
     RssGain,
     RssGrating,
@@ -19,6 +19,7 @@ from .rss import (
     RssReadoutMode,
     RssReadoutSpeed,
     RssSlitMaskIFU,
+    WavePlatePatternStep,
 )
 from .salticam import SalticamFilter, SalticamFilterSerializer
 from .target import MagnitudeBandpass, TargetType
@@ -48,4 +49,5 @@ __all__ = [
     "SalticamFilterSerializer",
     "SkyTransparency",
     "TargetType",
+    "WavePlatePatternStep",
 ]

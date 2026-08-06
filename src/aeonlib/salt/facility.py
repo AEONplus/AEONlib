@@ -2,7 +2,7 @@ import io
 import logging
 
 from pyastrosalt.session import Session
-from pyastrosalt.submission import Submission, validate, submit
+from pyastrosalt.submission import Submission, submit, validate
 
 from aeonlib.conf import settings
 from aeonlib.salt.models import Request

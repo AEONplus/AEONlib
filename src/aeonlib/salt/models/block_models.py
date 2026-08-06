@@ -3,37 +3,40 @@
 from __future__ import annotations
 
 import uuid
-from typing import Annotated, Literal, Self, TypeAlias
+from typing import Annotated, Literal, Self
 
 import astropy.units as u
 from pydantic import (
-    BaseModel,
-    FilePath,
-    NonNegativeInt,
-    NonNegativeFloat,
-    PositiveInt,
-    PositiveFloat,
-    model_validator,
     AfterValidator,
+    BaseModel,
     Field,
+    FilePath,
+    NonNegativeFloat,
+    NonNegativeInt,
+    PositiveFloat,
+    PositiveInt,
+    model_validator,
 )
 
 from aeonlib.models import Angle, Window
-from aeonlib.salt.models import SaltSiderealTarget, Salticam, Rss, Hrs, Nirwals
-from aeonlib.salt.models.util import LowerCaseValidator, CapitalizingSerializer
+from aeonlib.salt.models.hrs_models import Hrs
+from aeonlib.salt.models.nirwals_models import Nirwals
+from aeonlib.salt.models.rss_models import Rss
+from aeonlib.salt.models.salticam_models import Salticam
+from aeonlib.salt.models.target_models import SaltSiderealTarget
 from aeonlib.salt.models.types import (
     PositiveDuration,
     SalticamFilter,
     SalticamFilterSerializer,
     SkyTransparency,
 )
+from aeonlib.salt.models.util import CapitalizingSerializer, LowerCaseValidator
 from aeonlib.salt.validators import GreaterEqual, LessEqual, check_in_visibility_range
 
+type Instrument = Salticam | Rss | Hrs | Nirwals
 
-Instrument: TypeAlias = Salticam | Rss | Hrs | Nirwals
 
-
-class Block(BaseModel, validate_assignment=True):  # type: ignore
+class Block(BaseModel, validate_assignment=True):
     """
     A block for SALT.
 
@@ -128,16 +131,15 @@ class Block(BaseModel, validate_assignment=True):  # type: ignore
 
     @model_validator(mode="after")
     def check_max_num_visits_is_at_least_num_visits(self) -> Self:
-        if self.max_num_visits is not None:
-            if self.max_num_visits < self.num_visits:
-                raise ValueError(
-                    "max_num_visits must be greater than or equal to num_visits."
-                )
+        if self.max_num_visits is not None and self.max_num_visits < self.num_visits:
+            raise ValueError(
+                "max_num_visits must be greater than or equal to num_visits."
+            )
 
         return self
 
 
-class Constraints(BaseModel, validate_assignment=True):  # type: ignore
+class Constraints(BaseModel, validate_assignment=True):
     """
     Observing constraints.
 
@@ -176,7 +178,7 @@ class Constraints(BaseModel, validate_assignment=True):  # type: ignore
     max_seeing: PositiveFloat
 
 
-class Acquisition(BaseModel, validate_assignment=True):  # type: ignore
+class Acquisition(BaseModel, validate_assignment=True):
     """
     An acquisition.
 
@@ -232,17 +234,20 @@ class Acquisition(BaseModel, validate_assignment=True):  # type: ignore
 
     @model_validator(mode="after")
     def check_do_not_flip_position_angle(self):
-        if not isinstance(self.position_angle, str) and self.position_angle is not None:
-            if self.do_not_flip_position_angle is None:
-                raise ValueError(
-                    "The do_not_flip_position_angle property must not be None if the "
-                    "position_angle property is an angle."
-                )
+        if (
+            not isinstance(self.position_angle, str)
+            and self.position_angle is not None
+            and self.do_not_flip_position_angle is None
+        ):
+            raise ValueError(
+                "The do_not_flip_position_angle property must not be None if the "
+                "position_angle property is an angle."
+            )
 
         return self
 
 
-class ReferenceStar(BaseModel, validate_assignment=True):  # type: ignore
+class ReferenceStar(BaseModel, validate_assignment=True):
     """
     A reference star on which to acquire.
 

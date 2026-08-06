@@ -156,11 +156,7 @@ class TestRequest:
             for file in archive.namelist():
                 if file != "Blocks.xml":
                     assert file.startswith("Included/")
-                    assert (
-                        file.endswith(".pdf")
-                        or file.endswith(".png")
-                        or file.endswith(".rsmt")
-                    )
+                    assert file.endswith((".pdf", ".png", ".rsmt"))
                     assert file in block_submission
 
                     content = archive.read(file)

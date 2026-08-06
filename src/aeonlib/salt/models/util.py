@@ -4,21 +4,24 @@ import pathlib
 import uuid
 import xml.etree.ElementTree as ET
 import zoneinfo
-from typing import Any, Iterable, cast
+from collections.abc import Iterable
+from typing import Any, cast
 from uuid import uuid4
 from zoneinfo import ZoneInfo
 
 import astropy.units as u
 from astropy.coordinates import Angle
 from bs4 import BeautifulSoup
-from jinja2 import Environment, PackageLoader, select_autoescape, BaseLoader
+from jinja2 import BaseLoader, Environment, PackageLoader, select_autoescape
 from lxml import etree
-from pydantic import PlainSerializer, BeforeValidator
+from pydantic import BeforeValidator, PlainSerializer
+
+from aeonlib.salt.models.types import WavePlatePatternStep
 
 _schema: etree.XMLSchema | None = None
 
 
-LINEAR_POLARIMETRY_PATTERN = [
+LINEAR_POLARIMETRY_PATTERN: list[WavePlatePatternStep] = [
     (Angle(0 * u.deg), None),
     (Angle(45 * u.deg), None),
     (Angle(22.5 * u.deg), None),
@@ -27,7 +30,7 @@ LINEAR_POLARIMETRY_PATTERN = [
 # The half and quarter wave plate angles for the linear polarimetry pattern.
 
 
-LINEAR_HI_POLARIMETRY_PATTERN = [
+LINEAR_HI_POLARIMETRY_PATTERN: list[WavePlatePatternStep] = [
     (Angle(0 * u.deg), None),
     (Angle(45 * u.deg), None),
     (Angle(22.5 * u.deg), None),
@@ -40,14 +43,14 @@ LINEAR_HI_POLARIMETRY_PATTERN = [
 # The half and quarter wave plate angles for the linear-hi polarimetry pattern.
 
 
-CIRCULAR_POLARIMETRY_PATTERN = [
+CIRCULAR_POLARIMETRY_PATTERN: list[WavePlatePatternStep] = [
     (Angle(0 * u.deg), Angle(45 * u.deg)),
     (Angle(0 * u.deg), Angle(315 * u.deg)),
 ]
 # The half and quarter wave plate angles for the circular polarimetry pattern.
 
 
-CIRCULAR_HI_POLARIMETRY_PATTRERN = [
+CIRCULAR_HI_POLARIMETRY_PATTRERN: list[WavePlatePatternStep] = [
     (Angle(0 * u.deg), Angle(45 * u.deg)),
     (Angle(0 * u.deg), Angle(315 * u.deg)),
     (Angle(22.5 * u.deg), Angle(315 * u.deg)),
@@ -60,7 +63,7 @@ CIRCULAR_HI_POLARIMETRY_PATTRERN = [
 # The half and quarter wave plate angles for the circular-hi polarimetry pattern.
 
 
-ALL_STOKES_POLARIMETRY_PATTERN = [
+ALL_STOKES_POLARIMETRY_PATTERN: list[WavePlatePatternStep] = [
     (Angle(0 * u.deg), Angle(0 * u.deg)),
     (Angle(45 * u.deg), Angle(0 * u.deg)),
     (Angle(22.5 * u.deg), Angle(0 * u.deg)),
@@ -96,7 +99,7 @@ def validate_xml(xml: str) -> None:
 
     try:
         xml_doc = etree.parse(io.BytesIO(xml.encode("utf-8")))
-        cast(etree.XMLSchema, _schema).assertValid(xml_doc)  # noqa
+        cast(etree.XMLSchema, _schema).assertValid(xml_doc)
     except (etree.DocumentInvalid, etree.XMLSyntaxError) as e:
         raise ValueError(str(e))
 
@@ -139,7 +142,7 @@ def _to_utc(t: datetime.datetime | None) -> str:
             raise ValueError("The datetime instance must be naive.")
         t = t.replace(tzinfo=ZoneInfo("UTC"))
 
-    return cast(datetime.datetime, t).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return t.strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _sign(value):
@@ -193,8 +196,10 @@ def render_template(
     env.filters["year_as_iso_timestamp"] = _year_as_iso_timestamp
     env.filters["utc"] = _to_utc
     env.filters["sign"] = _sign
-    env.globals["uuid"] = _uuid
-    env.globals["to_angle"] = _to_angle
+    # jinja does't type env.globals completely
+    template_globals = cast(dict[str, Any], env.globals)
+    template_globals["uuid"] = _uuid
+    template_globals["to_angle"] = _to_angle
     template = env.get_template(template_path)
     return template.render(**kwargs)
 
@@ -317,7 +322,7 @@ def replace_attachment_paths(xml: str, replacements: dict[pathlib.Path, str]) ->
         path = pathlib.Path(path_text).resolve()
         if path not in replacements_resolved:
             raise ValueError(
-                f"Path missing in replacements dictionary: {path_text} (resolved: {str(path)}"
+                f"Path missing in replacements dictionary: {path_text} (resolved: {path!s}"
             )
         path_element.string = replacements_resolved[path]
     xml = soup.prettify()

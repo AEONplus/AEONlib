@@ -49,8 +49,8 @@ class Target(EsoModel):
         # Format angles the way ESO wants them.
         assert isinstance(st.ra, Angle)
         assert isinstance(st.dec, Angle)
-        self.ra = st.ra.to_string(sep=":", precision=3)  # pyright: ignore[reportUnknownMemberType]
-        self.dec = st.dec.to_string(sep=":", precision=3)  # pyright: ignore[reportUnknownMemberType]
+        self.ra = st.ra.to_string(sep=":", precision=3)
+        self.dec = st.dec.to_string(sep=":", precision=3)
         self.epoch = st.epoch
         self.name = st.name
         self.proper_motion_dec = st.proper_motion_dec

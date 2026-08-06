@@ -1,5 +1,5 @@
 import json
-from typing import Annotated, Union
+from typing import Annotated
 
 import pytest
 from astropy import units as u
@@ -8,12 +8,10 @@ from pydantic import BaseModel
 
 from aeonlib.salt.models.types.quantity import AstropyQuantityTypeAnnotation
 
-Wavelength = Annotated[
-    Union[Quantity, float], AstropyQuantityTypeAnnotation(u.Angstrom)
-]
+Wavelength = Annotated[Quantity | float, AstropyQuantityTypeAnnotation(u.Angstrom)]
 
 ProperMotion = Annotated[
-    Union[Quantity, float], AstropyQuantityTypeAnnotation(u.arcsec / u.year)
+    Quantity | float, AstropyQuantityTypeAnnotation(u.arcsec / u.year)
 ]
 
 
@@ -69,6 +67,7 @@ class TestAstropyQuantityTypeAnnotation:
         assert isinstance(asteroid.peak_wavelength, Quantity)
         assert pytest.approx(asteroid.peak_wavelength.value) == 4107
         assert asteroid.peak_wavelength.unit == u.Angstrom
+        assert isinstance(asteroid.proper_motion, Quantity)
         assert pytest.approx(asteroid.proper_motion.value) == 4383.0
         assert asteroid.proper_motion.unit == u.arcsec / u.year
 

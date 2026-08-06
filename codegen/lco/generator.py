@@ -62,9 +62,11 @@ def get_extra_params_fields(
 
 def get_modes(ins: dict[str, Any], type: str) -> list[str]:
     try:
-        return [m["code"] for m in ins["modes"][type]["modes"]]
-    except Exception:
+        modes = ins["modes"][type]["modes"]
+    except KeyError:
         return []
+
+    return [mode["code"] for mode in modes]
 
 
 def generate_instrument_configs(ins_s: str, facility: str) -> str:
@@ -163,4 +165,4 @@ if __name__ == "__main__":
             )
     except IndexError:
         _ = sys.stdout.write("Usage: python generator.py <facility>")
-        exit(1)
+        sys.exit(1)

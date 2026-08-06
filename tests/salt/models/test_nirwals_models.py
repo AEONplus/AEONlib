@@ -1,7 +1,7 @@
 from contextlib import nullcontext
 
-from astropy import units as u
 import pytest
+from astropy import units as u
 
 from aeonlib.salt.models import Nirwals, NirwalsDitherPatternStep
 
