@@ -56,6 +56,6 @@ def test_submit_observation():
 def test_build_rtml():
     frodo = Frodo()
     facility = LTFacility()
-    result = facility._observation_payload(CFG, frodo, TARGET, WINDOW)  # pyright: ignore[reportPrivateUsage]
+    result = facility._observation_payload(CFG, frodo, TARGET, WINDOW)
     result_str = etree.tostring(result, encoding="unicode")
     assert result_str.startswith("<RTML")

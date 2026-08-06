@@ -1,5 +1,3 @@
-# pyright: reportUnknownMemberType=false
-# pyright: reportUnannotatedClassAttribute=false
 import logging
 import tempfile
 from typing import Any, BinaryIO
@@ -261,7 +259,7 @@ class EsoFacility:
             temp_file.flush()
             logger.debug("Saved ephemeris file to %s", temp_file.name)
             try:
-                _, version = self.api.saveEphemerisFile(  # pyright: ignore[reportUnknownVariableType]
+                _, version = self.api.saveEphemerisFile(
                     ob.ob_id, temp_file.name, ephemeris.version
                 )
                 assert version
@@ -293,7 +291,7 @@ class EsoFacility:
             temp_file.flush()
             logger.debug("Saved finding chart to %s", temp_file.name)
             try:
-                _ = self.api.addFindingChart(ob.ob_id, temp_file.name)  # pyright: ignore[reportUnknownVariableType]
+                _ = self.api.addFindingChart(ob.ob_id, temp_file.name)
             except Exception as e:
                 raise ESONetworkError("Failed to add ESO finding chart") from e
 

@@ -1,5 +1,3 @@
-# pyright: reportUnknownVariableType=false
-# pyright: reportUnknownMemberType=false
 import logging
 from datetime import datetime
 from typing import Annotated, Any, cast

@@ -1,4 +1,3 @@
-# pyright: reportPrivateUsage=false
 from typing import Annotated, Literal
 
 from annotated_types import Ge, Le

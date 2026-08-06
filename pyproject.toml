@@ -58,11 +58,6 @@ extend-exclude = [
 ]
 force-exclude = true
 
-[tool.pyright]
-reportExplicitAny = false
-reportAny = false
-reportMissingTypeStubs = false
-
 [[tool.mypy.overrides]]
 module = "astropy.*"
 ignore_missing_imports = true
