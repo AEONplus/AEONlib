@@ -20,7 +20,7 @@ from aeonlib.cfht.models import (
     TargetDataMovingTarget,  # TODO: replace with common non-sidereal target model
 )
 
-pytestmark = pytest.mark.online
+pytestmark = [pytest.mark.online, pytest.mark.side_effect]
 
 required_mag_by_instrument: dict[Instrument, str] = {
     Instrument.spirou: "h",
