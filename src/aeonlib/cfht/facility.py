@@ -61,7 +61,7 @@ class CFHTFacility:
     def _program_request(self, method: str, url: str, **kwargs: Any) -> Any:
         if not self.program_token:
             raise ValueError(
-                "Program must be set. Initialize the facility with a ProgramInfo or use `select_program`"
+                "Program must be set. Initialize the facility with program_token or use `select_program`"
             )
         return self._request(
             method, f"programs/{self.program_token}/{url.lstrip('/')}", **kwargs
@@ -79,6 +79,25 @@ class CFHTFacility:
         """Get the list of observing programs"""
         entities = self._request("GET", "programs/")
         return [ProgramInfo.model_validate(entity) for entity in entities]
+
+    def instruments(self) -> set[Instrument]:
+        """Return the instruments allocated to the selected program"""
+        if not self.program_token:
+            raise ValueError(
+                "Program must be set. Initialize the facility with program_token or use `select_program`"
+            )
+        for program in self.programs():
+            program_data = program.program_data
+            if program_data is None or program_data.token != self.program_token:
+                continue
+
+            return {
+                allocation.instrument
+                for allocation in program_data.time_allocation or []
+                if allocation.instrument is not None
+            }
+
+        raise EntityNotFoundError(f"Program not found: {self.program_token}")
 
     def targets(self) -> list[TargetData]:
         """Get the list of targets for a given program"""
