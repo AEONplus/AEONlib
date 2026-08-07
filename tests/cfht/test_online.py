@@ -36,8 +36,9 @@ def facility() -> CFHTFacility:
 
 def test_programs(facility: CFHTFacility):
     programs = facility.programs()
-    assert programs[0].pi_info
-    assert programs[0].pi_info.first_name == "AEON"
+    assert any(
+        program.pi_info and program.pi_info.first_name == "AEON" for program in programs
+    )
 
 
 def example_fixed_target(

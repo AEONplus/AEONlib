@@ -23,10 +23,8 @@ class InvalidResponseError(ValueError):
 class CFHTFacility:
     """CFHT Facility class"""
 
-    program_token: str | None = None
-
     def __init__(
-        self, settings: Settings = default_settings, program: ProgramInfo | None = None
+        self, settings: Settings = default_settings, program_token: str | None = None
     ):
         base_url = settings.cfht_api_root
         if not base_url:
@@ -34,14 +32,13 @@ class CFHTFacility:
         access_token = settings.cfht_access_token
         if not access_token:
             raise ValueError("AEON_CFHT_ACCESS_TOKEN token is not set")
-        if program is not None:
-            self.select_program(program)
-
         headers = {
             "Authorization": f"Bearer {access_token}",
             "Content-Type": "application/json",
         }
+
         self._client = httpx.Client(base_url=base_url, headers=headers)
+        self.program_token = program_token
 
     def _request(self, method: str, url: str, **kwargs: Any) -> Any:
         response = self._client.request(method, url, **kwargs)
