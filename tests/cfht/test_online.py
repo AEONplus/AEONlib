@@ -11,7 +11,6 @@ from aeonlib.cfht.facility import (
     VersionMismatchError,
 )
 from aeonlib.cfht.models import (
-    DoubleValue,  # TODO: should be removed or coerced from float
     Instrument,
     MovingTargetEphemeris,  # TODO: replace with common non-sidereal model
     SkyCoordinate,
@@ -85,10 +84,10 @@ def example_fixed_target(
     # Add CFHT specific fields
     target_data.token = f"{program_token}-{random.randint(1000000000, 9999999999)}"
     target_data.fixed_target.estimated_radial_velocity_kmps = (
-        DoubleValue(value=234.0) if instrument == Instrument.spirou else None
+        234.0 if instrument == Instrument.spirou else None
     )
     target_data.magnitude = TargetDataMagnitude(
-        **{example_mag_by_instrument[instrument]: DoubleValue(value=10.0)}
+        **{example_mag_by_instrument[instrument]: 10.0}
     )
     target_data.temperature_effective = 1234.5
     target_data.standard_star = False
@@ -117,9 +116,7 @@ def example_moving_target(
                 for i in range(5)
             ]
         ),
-        magnitude=TargetDataMagnitude(
-            **{example_mag_by_instrument[instrument]: DoubleValue(value=10.0)}
-        ),
+        magnitude=TargetDataMagnitude(**{example_mag_by_instrument[instrument]: 10.0}),
         temperature_effective=1234.5,
         standard_star=False,
         pointing_offset_token=f"00AZ00-PO+{instrument.value}+1",

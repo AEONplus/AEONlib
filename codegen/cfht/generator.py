@@ -34,6 +34,7 @@ def generate_models(openapi_document: dict[str, Any]) -> str:
         set_default_enum_member=True,
         snake_case_field=True,
         allow_population_by_field_name=True,
+        type_overrides={"DoubleValue": "aeonlib.cfht.types.DoubleValue"},
         formatters=[Formatter.BUILTIN],
     )
 

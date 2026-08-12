@@ -5,7 +5,11 @@ from aeonlib.cfht.conversions import (
     _sidereal_target_payload,
     target_data_from_aeon,
 )
-from aeonlib.cfht.models import TargetData
+from aeonlib.cfht.models import (
+    TargetData,
+    TargetDataFixedTarget,
+    TargetDataMagnitude,
+)
 from aeonlib.models import SiderealTarget
 
 
@@ -43,3 +47,36 @@ def test_sidereal_target_to_target_data(sidereal_target):
     assert result.fixed_target.proper_motion
     assert result.fixed_target.proper_motion.ra_mas == 1.0
     assert result.fixed_target.proper_motion.dec_mas == 0.1
+
+
+def test_double_value_field_accepts_float():
+    fixed_target = TargetDataFixedTarget(estimated_radial_velocity_kmps=234.0)
+
+    assert fixed_target.estimated_radial_velocity_kmps == 234.0
+    assert fixed_target.api_dump() == {
+        "estimated_radial_velocity_kmps": {"value": 234.0}
+    }
+
+
+def test_aliased_double_value_field_accepts_float():
+    magnitude = TargetDataMagnitude(V=10.0)
+
+    assert magnitude.v == 10.0
+    assert magnitude.api_dump() == {"V": {"value": 10.0}}
+
+
+def test_double_value_field_accepts_wrapped_api_input():
+    magnitude = TargetDataMagnitude.model_validate({"V": {"value": 10.0}})
+    assert magnitude.v == 10.0
+
+    null_magnitude = TargetDataMagnitude.model_validate({"V": {"value": None}})
+    assert null_magnitude.v is None
+
+
+def test_double_value_field_accepts_float_assignment():
+    magnitude = TargetDataMagnitude()
+
+    magnitude.ab = 10.0
+
+    assert magnitude.ab == 10.0
+    assert magnitude.api_dump() == {"AB": {"value": 10.0}}
