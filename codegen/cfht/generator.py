@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 import sys
-from pathlib import Path
 from typing import Any
 
+import httpx
 import yaml
 from datamodel_code_generator import (
     DataModelType,
@@ -17,8 +17,7 @@ from datamodel_code_generator import (
     Error as DataModelCodegenError,
 )
 
-# Convert this to a URL once CFHT confirms the OAS3 spec is availanble online somewhere.
-OPENAPI_SPEC_PATH = Path(__file__).with_name("cfhtopenapi.yaml")
+OPENAPI_SPEC_URL = "https://hou-stage.cfht.hawaii.edu/api-docs/pi_api.yaml"
 GENERATED_HEADER = "# Auto generated file, do not edit\n# ruff: noqa: E741\n"
 
 
@@ -49,8 +48,9 @@ def generate_models(openapi_document: dict[str, Any]) -> str:
 
 
 def main() -> int:
-    with OPENAPI_SPEC_PATH.open(encoding="utf-8") as f:
-        document = yaml.safe_load(f)
+    response = httpx.get(OPENAPI_SPEC_URL)
+    response.raise_for_status()
+    document = yaml.safe_load(response.content)
     generated = generate_models(document)
     _ = sys.stdout.write(generated)
 
