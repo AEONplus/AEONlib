@@ -243,9 +243,6 @@ class _AstropyAngleType:
         }
 
 
-Time = Annotated[astropy.time.Time | datetime, _AstropyTimeType]
-TimeMJD = Annotated[astropy.time.Time | datetime | float, _AstropyTimeMJDType]
-Angle = Annotated[
-    astropy.coordinates.Angle | Quantity | str | float,
-    _AstropyAngleType,
-]
+Time = Annotated[astropy.time.Time, _AstropyTimeType]
+TimeMJD = Annotated[astropy.time.Time, _AstropyTimeMJDType]
+Angle = Annotated[astropy.coordinates.Angle, _AstropyAngleType]

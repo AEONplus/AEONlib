@@ -4,6 +4,7 @@ from collections.abc import Iterator
 
 import pytest
 
+from aeonlib.cfht.conversions import target_data_from_aeon
 from aeonlib.cfht.facility import (
     CFHTFacility,
     EntityNotFoundError,
@@ -15,10 +16,10 @@ from aeonlib.cfht.models import (
     MovingTargetEphemeris,  # TODO: replace with common non-sidereal model
     SkyCoordinate,
     TargetData,
-    TargetDataFixedTarget,  # TODO: replace with common target model
     TargetDataMagnitude,
     TargetDataMovingTarget,  # TODO: replace with common non-sidereal target model
 )
+from aeonlib.models import SiderealTarget
 
 pytestmark = pytest.mark.online
 
@@ -71,32 +72,36 @@ def program_instruments(
 def example_fixed_target(
     program_token: str, instrument: Instrument, test_run_id: str
 ) -> TargetData:
-    return TargetData(
-        token=f"{program_token}-{random.randint(1000000000, 9999999999)}",
+    # Start with an Aeonlib common SiderealTarget
+    sidereal_target = SiderealTarget(
         name=f"my new aeonlib test target {test_run_id}",
-        fixed_target=TargetDataFixedTarget(  # TODO: use Aeonlib common Target
-            coordinate=SkyCoordinate(
-                ra=random.uniform(0, 359.9999),
-                dec=random.uniform(-90, 90),
-            ),
-            estimated_radial_velocity_kmps=DoubleValue(
-                value=234.0
-            )  # TODO: remove the need for DoubleValue
-            if instrument == Instrument.spirou
-            else None,
-        ),
-        magnitude=TargetDataMagnitude(
-            **{example_mag_by_instrument[instrument]: DoubleValue(value=10.0)}
-        ),
-        temperature_effective=1234.5,
-        standard_star=False,
-        pointing_offset_token=f"00AZ00-PO+{instrument.value}+1",
+        type="ICRS",
+        ra=random.uniform(0, 359.9999),
+        dec=random.uniform(-90, 90),
     )
+    # Get a CFHT TargetData
+    target_data = target_data_from_aeon(sidereal_target)
+
+    # Add CFHT specific fields
+    target_data.token = f"{program_token}-{random.randint(1000000000, 9999999999)}"
+    target_data.fixed_target.estimated_radial_velocity_kmps = (
+        DoubleValue(value=234.0) if instrument == Instrument.spirou else None
+    )
+    target_data.magnitude = TargetDataMagnitude(
+        **{example_mag_by_instrument[instrument]: DoubleValue(value=10.0)}
+    )
+    target_data.temperature_effective = 1234.5
+    target_data.standard_star = False
+    target_data.pointing_offset_token = f"00AZ00-PO+{instrument.value}+1"
+
+    return target_data
 
 
 def example_moving_target(
     program_token: str, instrument: Instrument, test_run_id: str
 ) -> TargetData:
+    # For now constructing a moving target needs to be done manually as
+    # generating the ephemeris points automatically is not yet supported
     return TargetData(
         token=f"{program_token}-{random.randint(1000000000, 9999999999)}",
         name=f"my new aeonlib moving target {test_run_id}",
