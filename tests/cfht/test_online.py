@@ -230,7 +230,7 @@ def test_target_bad_version(program_facilities: list[CFHTFacility], test_run_id:
 
 
 def test_get_observing_templates(program_facilities: list[CFHTFacility]):
-    for facility, program_token, instrument in program_instruments(program_facilities):
+    for facility in program_facilities:
         templates = facility.observing_templates()
         assert isinstance(templates, list)
         assert all(
@@ -281,9 +281,7 @@ def test_create_observing_group(
 
 @pytest.mark.skip("response does not match schema")
 def test_get_exposures(program_facilities: list[CFHTFacility]):
-    for facility, _program_token, _instrument in program_instruments(
-        program_facilities
-    ):
+    for facility in program_facilities:
         exposures = facility.exposures()
         assert isinstance(exposures, list)
         assert all(isinstance(exposure, ExposureData) for exposure in exposures)
