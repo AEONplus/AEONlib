@@ -8,16 +8,23 @@ from aeonlib.cfht.conversions import target_data_from_aeon
 from aeonlib.cfht.facility import (
     CFHTFacility,
     EntityNotFoundError,
+    ServerError,
     VersionMismatchError,
 )
 from aeonlib.cfht.models import (
     Instrument,
     MovingTargetEphemeris,  # TODO: replace with common non-sidereal model
+    ObservingBlockObservingComponent,
+    ObservingGroupData,
+    ObservingGroupDataObservingBlock,
     ObservingTemplateData,
+    OgPriority,
+    SingleObservingGroup,
     SkyCoordinate,
     TargetData,
     TargetDataMagnitude,
     TargetDataMovingTarget,  # TODO: replace with common non-sidereal target model
+    TargetType,
 )
 from aeonlib.models import SiderealTarget
 
@@ -227,3 +234,44 @@ def test_get_observing_templates(program_facilities: list[CFHTFacility]):
         assert isinstance(templates, list)
         for template in templates:
             assert isinstance(template, ObservingTemplateData)
+
+
+@pytest.mark.side_effect
+def test_create_observing_group(
+    program_facilities: list[CFHTFacility], test_run_id: str
+):
+    facility, program_token, instrument = next(program_instruments(program_facilities))
+    templates = facility.observing_templates()
+    assert templates, "No observing templates available"
+    first_ot = templates[0]
+    new_target = example_fixed_target(program_token, instrument, test_run_id)
+    target = facility.create_or_update_target(new_target, instrument)
+    new_observing_group = ObservingGroupData(
+        token=f"{program_token}-{random.randint(1000000000, 9999999999)}",
+        og_priority=OgPriority.medium,
+        target_type=TargetType.object,
+        single_observing_group=SingleObservingGroup(
+            observing_block=ObservingGroupDataObservingBlock(
+                observing_component=[
+                    ObservingBlockObservingComponent(
+                        target_token=target.token,
+                        observing_template_token=first_ot.token,
+                    )
+                ]
+            )
+        ),
+    )
+    observing_group = facility.create_observing_group(new_observing_group)
+    assert isinstance(observing_group, ObservingGroupData)
+    try:
+        assert observing_group.token
+        assert observing_group.label
+
+        # Attempt to delete the target that is used in an observing group
+        with pytest.raises(ServerError):
+            if target.token is not None:
+                facility.delete_target(target.token)
+    finally:
+        facility.delete_observing_group(observing_group.token)
+        if target.token is not None:
+            facility.delete_target(target.token)

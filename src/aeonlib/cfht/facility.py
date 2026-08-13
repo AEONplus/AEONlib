@@ -5,7 +5,13 @@ import httpx
 from aeonlib.conf import Settings
 from aeonlib.conf import settings as default_settings
 
-from .models import Instrument, ObservingTemplateData, ProgramInfo, TargetData
+from .models import (
+    Instrument,
+    ObservingGroupData,
+    ObservingTemplateData,
+    ProgramInfo,
+    TargetData,
+)
 
 
 class VersionMismatchError(ValueError):
@@ -18,6 +24,10 @@ class EntityNotFoundError(ValueError):
 
 class InvalidResponseError(ValueError):
     """Raised when the response is invalid"""
+
+
+class ServerError(RuntimeError):
+    """Raised when the server returns an error"""
 
 
 class CFHTFacility:
@@ -48,7 +58,10 @@ class CFHTFacility:
             )
         if response.status_code == httpx.codes.NOT_FOUND:
             raise EntityNotFoundError(f"Entity not found: {response.request.url}")
-        response.raise_for_status()
+        try:
+            response.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            raise ServerError(f"CFHT API error: {exc}") from exc
         if method == "DELETE":
             return None
         try:
@@ -126,3 +139,15 @@ class CFHTFacility:
     def observing_templates(self) -> list[ObservingTemplateData]:
         entities = self._program_request("GET", "observing-templates/")
         return [ObservingTemplateData.model_validate(entity) for entity in entities]
+
+    def create_observing_group(
+        self, observing_group: ObservingGroupData
+    ) -> ObservingGroupData:
+        data = {"entity": observing_group.api_dump()}
+        entity = self._program_request(
+            "PUT", f"observing-groups/{observing_group.token}/", json=data
+        )
+        return ObservingGroupData.model_validate(entity)
+
+    def delete_observing_group(self, observing_group_token: str) -> None:
+        self._program_request("DELETE", f"observing-groups/{observing_group_token}")
