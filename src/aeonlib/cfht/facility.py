@@ -5,7 +5,7 @@ import httpx
 from aeonlib.conf import Settings
 from aeonlib.conf import settings as default_settings
 
-from .models import Instrument, ProgramInfo, TargetData
+from .models import Instrument, ObservingTemplateData, ProgramInfo, TargetData
 
 
 class VersionMismatchError(ValueError):
@@ -122,3 +122,7 @@ class CFHTFacility:
         }
         entity = self._program_request("PUT", f"targets/{target.token}/", json=data)
         return TargetData.model_validate(entity)
+
+    def observing_templates(self) -> list[ObservingTemplateData]:
+        entities = self._program_request("GET", "observing-templates/")
+        return [ObservingTemplateData.model_validate(entity) for entity in entities]

@@ -13,6 +13,7 @@ from aeonlib.cfht.facility import (
 from aeonlib.cfht.models import (
     Instrument,
     MovingTargetEphemeris,  # TODO: replace with common non-sidereal model
+    ObservingTemplateData,
     SkyCoordinate,
     TargetData,
     TargetDataMagnitude,
@@ -218,3 +219,11 @@ def test_target_bad_version(program_facilities: list[CFHTFacility], test_run_id:
     finally:
         if target.token is not None:
             facility.delete_target(target.token)
+
+
+def test_get_observing_templates(program_facilities: list[CFHTFacility]):
+    for facility, program_token, instrument in program_instruments(program_facilities):
+        templates = facility.observing_templates()
+        assert isinstance(templates, list)
+        for template in templates:
+            assert isinstance(template, ObservingTemplateData)
