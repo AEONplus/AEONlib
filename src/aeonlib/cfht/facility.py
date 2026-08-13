@@ -1,3 +1,4 @@
+from pprint import pprint
 from typing import Any
 
 import httpx
@@ -6,6 +7,7 @@ from aeonlib.conf import Settings
 from aeonlib.conf import settings as default_settings
 
 from .models import (
+    ExposureData,
     Instrument,
     ObservingGroupData,
     ObservingTemplateData,
@@ -50,7 +52,14 @@ class CFHTFacility:
         self._client = httpx.Client(base_url=base_url, headers=headers)
         self.program_token = program_token
 
-    def _request(self, method: str, url: str, **kwargs: Any) -> Any:
+    def _request(
+        self,
+        method: str,
+        url: str,
+        *,
+        response_key: str = "entity",
+        **kwargs: Any,
+    ) -> Any:
         response = self._client.request(method, url, **kwargs)
         if response.status_code == httpx.codes.CONFLICT:
             raise VersionMismatchError(
@@ -64,20 +73,32 @@ class CFHTFacility:
             raise ServerError(f"CFHT API error: {exc}") from exc
         if method == "DELETE":
             return None
+
         try:
-            return response.json()["entity"]
+            return response.json()[response_key]
         except (ValueError, TypeError, KeyError) as exc:
             raise InvalidResponseError(
-                f"CFHT API response from {response.request.url} did not contain an entity"
+                f"CFHT API response from {response.request.url} did not contain "
+                f"the expected {response_key!r} key"
             ) from exc
 
-    def _program_request(self, method: str, url: str, **kwargs: Any) -> Any:
+    def _program_request(
+        self,
+        method: str,
+        url: str,
+        *,
+        response_key: str = "entity",
+        **kwargs: Any,
+    ) -> Any:
         if not self.program_token:
             raise ValueError(
                 "Program must be set. Initialize the facility with program_token or use `select_program`"
             )
         return self._request(
-            method, f"programs/{self.program_token}/{url.lstrip('/')}", **kwargs
+            method,
+            f"programs/{self.program_token}/{url.lstrip('/')}",
+            response_key=response_key,
+            **kwargs,
         )
 
     def select_program(self, program: ProgramInfo) -> None:
@@ -151,3 +172,8 @@ class CFHTFacility:
 
     def delete_observing_group(self, observing_group_token: str) -> None:
         self._program_request("DELETE", f"observing-groups/{observing_group_token}")
+
+    def exposures(self) -> list[ExposureData]:
+        exposures = self._program_request("GET", "exposures/", response_key="exposure")
+        print(pprint(exposures))
+        return [ExposureData.model_validate(exposure) for exposure in exposures]

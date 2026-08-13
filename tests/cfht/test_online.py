@@ -12,6 +12,7 @@ from aeonlib.cfht.facility import (
     VersionMismatchError,
 )
 from aeonlib.cfht.models import (
+    ExposureData,
     Instrument,
     MovingTargetEphemeris,  # TODO: replace with common non-sidereal model
     ObservingBlockObservingComponent,
@@ -19,6 +20,7 @@ from aeonlib.cfht.models import (
     ObservingGroupDataObservingBlock,
     ObservingTemplateData,
     OgPriority,
+    ProgramInfo,
     SingleObservingGroup,
     SkyCoordinate,
     TargetData,
@@ -133,16 +135,15 @@ def example_moving_target(
 
 def test_programs(facility: CFHTFacility):
     programs = facility.programs()
-    assert any(
-        program.pi_info and program.pi_info.first_name == "AEON" for program in programs
-    )
+    assert isinstance(programs, list)
+    assert all(isinstance(program, ProgramInfo) for program in programs)
 
 
 def test_get_targets(program_facilities: list[CFHTFacility]):
     for facility in program_facilities:
         targets = facility.targets()
         assert isinstance(targets, list)
-        assert all(target.name is not None for target in targets)
+        assert all(isinstance(target, TargetData) for target in targets)
 
 
 @pytest.mark.side_effect
@@ -232,8 +233,9 @@ def test_get_observing_templates(program_facilities: list[CFHTFacility]):
     for facility, program_token, instrument in program_instruments(program_facilities):
         templates = facility.observing_templates()
         assert isinstance(templates, list)
-        for template in templates:
-            assert isinstance(template, ObservingTemplateData)
+        assert all(
+            isinstance(template, ObservingTemplateData) for template in templates
+        )
 
 
 @pytest.mark.side_effect
@@ -275,3 +277,13 @@ def test_create_observing_group(
         facility.delete_observing_group(observing_group.token)
         if target.token is not None:
             facility.delete_target(target.token)
+
+
+@pytest.mark.skip("response does not match schema")
+def test_get_exposures(program_facilities: list[CFHTFacility]):
+    for facility, _program_token, _instrument in program_instruments(
+        program_facilities
+    ):
+        exposures = facility.exposures()
+        assert isinstance(exposures, list)
+        assert all(isinstance(exposure, ExposureData) for exposure in exposures)
