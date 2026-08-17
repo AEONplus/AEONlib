@@ -35,7 +35,7 @@ pytestmark = pytest.mark.online
 example_mag_by_instrument: dict[Instrument, str] = {
     Instrument.spirou: "h",
     Instrument.espadons: "v",
-    Instrument.megacam: "ab",
+    Instrument.megacam: "a_b",
 }
 
 
@@ -279,7 +279,6 @@ def test_create_observing_group(
             facility.delete_target(target.token)
 
 
-@pytest.mark.skip("response does not match schema")
 def test_get_exposures(program_facilities: list[CFHTFacility]):
     for facility in program_facilities:
         exposures = facility.exposures()
