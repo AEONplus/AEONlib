@@ -29,7 +29,6 @@ INSTRUMENT_TESTS = {
 }
 
 
-@pytest.mark.skip(reason="LT endpoint appears to be offline.'")
 @pytest.mark.parametrize("ins", INSTRUMENT_TESTS.values(), ids=INSTRUMENT_TESTS.keys())
 def test_validate_observation(ins: LT_INSTRUMENTS):
     """Validate all the default instruments"""
@@ -38,7 +37,6 @@ def test_validate_observation(ins: LT_INSTRUMENTS):
     assert result
 
 
-@pytest.mark.skip(reason="LT endpoint appears to be offline.'")
 @pytest.mark.side_effect
 def test_submit_observation():
     """This test creates stuff remotely so just do one test with Frodo"""
@@ -52,7 +50,6 @@ def test_submit_observation():
     assert cancel_result
 
 
-@pytest.mark.skip(reason="LT endpoint appears to be offline.'")
 def test_build_rtml():
     frodo = Frodo()
     facility = LTFacility()
