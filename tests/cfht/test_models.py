@@ -62,7 +62,7 @@ def test_aliased_double_value_field_accepts_float():
     magnitude = TargetDataMagnitude(v=10.0)
 
     assert magnitude.v == 10.0
-    assert magnitude.api_dump() == {"v": {"value": 10.0}}
+    assert magnitude.api_dump() == {"V": {"value": 10.0}}
 
 
 def test_double_value_field_accepts_wrapped_api_input():
@@ -76,7 +76,7 @@ def test_double_value_field_accepts_wrapped_api_input():
 def test_double_value_field_accepts_float_assignment():
     magnitude = TargetDataMagnitude()
 
-    magnitude.a_b = 10.0
+    magnitude.ab = 10.0
 
-    assert magnitude.a_b == 10.0
-    assert magnitude.api_dump() == {"a_b": {"value": 10.0}}
+    assert magnitude.ab == 10.0
+    assert magnitude.api_dump() == {"AB": {"value": 10.0}}

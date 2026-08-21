@@ -35,7 +35,7 @@ pytestmark = pytest.mark.online
 example_mag_by_instrument: dict[Instrument, str] = {
     Instrument.spirou: "h",
     Instrument.espadons: "v",
-    Instrument.megacam: "a_b",
+    Instrument.megacam: "ab",
 }
 
 
