@@ -1,4 +1,4 @@
-from typing import ClassVar
+from typing import ClassVar, Literal
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -28,6 +28,11 @@ class Settings(BaseSettings):
     eso_environment: str = "demo"
     eso_username: str = ""
     eso_password: str = ""
+
+    # Gemini Observatory
+    gemini_token: str = ""
+    gemini_environment: Literal["production", "development"] = "production"
+    gemini_debug: bool = False
 
     # Liverpool Telescope
     lt_username: str = ""
