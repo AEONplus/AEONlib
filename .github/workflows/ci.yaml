@@ -39,7 +39,7 @@ jobs:
           python-version: "3.14"
 
       - name: Install the project
-        run: uv sync --dev --group codegen --extra eso --extra lt --extra salt
+        run: uv sync --dev --group codegen --extra eso --extra gemini --extra lt --extra salt
 
       - name: Run ty
         run: uvx ty check
@@ -61,7 +61,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install the project
-        run: uv sync --dev --extra eso --extra lt --extra salt
+        run: uv sync --dev --extra eso --extra gemini --extra lt --extra salt
 
       - name: Run tests
         run: uv run pytest

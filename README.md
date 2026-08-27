@@ -47,6 +47,7 @@ Environmental variables take precedence over .env files. See the
 [pydantic-settings](https://docs.pydantic.dev/latest/concepts/pydantic_settings/) documentation
 for more details.
 
+
 # Testing
 
 This project uses [pytest](https://docs.pytest.org/) to run tests:
@@ -277,3 +278,35 @@ salt_password = ""
 ```
 
 The username and password are those you would use for the [SALT Web Manager](https://www.salt.ac.za/wm/).
+
+## Gemini
+
+### Dependency Group
+
+The use the Gemini facility, you must install the `gemini` group:
+
+```bash
+pip install aeonlib[gemini]
+uv sync --extra gemini
+poetry install --with gemini
+```
+
+### Configuration Values
+```python
+  gemini_token: str = ""
+  gemini_environment: Literal["production", "development"] = "production"
+  gemini_debug: bool = False
+```
+
+The GPP client selects an environment automatically depending on which package version is
+installed. We override that here so the environment can be configured, otherwise it would
+be necessary to install a different package to test/deploy.
+
+### Helpful Links
+
+[gpp-client documentation](https://gpp-client.readthedocs.io/en/latest/client.html)
+
+### GPP Client direct access
+This module installs gpp-client, which is already a fully-features client for gemini. Thus
+AEONLib acts as a thin wrapper with some convenience functions. The gpp client can be
+accessed directly via facility.client
