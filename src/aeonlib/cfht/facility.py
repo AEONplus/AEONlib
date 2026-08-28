@@ -1,4 +1,3 @@
-from pprint import pprint
 from typing import Any
 
 import httpx
@@ -175,5 +174,4 @@ class CFHTFacility:
 
     def exposures(self) -> list[ExposureData]:
         exposures = self._program_request("GET", "exposures/", response_key="exposure")
-        print(pprint(exposures))
         return [ExposureData.model_validate(exposure) for exposure in exposures]
