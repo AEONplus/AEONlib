@@ -277,3 +277,16 @@ salt_password = ""
 ```
 
 The username and password are those you would use for the [SALT Web Manager](https://www.salt.ac.za/wm/).
+
+## Canada France Hawaii Telescope (CFHT)
+
+### Configuration values
+
+```python
+cfht_api_root: str = "https://api-stage.cfht.hawaii.edu/"
+cfht_access_token: str = ""
+```
+
+### Helpful Links
+
+[Kealahou Phase 1 & 2 tool - staging](https://hou-stage.cfht.hawaii.edu/)
