@@ -51,6 +51,9 @@ class CFHTFacility:
         self._client = httpx.Client(base_url=base_url, headers=headers)
         self.program_token = program_token
 
+    def __del__(self):
+        self._client.close()
+
     def _request(
         self,
         method: str,
