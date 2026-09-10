@@ -1,4 +1,3 @@
-from pprint import pprint
 from typing import Any
 
 import httpx
@@ -51,6 +50,9 @@ class CFHTFacility:
 
         self._client = httpx.Client(base_url=base_url, headers=headers)
         self.program_token = program_token
+
+    def __del__(self):
+        self._client.close()
 
     def _request(
         self,
@@ -175,5 +177,4 @@ class CFHTFacility:
 
     def exposures(self) -> list[ExposureData]:
         exposures = self._program_request("GET", "exposures/", response_key="exposure")
-        print(pprint(exposures))
         return [ExposureData.model_validate(exposure) for exposure in exposures]

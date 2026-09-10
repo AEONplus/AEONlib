@@ -310,3 +310,16 @@ be necessary to install a different package to test/deploy.
 This module installs gpp-client, which is already a fully-features client for gemini. Thus
 AEONLib acts as a thin wrapper with some convenience functions. The gpp client can be
 accessed directly via facility.client
+
+## Canada France Hawaii Telescope (CFHT)
+
+### Configuration values
+
+```python
+cfht_api_root: str = "https://api-stage.cfht.hawaii.edu/"
+cfht_access_token: str = ""
+```
+
+### Helpful Links
+
+[Kealahou Phase 1 & 2 tool - staging](https://hou-stage.cfht.hawaii.edu/)
