@@ -2,12 +2,15 @@ from datetime import UTC
 
 from gpp_client.generated.enums import TimingWindowInclusion
 from gpp_client.generated.input_types import (
+    BandNormalizedIntegratedInput,
     DeclinationInput,
     ParallaxInput,
     ProperMotionComponentInput,
     ProperMotionInput,
     RightAscensionInput,
     SiderealInput,
+    SourceProfileInput,
+    SpectralDefinitionIntegratedInput,
     TargetPropertiesInput,
     TimingWindowEndInput,
     TimingWindowInput,
@@ -25,6 +28,11 @@ def target_properties_from_aeon(target: SiderealTarget) -> TargetPropertiesInput
 
     return TargetPropertiesInput(
         name=target.name,
+        source_profile=SourceProfileInput(
+            point=SpectralDefinitionIntegratedInput(
+                band_normalized=BandNormalizedIntegratedInput(brightnesses=[])
+            )
+        ),
         sidereal=SiderealInput(
             ra=RightAscensionInput(degrees=target.ra.to_value("deg")),
             dec=DeclinationInput(degrees=target.dec.to_value("deg")),

@@ -26,6 +26,10 @@ def test_target_properties_from_aeon():
     result = target_properties_from_aeon(target)
 
     assert result.name == "test target"
+    assert result.source_profile is not None
+    assert result.source_profile.point is not None
+    assert result.source_profile.point.band_normalized is not None
+    assert result.source_profile.point.band_normalized.brightnesses == []
     assert result.sidereal is not None
     assert result.sidereal.ra is not None
     assert result.sidereal.ra.degrees == 12.3
