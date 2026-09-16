@@ -31,6 +31,7 @@ dev = [
 
 [project.optional-dependencies]
 eso = ["p2api>=1.0.10"]
+gemini = ["gpp-client>=26.7.3"]
 lt = [
     "lxml>=5.4.0",
     "lxml-stubs>=0.5.1",
