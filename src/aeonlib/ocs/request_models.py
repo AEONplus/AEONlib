@@ -113,6 +113,15 @@ class RequestGroup(BaseModel):
     requests: list[Request] = []
 
 
+class ValidationResult(BaseModel):
+    """Request validation outcome plus request duration."""
+
+    model_config: ClassVar[ConfigDict] = ConfigDict(validate_assignment=True)
+    valid: bool
+    errors: dict[str, Any]
+    duration: float | None = None
+
+
 class SubmittedRequestGroup(RequestGroup):
     """
     Represents an request group that is saved in the OCS database

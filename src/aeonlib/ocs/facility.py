@@ -8,7 +8,12 @@ from astropy.table import Table
 
 from aeonlib.conf import Settings
 from aeonlib.conf import settings as default_settings
-from aeonlib.ocs.request_models import RequestGroup, SubmittedRequestGroup
+from aeonlib.exceptions import AuthenticationError
+from aeonlib.ocs.request_models import (
+    RequestGroup,
+    SubmittedRequestGroup,
+    ValidationResult,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -67,18 +72,46 @@ class OCSFacility(ABC):
     def serialize_request_group(self, request_group: RequestGroup) -> dict[str, Any]:
         return request_group.model_dump(mode="json", exclude_none=True)
 
-    def validate_request_group(
-        self, request_group: RequestGroup
-    ) -> tuple[bool, list[Any]]:
+    def validate_request_group(self, request_group: RequestGroup) -> ValidationResult:
         payload = self.serialize_request_group(request_group)
         logger.debug("LcoFacility.validate_request_group -> %s", payload)
         response = self.client.post("/requestgroups/validate/", json=payload)
-        response = response.json()
-        logger.debug("<- %s", response)
-        if response.get("request_durations"):
-            return True, []
-        else:
-            return False, response.get("errors", [str(response)])
+        # The logic gets tricky here because we want to intercept 400s and
+        # convert them into ValidationResult instead of propagating them
+        errors: dict[str, Any] = {}
+        try:
+            response.raise_for_status()
+        except httpx.HTTPStatusError as exc:
+            if 401 <= response.status_code <= 403:
+                raise AuthenticationError(f"OCS: {response.content}") from exc
+            if response.status_code != 400:
+                raise
+
+        try:
+            data: dict[str, Any] = response.json()
+        except ValueError:
+            if response.status_code != 400:
+                raise
+            data = {"errors": {"non_field_errors": [response.text]}}
+        logger.debug("<- %s", data)
+
+        details = data.get("errors", data if response.status_code == 400 else {})
+        if isinstance(details, dict):
+            errors.update(details)
+        elif details:
+            errors["non_field_errors"] = (
+                details if isinstance(details, list) else [str(details)]
+            )
+
+        durations = data.get("request_durations") or {}
+        valid = response.status_code != 400 and bool(durations) and not errors
+        if not valid and not errors:
+            errors["non_field_errors"] = [str(data)]
+        return ValidationResult(
+            valid=valid,
+            errors=errors,
+            duration=durations.get("duration") if valid else None,
+        )
 
     def submit_request_group(
         self, request_group: RequestGroup

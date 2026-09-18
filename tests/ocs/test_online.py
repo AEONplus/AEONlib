@@ -38,10 +38,23 @@ def lco_facility() -> LcoFacility:
     "request_group", LCO_REQUESTS.values(), ids=LCO_REQUESTS.keys()
 )
 def test_valid_lco_requests(lco_facility: LcoFacility, request_group: RequestGroup):
-    valid, errors = lco_facility.validate_request_group(request_group)
-    if not valid:
-        logger.error("Online validation failed. Server response: %s", errors)
-    assert valid
+    result = lco_facility.validate_request_group(request_group)
+    if not result.valid:
+        logger.error("Online validation failed. Server response: %s", result.errors)
+    assert result.valid
+    assert result.duration and result.duration > 0.0
+
+
+def test_invalid_lco_request(lco_facility: LcoFacility):
+    request_group = LCO_REQUESTS["lco_1m0_scicam_sinistro"].model_copy(deep=True)
+    # Set an unreasonably low airmass to trigger server side validation failure
+    request_group.requests[0].configurations[0].constraints.max_airmass = 1.0
+    result = lco_facility.validate_request_group(request_group)
+    assert not result.valid
+    assert result.errors
+    assert (
+        "loosening the airmass" in result.errors["requests"][0]["non_field_errors"][0]
+    )
 
 
 @pytest.mark.side_effect
@@ -63,10 +76,11 @@ def soar_facility() -> SoarFacility:
     "request_group", SOAR_REQUESTS.values(), ids=SOAR_REQUESTS.keys()
 )
 def test_valid_soar_requests(soar_facility: SoarFacility, request_group: RequestGroup):
-    valid, errors = soar_facility.validate_request_group(request_group)
-    if not valid:
-        logger.error("Online validation failed. Server response: %s", errors)
-    assert valid
+    result = soar_facility.validate_request_group(request_group)
+    if not result.valid:
+        logger.error("Online validation failed. Server response: %s", result.errors)
+    assert result.valid
+    assert result.duration and result.duration > 0.0
 
 
 @pytest.mark.side_effect
@@ -88,10 +102,11 @@ def saao_facility() -> SAAOFacility:
     "request_group", SAAO_REQUESTS.values(), ids=SAAO_REQUESTS.keys()
 )
 def test_valid_saao_requests(saao_facility: SAAOFacility, request_group: RequestGroup):
-    valid, errors = saao_facility.validate_request_group(request_group)
-    if not valid:
-        logger.error("Online validation failed. Server response: %s", errors)
-    assert valid
+    result = saao_facility.validate_request_group(request_group)
+    if not result.valid:
+        logger.error("Online validation failed. Server response: %s", result.errors)
+    assert result.valid
+    assert result.duration and result.duration > 0.0
 
 
 # BLANCO tests
@@ -106,10 +121,11 @@ def blanco_facility() -> BlancoFacility:
 def test_valid_blanco_requests(
     blanco_facility: BlancoFacility, request_group: RequestGroup
 ):
-    valid, errors = blanco_facility.validate_request_group(request_group)
-    if not valid:
-        logger.error("Online validation failed. Server response: %s", errors)
-    assert valid
+    result = blanco_facility.validate_request_group(request_group)
+    if not result.valid:
+        logger.error("Online validation failed. Server response: %s", result.errors)
+    assert result.valid
+    assert result.duration and result.duration > 0.0
 
 
 @pytest.mark.side_effect
