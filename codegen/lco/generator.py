@@ -69,6 +69,13 @@ def get_modes(ins: dict[str, Any], type: str) -> list[str]:
     return [mode["code"] for mode in modes]
 
 
+def get_mode_default(ins: dict[str, Any], mode_type: str) -> str | None:
+    default = ins.get("modes", {}).get(mode_type, {}).get("default")
+    if default is not None and default not in get_modes(ins, mode_type):
+        raise ValueError(f"Invalid {mode_type} mode default: {default!r}")
+    return default
+
+
 def generate_instrument_configs(ins_s: str, facility: str) -> str:
     """
     Generate instrument models based on the output of the OCS
@@ -130,6 +137,10 @@ def generate_instrument_configs(ins_s: str, facility: str) -> str:
                 "acquisition_modes": get_modes(ins, "acquisition"),
                 "guiding_modes": get_modes(ins, "guiding"),
                 "rotator_modes": get_modes(ins, "rotator"),
+                "mode_defaults": {
+                    mode_type: get_mode_default(ins, mode_type)
+                    for mode_type in ("readout", "acquisition", "guiding", "rotator")
+                },
                 "optical_elements": {
                     # This gets rid of the silly trailing s on "filters" and "narrowband_g_positions"
                     k.rstrip("s"): v

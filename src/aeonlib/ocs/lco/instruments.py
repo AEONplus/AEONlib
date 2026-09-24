@@ -30,7 +30,7 @@ class Lco0M4ScicamQhy600OpticalElements(BaseModel):
 
 class Lco0M4ScicamQhy600GuidingConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["OFF", "ON"]
+    mode: Literal["OFF", "ON"] = "ON"
     optional: bool
     """Whether the guiding is optional or not"""
     exposure_time: Annotated[int, NonNegativeInt, Le(120)] | None = None
@@ -40,7 +40,7 @@ class Lco0M4ScicamQhy600GuidingConfig(BaseModel):
 
 class Lco0M4ScicamQhy600AcquisitionConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["OFF"]
+    mode: Literal["OFF"] = "OFF"
     exposure_time: Annotated[int, NonNegativeInt, Le(60)] | None = None
     """Acquisition exposure time"""
     extra_params: dict[Any, Any] = {}
@@ -52,7 +52,7 @@ class Lco0M4ScicamQhy600Config(BaseModel):
     """The number of exposures to take. This field must be set to a value greater than 0"""
     exposure_time: NonNegativeInt
     """ Exposure time in seconds"""
-    mode: Literal["central30x30", "full_frame"]
+    mode: Literal["central30x30", "full_frame"] = "central30x30"
     rois: list[Roi] | None = None
     extra_params: Lco0M4ScicamQhy600InstrumentConfigExtraParams = Field(default_factory=Lco0M4ScicamQhy600InstrumentConfigExtraParams)
     optical_elements: Lco0M4ScicamQhy600OpticalElements
@@ -88,7 +88,7 @@ class Lco1M0ScicamSinistroOpticalElements(BaseModel):
 
 class Lco1M0ScicamSinistroGuidingConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["OFF", "ON"]
+    mode: Literal["OFF", "ON"] = "ON"
     optional: bool
     """Whether the guiding is optional or not"""
     exposure_time: Annotated[int, NonNegativeInt, Le(120)] | None = None
@@ -98,7 +98,7 @@ class Lco1M0ScicamSinistroGuidingConfig(BaseModel):
 
 class Lco1M0ScicamSinistroAcquisitionConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["OFF"]
+    mode: Literal["OFF"] = "OFF"
     exposure_time: Annotated[int, NonNegativeInt, Le(60)] | None = None
     """Acquisition exposure time"""
     extra_params: dict[Any, Any] = {}
@@ -110,7 +110,7 @@ class Lco1M0ScicamSinistroConfig(BaseModel):
     """The number of exposures to take. This field must be set to a value greater than 0"""
     exposure_time: NonNegativeInt
     """ Exposure time in seconds"""
-    mode: Literal["full_frame", "central_2k_2x2"]
+    mode: Literal["full_frame", "central_2k_2x2"] = "full_frame"
     rois: list[Roi] | None = None
     extra_params: Lco1M0ScicamSinistroInstrumentConfigExtraParams = Field(default_factory=Lco1M0ScicamSinistroInstrumentConfigExtraParams)
     optical_elements: Lco1M0ScicamSinistroOpticalElements
@@ -145,7 +145,7 @@ class Lco2M0FloydsScicamOpticalElements(BaseModel):
 
 class Lco2M0FloydsScicamGuidingConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["OFF", "ON"]
+    mode: Literal["OFF", "ON"] = "ON"
     optional: bool
     """Whether the guiding is optional or not"""
     exposure_time: Annotated[int, NonNegativeInt, Le(120)] | None = None
@@ -155,7 +155,7 @@ class Lco2M0FloydsScicamGuidingConfig(BaseModel):
 
 class Lco2M0FloydsScicamAcquisitionConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["BRIGHTEST", "WCS"]
+    mode: Literal["BRIGHTEST", "WCS"] = "WCS"
     exposure_time: Annotated[int, NonNegativeInt, Le(60)] | None = None
     """Acquisition exposure time"""
     extra_params: dict[Any, Any] = {}
@@ -167,8 +167,8 @@ class Lco2M0FloydsScicamConfig(BaseModel):
     """The number of exposures to take. This field must be set to a value greater than 0"""
     exposure_time: NonNegativeInt
     """ Exposure time in seconds"""
-    mode: Literal["default"]
-    rotator_mode: Literal["VFLOAT", "SKY"]
+    mode: Literal["default"] = "default"
+    rotator_mode: Literal["VFLOAT", "SKY"] = "VFLOAT"
     rois: list[Roi] | None = None
     extra_params: Lco2M0FloydsScicamInstrumentConfigExtraParams = Field(default_factory=Lco2M0FloydsScicamInstrumentConfigExtraParams)
     optical_elements: Lco2M0FloydsScicamOpticalElements
@@ -206,7 +206,7 @@ class Lco2M0ScicamMuscatOpticalElements(BaseModel):
 
 class Lco2M0ScicamMuscatGuidingConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["ON", "OFF"]
+    mode: Literal["ON", "OFF"] = "ON"
     optional: bool
     """Whether the guiding is optional or not"""
     exposure_time: Annotated[int, NonNegativeInt, Le(120)] | None = None
@@ -216,7 +216,7 @@ class Lco2M0ScicamMuscatGuidingConfig(BaseModel):
 
 class Lco2M0ScicamMuscatAcquisitionConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["OFF"]
+    mode: Literal["OFF"] = "OFF"
     exposure_time: Annotated[int, NonNegativeInt, Le(60)] | None = None
     """Acquisition exposure time"""
     extra_params: dict[Any, Any] = {}
@@ -228,7 +228,7 @@ class Lco2M0ScicamMuscatConfig(BaseModel):
     """The number of exposures to take. This field must be set to a value greater than 0"""
     exposure_time: NonNegativeInt
     """ Exposure time in seconds"""
-    mode: Literal["MUSCAT_SLOW", "MUSCAT_FAST"]
+    mode: Literal["MUSCAT_SLOW", "MUSCAT_FAST"] = "MUSCAT_FAST"
     rois: list[Roi] | None = None
     extra_params: Lco2M0ScicamMuscatInstrumentConfigExtraParams = Field(default_factory=Lco2M0ScicamMuscatInstrumentConfigExtraParams)
     optical_elements: Lco2M0ScicamMuscatOpticalElements

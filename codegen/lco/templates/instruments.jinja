@@ -40,7 +40,7 @@ class {{ ctx.class_name }}OpticalElements(BaseModel):
 
 class {{ ctx.class_name }}GuidingConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal[{% for m in ctx.guiding_modes %}"{{ m }}"{% if not loop.last %}, {% endif %}{% else %}""{% endfor %}]
+    mode: Literal[{% for m in ctx.guiding_modes %}"{{ m }}"{% if not loop.last %}, {% endif %}{% else %}""{% endfor %}]{% if ctx.mode_defaults.guiding is not none %} = "{{ ctx.mode_defaults.guiding }}"{% endif +%}
     optional: bool
     """Whether the guiding is optional or not"""
     exposure_time: Annotated[int, NonNegativeInt, Le(120)] | None = None
@@ -50,7 +50,7 @@ class {{ ctx.class_name }}GuidingConfig(BaseModel):
 
 class {{ ctx.class_name }}AcquisitionConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal[{% for m in ctx.acquisition_modes %}"{{ m }}"{% if not loop.last %}, {% endif %}{% else %}""{% endfor %}]
+    mode: Literal[{% for m in ctx.acquisition_modes %}"{{ m }}"{% if not loop.last %}, {% endif %}{% else %}""{% endfor %}]{% if ctx.mode_defaults.acquisition is not none %} = "{{ ctx.mode_defaults.acquisition }}"{% endif +%}
     exposure_time: Annotated[int, NonNegativeInt, Le(60)] | None = None
     """Acquisition exposure time"""
     extra_params: dict[Any, Any] = {}
@@ -62,9 +62,9 @@ class {{ ctx.class_name }}Config(BaseModel):
     """The number of exposures to take. This field must be set to a value greater than 0"""
     exposure_time: NonNegativeInt
     """ Exposure time in seconds"""
-    mode: Literal[{% for m in ctx.readout_modes %}"{{ m }}"{% if not loop.last %}, {% endif %}{% else %}""{% endfor %}]
+    mode: Literal[{% for m in ctx.readout_modes %}"{{ m }}"{% if not loop.last %}, {% endif %}{% else %}""{% endfor %}]{% if ctx.mode_defaults.readout is not none %} = "{{ ctx.mode_defaults.readout }}"{% endif +%}
     {% if ctx.rotator_modes %}
-    rotator_mode: Literal[{% for m in ctx.rotator_modes %}"{{ m }}"{% if not loop.last %}, {% endif %}{% else %}""{% endfor %}]
+    rotator_mode: Literal[{% for m in ctx.rotator_modes %}"{{ m }}"{% if not loop.last %}, {% endif %}{% else %}""{% endfor %}]{% if ctx.mode_defaults.rotator is not none %} = "{{ ctx.mode_defaults.rotator }}"{% endif +%}
     {% endif %}
     rois: list[Roi] | None = None
     {% if ctx.instrument_config_extra_params %}
