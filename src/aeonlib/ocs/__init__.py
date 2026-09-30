@@ -1,4 +1,10 @@
-from .request_models import Location, Request, RequestGroup
+from .request_models import (
+    Location,
+    Request,
+    RequestGroup,
+    SubmittedRequest,
+    SubmittedRequestGroup,
+)
 from .target_models import Constraints
 
 __all__ = [
@@ -6,4 +12,6 @@ __all__ = [
     "Location",
     "Request",
     "RequestGroup",
+    "SubmittedRequest",
+    "SubmittedRequestGroup",
 ]

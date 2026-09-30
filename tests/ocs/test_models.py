@@ -11,6 +11,8 @@ from aeonlib.ocs import (
     Location,
     Request,
     RequestGroup,
+    SubmittedRequest,
+    SubmittedRequestGroup,
 )
 from aeonlib.ocs.lco.facility import LcoFacility
 from aeonlib.ocs.lco.instruments import Lco1M0ScicamSinistro
@@ -64,6 +66,38 @@ def request_group() -> RequestGroup:
             )
         ],
     )
+
+
+class TestSubmittedModels:
+    def test_submitted_request_requires_id(self, request_group: RequestGroup):
+        data = request_group.requests[0].model_dump()
+        with pytest.raises(ValidationError) as exc_info:
+            SubmittedRequest.model_validate(data)
+        assert exc_info.value.errors()[0]["loc"] == ("id",)
+        assert exc_info.value.errors()[0]["type"] == "missing"
+
+        submitted = SubmittedRequest.model_validate({**data, "id": 456})
+        assert submitted.id == 456
+
+    def test_response_parsing(self, request_group: RequestGroup):
+        data = request_group.model_dump(mode="json")
+        data.update(
+            id=123,
+            state="PENDING",
+            submitter="test-user",
+            created="2026-09-30T12:00:00Z",
+            modified="2026-09-30T12:00:00Z",
+        )
+        data["requests"][0]["id"] = 456
+        submitted = SubmittedRequestGroup.model_validate(data)
+
+        assert submitted.id == 123
+        assert isinstance(submitted.requests[0], SubmittedRequest)
+        assert submitted.requests[0].id == 456
+        assert submitted.state == "PENDING"
+        assert submitted.submitter == "test-user"
+        assert submitted.modified == submitted.created
+        assert submitted.model_dump(mode="json") == data
 
 
 class TestCommonValidationErrors:

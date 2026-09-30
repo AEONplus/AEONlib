@@ -47,9 +47,8 @@ Configuration = Annotated[
 ]
 
 
-class Request(BaseModel):
-    """A request for a single, discrete observation. One group can contain multiple
-    requests"""
+class _RequestBase(BaseModel):
+    """Common fields for requests."""
 
     model_config: ClassVar[ConfigDict] = ConfigDict(validate_assignment=True)
     acceptability_threshold: Annotated[int, NonNegativeInt, Le(100)] = 90
@@ -78,10 +77,20 @@ class Request(BaseModel):
     location: Location
 
 
-class RequestGroup(BaseModel):
+class Request(_RequestBase):
     """
     An Observation request for any observatory that supports an OCS API.
     """
+
+
+class SubmittedRequest(_RequestBase):
+    """A request saved to the OCS database."""
+
+    id: int
+
+
+class _RequestGroupBase(BaseModel):
+    """Common fields for request groups."""
 
     model_config: ClassVar[ConfigDict] = ConfigDict(validate_assignment=True)
     name: Annotated[str, StringConstraints(max_length=50)]
@@ -110,6 +119,11 @@ class RequestGroup(BaseModel):
     Requests submitted with TIME_CRITICAL are scheduled normally but with a high priority.
     These modes are only available if the Proposal was granted special time.
     """
+
+
+class RequestGroup(_RequestGroupBase):
+    """An unsaved request group to submit to the OCS API."""
+
     requests: list[Request] = []
 
 
@@ -122,12 +136,13 @@ class ValidationResult(BaseModel):
     duration: float | None = None
 
 
-class SubmittedRequestGroup(RequestGroup):
+class SubmittedRequestGroup(_RequestGroupBase):
     """
     Represents an request group that is saved in the OCS database
     """
 
     id: int
+    requests: list[SubmittedRequest]
     state: Literal[
         "PENDING", "COMPLETED", "WINDOW_EXPIRED", "FAILURE_LIMIT_REACHED", "CANCELED"
     ]
