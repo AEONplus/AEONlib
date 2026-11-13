@@ -1,8 +1,8 @@
-from typing import Literal
+from typing import Literal, TypeAlias
 
 from aeonlib.types import Angle
 
-type WavePlatePatternStep = tuple[Angle | None, Angle | None]
+WavePlatePatternStep: TypeAlias = tuple[Angle | None, Angle | None]
 """A pair of half and quarter wave plate angles."""
 
 

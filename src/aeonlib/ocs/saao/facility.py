@@ -1,5 +1,6 @@
 import logging
-from typing import override
+
+from typing_extensions import override
 
 from aeonlib.conf import Settings
 from aeonlib.ocs.facility import OCSFacility
