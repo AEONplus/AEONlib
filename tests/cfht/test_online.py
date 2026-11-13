@@ -93,9 +93,10 @@ def example_fixed_target(
 
     # Add CFHT specific fields
     target_data.token = f"{program_token}-{random.randint(1000000000, 9999999999)}"
-    target_data.fixed_target.estimated_radial_velocity_kmps = (
-        234.0 if instrument == Instrument.spirou else None
-    )
+    if target_data.fixed_target is not None:
+        target_data.fixed_target.estimated_radial_velocity_kmps = (
+            234.0 if instrument == Instrument.spirou else None
+        )
     target_data.magnitude = TargetDataMagnitude(
         **{example_mag_by_instrument[instrument]: 10.0}
     )

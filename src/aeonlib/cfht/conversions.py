@@ -14,7 +14,7 @@ from .models import TargetData, TargetDataFixedTarget
 class FixedTargetData(TargetData):
     """CFHT target data guaranteed to contain sidereal target fields."""
 
-    fixed_target: TargetDataFixedTarget
+    fixed_target: TargetDataFixedTarget | None
 
 
 def _sidereal_target_payload(target: SiderealTarget) -> dict[str, Any]:
