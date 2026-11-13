@@ -33,3 +33,9 @@ update-cfht:
 # Update all generated instrument files
 update-all: update-lco update-soar update-saao update-blanco
     @echo "All updates completed"
+
+type-check:
+    uvx ty check .
+
+bump-deps:
+    uv sync -U --extra lt --extra eso --extra salt --extra gemini --group codegen --group dev
