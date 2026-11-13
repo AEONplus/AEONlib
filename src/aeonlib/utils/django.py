@@ -1,6 +1,6 @@
 # Ignore undefined attributes for the Django mixin
 # mypy: disable-error-code="attr-defined"
-# ty: ignore[unresolved-attribute]
+# ty: ignore[missing-attribute]
 
 from pydantic import BaseModel, TypeAdapter
 from pydantic import ValidationError as PydanticValidationError
@@ -34,7 +34,7 @@ class PydanticValidationMixin:
 
     def validate_pydantic_fields(self):
         """Add Pydantic errors to their bound Django field before _post_clean."""
-        from django.core.exceptions import (  # type: ignore[import-not-found, ty:unresolved-import]
+        from django.core.exceptions import (  # type: ignore[import-not-found, ty:import-not-found]
             ImproperlyConfigured,
             ValidationError,
         )
