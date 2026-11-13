@@ -23,7 +23,7 @@ class SoarGhtsBluecamOpticalElements(BaseModel):
 
 class SoarGhtsBluecamGuidingConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["ON"]
+    mode: Literal["ON"] = "ON"
     optional: bool
     """Whether the guiding is optional or not"""
     exposure_time: Annotated[int, NonNegativeInt, Le(120)] | None = None
@@ -33,7 +33,7 @@ class SoarGhtsBluecamGuidingConfig(BaseModel):
 
 class SoarGhtsBluecamAcquisitionConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["MANUAL"]
+    mode: Literal["MANUAL"] = "MANUAL"
     exposure_time: Annotated[int, NonNegativeInt, Le(60)] | None = None
     """Acquisition exposure time"""
     extra_params: dict[Any, Any] = {}
@@ -45,8 +45,8 @@ class SoarGhtsBluecamConfig(BaseModel):
     """The number of exposures to take. This field must be set to a value greater than 0"""
     exposure_time: NonNegativeInt
     """ Exposure time in seconds"""
-    mode: Literal["GHTS_B_400m1_2x2", "GHTS_B_400m1_2x2_slit1p5"]
-    rotator_mode: Literal["SKY"]
+    mode: Literal["GHTS_B_400m1_2x2", "GHTS_B_400m1_2x2_slit1p5"] = "GHTS_B_400m1_2x2"
+    rotator_mode: Literal["SKY"] = "SKY"
     rois: list[Roi] | None = None
     extra_params: SoarGhtsBluecamInstrumentConfigExtraParams = Field(default_factory=SoarGhtsBluecamInstrumentConfigExtraParams)
     optical_elements: SoarGhtsBluecamOpticalElements
@@ -81,7 +81,7 @@ class SoarGhtsBluecamImagerOpticalElements(BaseModel):
 
 class SoarGhtsBluecamImagerGuidingConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["OFF", "ON"]
+    mode: Literal["OFF", "ON"] = "ON"
     optional: bool
     """Whether the guiding is optional or not"""
     exposure_time: Annotated[int, NonNegativeInt, Le(120)] | None = None
@@ -91,7 +91,7 @@ class SoarGhtsBluecamImagerGuidingConfig(BaseModel):
 
 class SoarGhtsBluecamImagerAcquisitionConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["MANUAL"]
+    mode: Literal["MANUAL"] = "MANUAL"
     exposure_time: Annotated[int, NonNegativeInt, Le(60)] | None = None
     """Acquisition exposure time"""
     extra_params: dict[Any, Any] = {}
@@ -103,8 +103,8 @@ class SoarGhtsBluecamImagerConfig(BaseModel):
     """The number of exposures to take. This field must be set to a value greater than 0"""
     exposure_time: NonNegativeInt
     """ Exposure time in seconds"""
-    mode: Literal["GHTS_B_Image_2x2"]
-    rotator_mode: Literal["SKY"]
+    mode: Literal["GHTS_B_Image_2x2"] = "GHTS_B_Image_2x2"
+    rotator_mode: Literal["SKY"] = "SKY"
     rois: list[Roi] | None = None
     extra_params: SoarGhtsBluecamImagerInstrumentConfigExtraParams = Field(default_factory=SoarGhtsBluecamImagerInstrumentConfigExtraParams)
     optical_elements: SoarGhtsBluecamImagerOpticalElements
@@ -138,7 +138,7 @@ class SoarGhtsRedcamOpticalElements(BaseModel):
 
 class SoarGhtsRedcamGuidingConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["ON"]
+    mode: Literal["ON"] = "ON"
     optional: bool
     """Whether the guiding is optional or not"""
     exposure_time: Annotated[int, NonNegativeInt, Le(120)] | None = None
@@ -148,7 +148,7 @@ class SoarGhtsRedcamGuidingConfig(BaseModel):
 
 class SoarGhtsRedcamAcquisitionConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["MANUAL"]
+    mode: Literal["MANUAL"] = "MANUAL"
     exposure_time: Annotated[int, NonNegativeInt, Le(60)] | None = None
     """Acquisition exposure time"""
     extra_params: dict[Any, Any] = {}
@@ -160,8 +160,8 @@ class SoarGhtsRedcamConfig(BaseModel):
     """The number of exposures to take. This field must be set to a value greater than 0"""
     exposure_time: NonNegativeInt
     """ Exposure time in seconds"""
-    mode: Literal["GHTS_R_2100_5000A_1x2_slit1p0", "GHTS_R_400m1_2x2", "GHTS_R_400m2_2x2", "GHTS_R_400m1_2x2_slit1p5"]
-    rotator_mode: Literal["SKY"]
+    mode: Literal["GHTS_R_2100_5000A_1x2_slit1p0", "GHTS_R_400m1_2x2", "GHTS_R_400m2_2x2", "GHTS_R_400m1_2x2_slit1p5"] = "GHTS_R_400m2_2x2"
+    rotator_mode: Literal["SKY"] = "SKY"
     rois: list[Roi] | None = None
     extra_params: SoarGhtsRedcamInstrumentConfigExtraParams = Field(default_factory=SoarGhtsRedcamInstrumentConfigExtraParams)
     optical_elements: SoarGhtsRedcamOpticalElements
@@ -196,7 +196,7 @@ class SoarGhtsRedcamImagerOpticalElements(BaseModel):
 
 class SoarGhtsRedcamImagerGuidingConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["OFF", "ON"]
+    mode: Literal["OFF", "ON"] = "ON"
     optional: bool
     """Whether the guiding is optional or not"""
     exposure_time: Annotated[int, NonNegativeInt, Le(120)] | None = None
@@ -206,7 +206,7 @@ class SoarGhtsRedcamImagerGuidingConfig(BaseModel):
 
 class SoarGhtsRedcamImagerAcquisitionConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["MANUAL"]
+    mode: Literal["MANUAL"] = "MANUAL"
     exposure_time: Annotated[int, NonNegativeInt, Le(60)] | None = None
     """Acquisition exposure time"""
     extra_params: dict[Any, Any] = {}
@@ -218,8 +218,8 @@ class SoarGhtsRedcamImagerConfig(BaseModel):
     """The number of exposures to take. This field must be set to a value greater than 0"""
     exposure_time: NonNegativeInt
     """ Exposure time in seconds"""
-    mode: Literal["GHTS_R_Image_2x2"]
-    rotator_mode: Literal["SKY"]
+    mode: Literal["GHTS_R_Image_2x2"] = "GHTS_R_Image_2x2"
+    rotator_mode: Literal["SKY"] = "SKY"
     rois: list[Roi] | None = None
     extra_params: SoarGhtsRedcamImagerInstrumentConfigExtraParams = Field(default_factory=SoarGhtsRedcamImagerInstrumentConfigExtraParams)
     optical_elements: SoarGhtsRedcamImagerOpticalElements
@@ -248,7 +248,7 @@ class SoarTriplespecOpticalElements(BaseModel):
 
 class SoarTriplespecGuidingConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["ON"]
+    mode: Literal["ON"] = "ON"
     optional: bool
     """Whether the guiding is optional or not"""
     exposure_time: Annotated[int, NonNegativeInt, Le(120)] | None = None
@@ -258,7 +258,7 @@ class SoarTriplespecGuidingConfig(BaseModel):
 
 class SoarTriplespecAcquisitionConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["MANUAL"]
+    mode: Literal["MANUAL"] = "MANUAL"
     exposure_time: Annotated[int, NonNegativeInt, Le(60)] | None = None
     """Acquisition exposure time"""
     extra_params: dict[Any, Any] = {}
@@ -270,8 +270,8 @@ class SoarTriplespecConfig(BaseModel):
     """The number of exposures to take. This field must be set to a value greater than 0"""
     exposure_time: NonNegativeInt
     """ Exposure time in seconds"""
-    mode: Literal["fowler1_coadds2", "fowler4_coadds1", "fowler8_coadds1", "fowler16_coadds1", "fowler1_coadds1"]
-    rotator_mode: Literal["SKY"]
+    mode: Literal["fowler1_coadds2", "fowler4_coadds1", "fowler8_coadds1", "fowler16_coadds1", "fowler1_coadds1"] = "fowler16_coadds1"
+    rotator_mode: Literal["SKY"] = "SKY"
     rois: list[Roi] | None = None
     optical_elements: SoarTriplespecOpticalElements
 

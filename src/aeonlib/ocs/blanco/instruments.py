@@ -19,12 +19,12 @@ class BlancoDecamConfigExtraParams(BaseModel):
 
 class BlancoDecamOpticalElements(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    filter: Literal["r", "g", "i", "z"]
+    filter: Literal["r", "g", "i", "z", "u"]
 
 
 class BlancoDecamGuidingConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["ON"]
+    mode: Literal["ON"] = "ON"
     optional: bool
     """Whether the guiding is optional or not"""
     exposure_time: Annotated[int, NonNegativeInt, Le(120)] | None = None
@@ -34,7 +34,7 @@ class BlancoDecamGuidingConfig(BaseModel):
 
 class BlancoDecamAcquisitionConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["OFF"]
+    mode: Literal["OFF"] = "OFF"
     exposure_time: Annotated[int, NonNegativeInt, Le(60)] | None = None
     """Acquisition exposure time"""
     extra_params: dict[Any, Any] = {}
@@ -46,7 +46,7 @@ class BlancoDecamConfig(BaseModel):
     """The number of exposures to take. This field must be set to a value greater than 0"""
     exposure_time: NonNegativeInt
     """ Exposure time in seconds"""
-    mode: Literal["default"]
+    mode: Literal["default"] = "default"
     rois: list[Roi] | None = None
     optical_elements: BlancoDecamOpticalElements
 
@@ -90,7 +90,7 @@ class BlancoNewfirmOpticalElements(BaseModel):
 
 class BlancoNewfirmGuidingConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["ON"]
+    mode: Literal["ON"] = "ON"
     optional: bool
     """Whether the guiding is optional or not"""
     exposure_time: Annotated[int, NonNegativeInt, Le(120)] | None = None
@@ -100,7 +100,7 @@ class BlancoNewfirmGuidingConfig(BaseModel):
 
 class BlancoNewfirmAcquisitionConfig(BaseModel):
     model_config = ConfigDict(validate_assignment=True)
-    mode: Literal["MANUAL"]
+    mode: Literal["MANUAL"] = "MANUAL"
     exposure_time: Annotated[int, NonNegativeInt, Le(60)] | None = None
     """Acquisition exposure time"""
     extra_params: dict[Any, Any] = {}
@@ -112,7 +112,7 @@ class BlancoNewfirmConfig(BaseModel):
     """The number of exposures to take. This field must be set to a value greater than 0"""
     exposure_time: NonNegativeInt
     """ Exposure time in seconds"""
-    mode: Literal["fowler1", "fowler2"]
+    mode: Literal["fowler1", "fowler2"] = "fowler1"
     rois: list[Roi] | None = None
     extra_params: BlancoNewfirmInstrumentConfigExtraParams = Field(default_factory=BlancoNewfirmInstrumentConfigExtraParams)
     optical_elements: BlancoNewfirmOpticalElements
